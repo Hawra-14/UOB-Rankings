@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Department Dashboard – UoB Rankings Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --navy: #0d1b3e;
+      --navy-mid: #162248;
+      --gold: #c9a227;
+      --sidebar-w: 265px;
+      --header-h: 66px;
+      --light-bg: #f0f2f7;
+      --white: #fff;
+      --border: #e2e8f4;
+      --text: #1e2d50;
+      --subtext: #6b7c9e;
+      --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light-bg);
+      color: var(--text);
+      overflow: hidden
+    }
+
+    /* ════════════════════════════
+   TOP HEADER
+════════════════════════════ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-h);
+      z-index: 100;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem 0 0;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0 1.2rem;
+      height: 100%;
+      gap: .85rem;
+      text-decoration: none;
+    }
+
+    .header-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .header-logo svg {
+      width: 40px;
+      height: 40px
+    }
+
+    .brand-text {}
+
+    .brand-title {
+      font-weight: 700;
+      font-size: .95rem;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .brand-sub {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold)
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem
+    }
+
+    .bell-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      position: relative;
+      transition: background .16s;
+    }
+
+    .bell-btn:hover {
+      background: rgba(255, 255, 255, 0.18)
+    }
+
+    .bell-dot {
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      border: 2px solid var(--navy);
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: .7rem
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #16a34a;
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .user-info {}
+
+    .user-name {
+      font-size: .86rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .user-role {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .6)
+    }
+
+    /* ════════════════════════════
+   LAYOUT
+════════════════════════════ */
+    .layout {
+      display: flex;
+      margin-top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+    }
+
+    /* ════════════════════════════
+   SIDEBAR
+════════════════════════════ */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.07);
+      position: relative;
+    }
+
+    /* Gold left accent for active item */
+    .sidebar-collapse {
+      position: absolute;
+      right: -14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 48px;
+      background: var(--light-bg);
+      border: 1px solid var(--border);
+      border-left: none;
+      border-radius: 0 8px 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--subtext);
+      font-size: .7rem;
+      z-index: 5;
+    }
+
+    .nav-section-label {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      padding: .9rem 1.4rem .5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .72rem 1.4rem;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: .86rem;
+      font-weight: 500;
+      position: relative;
+      transition: background .16s, color .16s;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, .85)
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-weight: 600;
+      border-left-color: var(--gold);
+    }
+
+    .nav-icon {
+      font-size: 1rem;
+      width: 22px;
+      text-align: center;
+      flex-shrink: 0
+    }
+
+    .nav-spacer {
+      flex: 1
+    }
+
+    .nav-sub {
+      padding-left: 2.6rem;
+      font-size: .82rem;
+      color: rgba(255, 255, 255, 0.5)
+    }
+
+    .nav-sub:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, .75)
+    }
+
+    .nav-sub.active {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-weight: 600;
+      border-left-color: var(--gold)
+    }
+
+    .nav-logout {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .72rem 1.4rem;
+      cursor: pointer;
+      color: #f87171;
+      font-size: .86rem;
+      font-weight: 600;
+      transition: background .16s;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+    }
+
+    .nav-logout:hover {
+      background: rgba(248, 113, 113, 0.1)
+    }
+
+    /* ════════════════════════════
+   MAIN CONTENT
+════════════════════════════ */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.4rem 1.2rem 1.4rem 1.5rem;
+    }
+
+    /* Center column */
+    .center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      min-width: 0
+    }
+
+    /* Right column */
+    .right-col {
+      width: 290px;
+      flex-shrink: 0
+    }
+
+    /* ── Welcome banner ── */
+    .welcome-card {
+      background: var(--navy);
+      border-radius: 16px;
+      padding: 1.6rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-card::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      top: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(201, 162, 39, 0.08);
+      pointer-events: none;
+    }
+
+    .welcome-label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: .35rem
+    }
+
+    .welcome-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .35rem
+    }
+
+    .welcome-sub {
+      font-size: .86rem;
+      color: rgba(255, 255, 255, 0.55)
+    }
+
+    /* ── Stat cards row ── */
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.2rem 1.3rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #f0f2f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      margin-bottom: .85rem;
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: .25rem
+    }
+
+    .stat-label {
+      font-size: .75rem;
+      color: var(--subtext);
+      font-weight: 500
+    }
+
+    /* ── Chart card ── */
+    .chart-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.4rem 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.3rem
+    }
+
+    .card-title {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .card-link {
+      font-size: .8rem;
+      color: var(--navy);
+      font-weight: 600;
+      text-decoration: none;
+      opacity: .7;
+      transition: opacity .16s
+    }
+
+    .card-link:hover {
+      opacity: 1
+    }
+
+    /* Bar chart */
+    .bar-chart {
+      position: relative
+    }
+
+    .bar-y-labels {
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: space-between;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 28px;
+      pointer-events: none;
+    }
+
+    .bar-y-label {
+      font-size: .72rem;
+      color: var(--subtext);
+      line-height: 1
+    }
+
+    .bar-chart-inner {
+      margin-left: 36px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bar-grid-lines {
+      position: relative;
+      height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 1px solid #e8ecf4;
+    }
+
+    .grid-line {
+      width: 100%;
+      border-top: 1px solid #eef0f5;
+    }
+
+    .bars-row {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      padding: 0 2rem;
+      height: 100%;
+    }
+
+    .bar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      flex: 1
+    }
+
+    .bar-pct {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    .bar {
+      width: 52px;
+      border-radius: 6px 6px 0 0;
+      transition: filter .18s;
+      cursor: pointer;
+    }
+
+    .bar:hover {
+      filter: brightness(1.1)
+    }
+
+    .bar-name {
+      font-size: .76rem;
+      color: var(--subtext);
+      margin-top: .3rem
+    }
+
+    /* ── My Ranking Forms ── */
+    .forms-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.4rem 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .85rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0
+    }
+
+    .form-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .form-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .form-name {
+      font-size: .86rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: .45rem
+    }
+
+    .progress-bar-wrap {
+      height: 5px;
+      background: #eef0f6;
+      border-radius: 999px;
+      overflow: hidden
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 999px;
+      transition: width .6s ease
+    }
+
+    /* ════════════════════════════
+   RIGHT COLUMN – DEADLINES
+════════════════════════════ */
+    .deadlines-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 1.4rem 1.3rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+    }
+
+    .deadline-item {
+      display: flex;
+      gap: .85rem;
+      align-items: flex-start;
+      padding: .8rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .deadline-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0
+    }
+
+    .deadline-date {
+      flex-shrink: 0;
+      width: 38px;
+      text-align: center;
+      background: var(--light-bg);
+      border-radius: 8px;
+      padding: .3rem .2rem;
+    }
+
+    .deadline-day {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1
+    }
+
+    .deadline-mon {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--subtext)
+    }
+
+    .deadline-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .deadline-title {
+      font-size: .83rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: .2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .deadline-sub {
+      font-size: .74rem;
+      color: var(--subtext);
+      margin-bottom: .35rem
+    }
+
+    .deadline-tags {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      flex-wrap: wrap
+    }
+
+    .tag-ranking {
+      font-size: .66rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .18rem .55rem;
+      border-radius: 999px;
+    }
+
+    .tag-qs-wur {
+      background: #dbeafe;
+      color: #1e40af
+    }
+
+    .tag-the-wur {
+      background: #ede9fe;
+      color: #5b21b6
+    }
+
+    .tag-the-impact {
+      background: #fce7f3;
+      color: #9d174d
+    }
+
+    .tag-qs-sus {
+      background: #d1fae5;
+      color: #065f46
+    }
+
+    .tag-green {
+      background: #dcfce7;
+      color: #14532d
+    }
+
+    .urgency {
+      font-size: .66rem;
+      font-weight: 700;
+      padding: .2rem .6rem;
+      border-radius: 999px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .urg-urgent {
+      background: #fee2e2;
+      color: #dc2626
+    }
+
+    .urg-soon {
+      background: #fef9c3;
+      color: #854d0e
+    }
+
+    .urg-ontrack {
+      background: #d1fae5;
+      color: #065f46
+    }
+
+    /* Deadline left accent */
+    .deadline-accent {
+      width: 3px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      align-self: stretch;
+      min-height: 60px
+    }
+
+    .acc-red {
+      background: #ef4444
+    }
+
+    .acc-purple {
+      background: #8b5cf6
+    }
+
+    .acc-orange {
+      background: #f59e0b
+    }
+
+    .acc-green {
+      background: #10b981
+    }
+
+    .acc-ltgreen {
+      background: #22c55e
+    }
+
+    /* scrollbar */
+    .main::-webkit-scrollbar,
+    .sidebar::-webkit-scrollbar {
+      width: 5px
+    }
+
+    .main::-webkit-scrollbar-track,
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    .main::-webkit-scrollbar-thumb,
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, .12);
+      border-radius: 4px
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════ HEADER ════════ -->
+  <header class="header">
+    <a class="header-brand" href="index.html">
+      <div class="header-logo">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="#c9a227" stroke-width="1.6" />
+          <polygon points="20,6 23,15 32,15 25,20 28,29 20,24 12,29 15,20 8,15 17,15" fill="#c9a227" />
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">Rankings Tracker</div>
+        <div class="brand-sub">Department Portal</div>
+      </div>
+    </a>
+
+    <div class="header-right">
+      <button class="bell-btn">
+        🔔
+        <span class="bell-dot"></span>
+      </button>
+      <div class="user-pill">
+        <div class="user-avatar">IT</div>
+        <div class="user-info">
+          <div class="user-name">IT &amp; Digital Services</div>
+          <div class="user-role">Department User</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ════════ LAYOUT ════════ -->
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="nav-section-label">Navigation</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">🏠</span> Home</a>
+      <a class="nav-item " href="ranking-forms.html"><span class="nav-icon">📋</span> My Ranking Forms</a>
+      <a class="nav-item nav-sub " href="form-qs-sustainability.html"><span class="nav-icon">🌿</span> QS
+        Sustainability</a>
+      <a class="nav-item nav-sub " href="form-qs-wur.html"><span class="nav-icon">🏆</span> QS WUR</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">📊</span> THE WUR</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🎯</span> THE Impact</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🌱</span> Green Metric</a>
+      <a class="nav-item " href="progress.html"><span class="nav-icon">📈</span> Progress</a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
+      <div class="nav-spacer"></div>
+      <a class="nav-logout" href="login.html"><span class="nav-icon">🚪</span> Logout</a>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+
+      <!-- CENTER COLUMN -->
+      <div class="center">
+
+        <!-- Welcome banner -->
+        <div class="welcome-card">
+          <div class="welcome-label">Good Morning</div>
+          <div class="welcome-title">IT &amp; Digital Services 👋</div>
+          <div class="welcome-sub">Here's your rankings submission overview for today.</div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-num">35</div>
+            <div class="stat-label">Total Questions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-num">12</div>
+            <div class="stat-label">In Progress</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#f0fdf4">✅</div>
+            <div class="stat-num">8</div>
+            <div class="stat-label">Submitted</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fff7ed">🔥</div>
+            <div class="stat-num">3</div>
+            <div class="stat-label">Deadlines Soon</div>
+          </div>
+        </div>
+
+        <!-- Bar chart -->
+        <div class="chart-card">
+          <div class="card-header">
+            <div class="card-title">📊 Ranking Completion Overview</div>
+            <a href="#" class="card-link">View Details →</a>
+          </div>
+          <div class="bar-chart">
+            <!-- Y axis labels -->
+            <div style="display:flex;gap:0">
+              <div
+                style="width:36px;display:flex;flex-direction:column-reverse;justify-content:space-between;height:260px;padding-bottom:0">
+                <span style="font-size:.69rem;color:var(--subtext)">0%</span>
+                <span style="font-size:.69rem;color:var(--subtext)">25%</span>
+                <span style="font-size:.69rem;color:var(--subtext)">50%</span>
+                <span style="font-size:.69rem;color:var(--subtext)">75%</span>
+                <span style="font-size:.69rem;color:var(--subtext)">100%</span>
+              </div>
+              <div style="flex:1;position:relative;height:260px;border-left:1px solid #eef0f5">
+                <!-- Grid lines -->
+                <div
+                  style="position:absolute;top:0;left:0;right:0;height:100%;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none">
+                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
+                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
+                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
+                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
+                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
+                </div>
+                <!-- Bars -->
+                <div
+                  style="position:absolute;bottom:0;left:0;right:0;display:flex;align-items:flex-end;justify-content:space-around;padding:0 2rem;height:100%">
+
+                  <div class="bar-group">
+                    <span class="bar-pct">35%</span>
+                    <div class="bar"
+                      style="height:calc(260px * 0.35);background:linear-gradient(180deg,#34d399,#10b981)"></div>
+                    <span class="bar-name">QS Sus</span>
+                  </div>
+
+                  <div class="bar-group">
+                    <span class="bar-pct">60%</span>
+                    <div class="bar"
+                      style="height:calc(260px * 0.60);background:linear-gradient(180deg,#22d3ee,#0891b2)"></div>
+                    <span class="bar-name">QS WUR</span>
+                  </div>
+
+                  <div class="bar-group">
+                    <span class="bar-pct">20%</span>
+                    <div class="bar"
+                      style="height:calc(260px * 0.20);background:linear-gradient(180deg,#a78bfa,#7c3aed)"></div>
+                    <span class="bar-name">THE WUR</span>
+                  </div>
+
+                  <div class="bar-group">
+                    <span class="bar-pct">45%</span>
+                    <div class="bar"
+                      style="height:calc(260px * 0.45);background:linear-gradient(180deg,#f87171,#ef4444)"></div>
+                    <span class="bar-name">Impact</span>
+                  </div>
+
+                  <div class="bar-group">
+                    <span class="bar-pct">10%</span>
+                    <div class="bar"
+                      style="height:calc(260px * 0.10);background:linear-gradient(180deg,#86efac,#22c55e)"></div>
+                    <span class="bar-name">Green</span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Ranking Forms -->
+        <div class="forms-card">
+          <div class="card-header">
+            <div class="card-title">📋 My Ranking Forms</div>
+            <a href="#" class="card-link">See All →</a>
+          </div>
+
+          <div class="form-row">
+            <div class="form-icon" style="background:#d1fae5">🌿</div>
+            <div class="form-info">
+              <div class="form-name">QS Sustainability 2025</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" style="width:55%;background:linear-gradient(90deg,#34d399,#10b981)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-icon" style="background:#dbeafe">🏆</div>
+            <div class="form-info">
+              <div class="form-name">QS World University Rankings 2025</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" style="width:70%;background:linear-gradient(90deg,#22d3ee,#0891b2)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-icon" style="background:#ede9fe">📊</div>
+            <div class="form-info">
+              <div class="form-name">Times Higher Education WUR 2025</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" style="width:30%;background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-icon" style="background:#fce7f3">🎯</div>
+            <div class="form-info">
+              <div class="form-name">THE Impact Rankings 2025</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" style="width:45%;background:linear-gradient(90deg,#f87171,#ef4444)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-icon" style="background:#dcfce7">🌱</div>
+            <div class="form-info">
+              <div class="form-name">UI GreenMetric Rankings 2025</div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" style="width:10%;background:linear-gradient(90deg,#86efac,#22c55e)"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /center -->
+
+      <!-- RIGHT COLUMN -->
+      <div class="right-col">
+        <div class="deadlines-card">
+          <div class="card-header" style="margin-bottom:1rem">
+            <div class="card-title">📅 Upcoming Deadlines</div>
+          </div>
+
+          <!-- Item 1 -->
+          <div class="deadline-item">
+            <div class="deadline-accent acc-red"></div>
+            <div class="deadline-date">
+              <div class="deadline-day">31</div>
+              <div class="deadline-mon">Mar</div>
+            </div>
+            <div class="deadline-info">
+              <div class="deadline-title">QS World University Ra…</div>
+              <div class="deadline-sub">Data submission deadline</div>
+              <div class="deadline-tags">
+                <span class="tag-ranking tag-qs-wur">QS WUR</span>
+                <span class="urgency urg-urgent">Urgent</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="deadline-item">
+            <div class="deadline-accent acc-purple"></div>
+            <div class="deadline-date">
+              <div class="deadline-day">30</div>
+              <div class="deadline-mon">Apr</div>
+            </div>
+            <div class="deadline-info">
+              <div class="deadline-title">THE World University Ra…</div>
+              <div class="deadline-sub">Data submission deadline</div>
+              <div class="deadline-tags">
+                <span class="tag-ranking tag-the-wur">THE WUR</span>
+                <span class="urgency urg-soon">Soon</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="deadline-item">
+            <div class="deadline-accent acc-orange"></div>
+            <div class="deadline-date">
+              <div class="deadline-day">15</div>
+              <div class="deadline-mon">May</div>
+            </div>
+            <div class="deadline-info">
+              <div class="deadline-title">THE Impact Rankings</div>
+              <div class="deadline-sub">Data submission deadline</div>
+              <div class="deadline-tags">
+                <span class="tag-ranking tag-the-impact">THE Impact</span>
+                <span class="urgency urg-soon">Soon</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="deadline-item">
+            <div class="deadline-accent acc-green"></div>
+            <div class="deadline-date">
+              <div class="deadline-day">15</div>
+              <div class="deadline-mon">Jun</div>
+            </div>
+            <div class="deadline-info">
+              <div class="deadline-title">QS Sustainability Ran…</div>
+              <div class="deadline-sub">Data submission deadline</div>
+              <div class="deadline-tags">
+                <span class="tag-ranking tag-qs-sus">QS Sus</span>
+                <span class="urgency urg-ontrack">On Track</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="deadline-item">
+            <div class="deadline-accent acc-ltgreen"></div>
+            <div class="deadline-date">
+              <div class="deadline-day">30</div>
+              <div class="deadline-mon">Jun</div>
+            </div>
+            <div class="deadline-info">
+              <div class="deadline-title">UI GreenMetric Ranki…</div>
+              <div class="deadline-sub">Data submission deadline</div>
+              <div class="deadline-tags">
+                <span class="tag-ranking tag-green">GreenMetric</span>
+                <span class="urgency urg-ontrack">On Track</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /right-col -->
+
+    </div><!-- /main -->
+  </div><!-- /layout -->
+
+  <script>
+    // Auth check
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    // Display user info
+    document.querySelector('.user-name').textContent = user.name || 'User';
+    document.querySelector('.user-role').textContent = user.role === 'admin' ? 'Administrator' : 'Department User';
+
+    const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    document.querySelector('.user-avatar').textContent = initials;
+
+    // Logout
+    document.querySelector('.nav-logout').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('http://localhost:3002/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+
+</html>

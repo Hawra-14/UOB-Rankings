@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QS Sustainability Rankings 2025 – UoB Rankings Tracker</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --navy: #0d1b3e;
+      --gold: #c9a227;
+      --teal: #0d9488;
+      --sidebar-w: 265px;
+      --header-h: 66px;
+      --light-bg: #f0f2f7;
+      --border: #e2e8f4;
+      --text: #1e2d50;
+      --subtext: #6b7c9e;
+      --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
+      --orange-bg: #fdf0d5;
+      --orange-text: #8a6000;
+      --orange-border: #f0c070;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light-bg);
+      color: var(--text);
+      overflow: hidden
+    }
+
+    /* HEADER */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-h);
+      z-index: 200;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem 0 0;
+      border-bottom: 2px solid var(--gold)
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0 1.2rem;
+      height: 100%;
+      gap: .85rem;
+      text-decoration: none
+    }
+
+    .header-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .header-logo svg {
+      width: 40px;
+      height: 40px
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: .95rem;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .brand-sub {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold)
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem
+    }
+
+    .bell-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      position: relative
+    }
+
+    .bell-dot {
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      border: 2px solid var(--navy)
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: .7rem
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #16a34a;
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .user-name {
+      font-size: .86rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .user-role {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .6)
+    }
+
+    /* LAYOUT */
+    .layout {
+      display: flex;
+      margin-top: var(--header-h);
+      height: calc(100vh - var(--header-h))
+    }
+
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.07)
+    }
+
+    .nav-section-label {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      padding: .9rem 1.4rem .5rem
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .72rem 1.4rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: .86rem;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      transition: background .16s, color .16s
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, .85)
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-weight: 600;
+      border-left-color: var(--gold)
+    }
+
+    .nav-icon {
+      font-size: 1rem;
+      width: 22px;
+      text-align: center;
+      flex-shrink: 0
+    }
+
+    .nav-spacer {
+      flex: 1
+    }
+
+    .nav-sub {
+      padding-left: 2.8rem;
+      font-size: .82rem;
+      border-left: 3px solid transparent
+    }
+
+    .nav-sub:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, .75)
+    }
+
+    .nav-sub.active {
+      background: rgba(255, 255, 255, 0.07);
+      color: #fff;
+      font-weight: 600;
+      border-left-color: var(--gold)
+    }
+
+    .nav-logout {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .72rem 1.4rem;
+      color: #f87171;
+      font-size: .86rem;
+      font-weight: 600;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      transition: background .16s
+    }
+
+    .nav-logout:hover {
+      background: rgba(248, 113, 113, 0.1)
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .15);
+      border-radius: 4px
+    }
+
+    /* MAIN */
+    .main-wrap {
+      flex: 1;
+      display: flex;
+      overflow: hidden
+    }
+
+    .center {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.4rem 1.5rem 5rem
+    }
+
+    .center::-webkit-scrollbar {
+      width: 5px
+    }
+
+    .center::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, .1);
+      border-radius: 4px
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: .45rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      margin-bottom: 1.1rem;
+      transition: background .14s;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .back-btn:hover {
+      background: #f5f7fc
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: .25rem
+    }
+
+    .page-sub {
+      font-size: .84rem;
+      color: var(--subtext);
+      margin-bottom: 1.1rem
+    }
+
+    .banner {
+      border-radius: 9px;
+      padding: .65rem 1rem;
+      font-size: .8rem;
+      line-height: 1.55;
+      margin-bottom: .55rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .5rem
+    }
+
+    .banner-green {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #065f46
+    }
+
+    .banner-yellow {
+      background: #fefce8;
+      border: 1px solid #fde68a;
+      color: #713f12
+    }
+
+    .banner strong {
+      font-weight: 700
+    }
+
+    /* MAIN SECTION BLOCK */
+    .sec-block {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 1.1rem
+    }
+
+    .sec-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .85rem 1.3rem;
+      cursor: pointer;
+      transition: background .14s;
+      background: #f8f8f8;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .sec-hdr:hover {
+      background: #f0f2f7
+    }
+
+    .sec-hdr-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy)
+    }
+
+    .sec-tog {
+      font-size: .78rem;
+      color: var(--subtext)
+    }
+
+    /* SUBSECTION */
+    .subsec {
+      border-bottom: 1px solid var(--border)
+    }
+
+    .subsec:last-child {
+      border-bottom: none
+    }
+
+    .subsec-hdr {
+      display: grid;
+      gap: .5rem;
+      background: var(--orange-bg);
+      padding: .55rem 1.3rem;
+      border-bottom: 1px solid var(--orange-border);
+      align-items: center;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--orange-text);
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    .subsec-hdr>div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* 5-col: Question+Action | URL/Response | Status | Updated at | Action */
+    .g-url {
+      grid-template-columns: 1.9fr 1.7fr .45fr .82fr .72fr
+    }
+
+    /* 9-col numeric: Question | FT | PT | HC | FTE | Est | Status | Updated | Action */
+    .g-num {
+      grid-template-columns: 1.6fr .58fr .58fr .58fr .58fr .4fr .48fr .78fr .68fr
+    }
+
+    /* 5-col total */
+    .g-total {
+      grid-template-columns: 1.9fr 1.7fr .45fr .82fr .72fr
+    }
+
+    /* QUESTION ROW */
+    .q-row {
+      display: grid;
+      gap: .5rem;
+      padding: .85rem 1.3rem;
+      border-bottom: 1px solid #f0f2f8;
+      align-items: start;
+      cursor: pointer;
+      transition: background .12s;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .q-row>div {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .q-row:last-child {
+      border-bottom: none
+    }
+
+    .q-row:hover {
+      background: #fafbff
+    }
+
+    .q-row.selected {
+      background: #f0fdf4
+    }
+
+
+
+    .q-row.g-url {
+      grid-template-columns: 1.9fr 1.7fr .45fr .82fr .72fr
+    }
+
+    .q-row.g-num {
+      grid-template-columns: 1.6fr .58fr .58fr .58fr .58fr .4fr .48fr .78fr .68fr
+    }
+
+    .q-row.g-total {
+      grid-template-columns: 1.9fr 1.7fr .45fr .82fr .72fr
+    }
+
+    .q-text {
+      font-size: .83rem;
+      color: var(--text);
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .sync {
+      font-size: .68rem;
+      color: #0891b2;
+      font-weight: 700
+    }
+
+    .date-cell {
+      font-size: .74rem;
+      color: var(--subtext);
+      white-space: nowrap;
+      padding-top: .15rem;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .status-cell {
+      text-align: center;
+      font-size: .95rem;
+      padding-top: .1rem;
+      white-space: nowrap
+    }
+
+    /* INPUTS */
+    .txt-input {
+      width: 100%;
+      background: #f5f7fc;
+      border: 1.5px solid transparent;
+      border-radius: 7px;
+      padding: .35rem .6rem;
+      font-size: .79rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--navy);
+      outline: none;
+      transition: border-color .14s, background .14s
+    }
+
+    .txt-input:focus {
+      border-color: var(--teal);
+      background: #fff
+    }
+
+    .url-wrap {
+      display: flex;
+      gap: .4rem;
+      align-items: center;
+      margin-top: .35rem
+    }
+
+    .url-input {
+      flex: 1;
+      background: #f5f7fc;
+      border: 1.5px solid transparent;
+      border-radius: 7px;
+      padding: .35rem .55rem;
+      font-size: .76rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--navy);
+      outline: none;
+      min-width: 0
+    }
+
+    .url-input:focus {
+      border-color: var(--teal);
+      background: #fff
+    }
+
+    /* Action buttons */
+    .btn-edit {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      border: 1.5px solid var(--teal);
+      background: #fff;
+      color: var(--teal);
+      font-size: .76rem;
+      font-weight: 600;
+      padding: .3rem .7rem;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+      transition: background .12s, color .12s;
+    }
+
+    .btn-edit:hover {
+      background: var(--teal);
+      color: #fff
+    }
+
+    .btn-submit-row {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      padding: .3rem .7rem;
+      border-radius: 7px;
+      font-size: .74rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+      transition: background .14s;
+    }
+
+    .btn-submit-row:hover {
+      background: #0f7a72
+    }
+
+    .action-cell {
+      display: flex;
+      align-items: flex-start;
+      padding-top: .05rem;
+      white-space: nowrap
+    }
+
+    .btn-open-link {
+      background: #e2e8f4;
+      color: var(--navy);
+      border: none;
+      padding: .3rem .65rem;
+      border-radius: 6px;
+      font-size: .72rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .btn-open-link:hover {
+      background: #d0d8ec
+    }
+
+    .btn-upload {
+      background: #fff;
+      color: var(--navy);
+      border: 1.5px solid var(--border);
+      padding: .32rem .8rem;
+      border-radius: 6px;
+      font-size: .75rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .or-divider {
+      text-align: center;
+      font-size: .75rem;
+      color: var(--subtext);
+      margin: .3rem 0
+    }
+
+    /* Checkboxes & radios */
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .45rem;
+      font-size: .8rem;
+      color: var(--text);
+      margin: .3rem 0;
+      line-height: 1.4
+    }
+
+    .check-item input[type=checkbox],
+    .check-item input[type=radio] {
+      accent-color: var(--teal);
+      width: 13px;
+      height: 13px;
+      margin-top: .15rem;
+      flex-shrink: 0;
+      cursor: pointer
+    }
+
+    .tick-label {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--teal);
+      margin-bottom: .3rem
+    }
+
+    .group-label {
+      font-size: .79rem;
+      color: var(--subtext);
+      margin: .5rem 0 .2rem;
+      font-weight: 600
+    }
+
+    .evidence-label {
+      font-size: .75rem;
+      color: var(--subtext);
+      margin: .45rem 0 .2rem
+    }
+
+    .rich-editor {
+      background: #f5f7fc;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      min-height: 80px;
+      padding: .5rem;
+      font-size: .78rem;
+      color: var(--text);
+      margin-bottom: .25rem
+    }
+
+    .word-count {
+      font-size: .71rem;
+      color: var(--subtext);
+      text-align: right
+    }
+
+    .na-wrap {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .79rem;
+      color: var(--subtext);
+      margin-top: .3rem
+    }
+
+    .na-wrap input {
+      accent-color: var(--teal);
+      cursor: pointer
+    }
+
+    .protected-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .15rem .5rem;
+      margin-top: .3rem
+    }
+
+    /* Definition panel */
+    .def-panel {
+      width: 268px;
+      flex-shrink: 0;
+      background: #fff;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column
+    }
+
+    .def-panel-hdr {
+      background: var(--teal);
+      color: #fff;
+      padding: .85rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: .5rem;
+      flex-shrink: 0
+    }
+
+    .def-panel-hdr-title {
+      font-size: .82rem;
+      font-weight: 700;
+      line-height: 1.4;
+      flex: 1
+    }
+
+    .def-close {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .25);
+      border: none;
+      color: #fff;
+      font-size: .78rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .def-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0
+    }
+
+    .def-tab {
+      flex: 1;
+      text-align: center;
+      padding: .52rem;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--subtext);
+      border-bottom: 2.5px solid transparent;
+      transition: color .14s, border-color .14s
+    }
+
+    .def-tab.active {
+      color: var(--teal);
+      border-bottom-color: var(--teal)
+    }
+
+    .def-body {
+      padding: 1rem;
+      font-size: .79rem;
+      color: #3a4a6b;
+      line-height: 1.62;
+      overflow-y: auto;
+      flex: 1
+    }
+
+    /* Bottom bar */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: var(--sidebar-w);
+      padding: .8rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: .7rem;
+      background: linear-gradient(to top, #f0f2f7 55%, transparent);
+      pointer-events: none;
+      z-index: 100
+    }
+
+    .bottom-bar>* {
+      pointer-events: all
+    }
+
+
+    .btn-submit-fixed {
+      background: #16a34a;
+      color: #fff;
+      border: none;
+      padding: .6rem 1.6rem;
+      border-radius: 9px;
+      font-size: .86rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .btn-submit-fixed:hover {
+      background: #15803d
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 27, 62, 0.45);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px)
+    }
+
+    .modal-overlay.show {
+      display: flex
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 20px 60px rgba(13, 27, 62, 0.25);
+      overflow: hidden;
+      animation: modalIn .25s cubic-bezier(.34, 1.56, .64, 1) both
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(.92) translateY(16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0)
+      }
+    }
+
+    .modal-hdr {
+      background: #0d9488;
+      color: #fff;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem
+    }
+
+    .modal-hdr-title {
+      font-size: 1.05rem;
+      font-weight: 700
+    }
+
+    .modal-body {
+      padding: 1.5rem 1.6rem
+    }
+
+    .modal-desc {
+      font-size: .88rem;
+      color: #3a4a6b;
+      line-height: 1.65;
+      margin-bottom: 1.2rem
+    }
+
+    .modal-checks {
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+      margin-bottom: 1rem
+    }
+
+    .modal-check-item {
+      background: #f0fdf9;
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: .75rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      font-size: .84rem;
+      color: #065f46;
+      line-height: 1.5
+    }
+
+    .modal-check-tick {
+      color: #10b981;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0
+    }
+
+    .modal-warning {
+      background: #fefce8;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: .75rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: .65rem;
+      font-size: .82rem;
+      color: #713f12;
+      line-height: 1.55;
+      margin-bottom: 1.4rem
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: .75rem;
+      justify-content: flex-end
+    }
+
+
+
+    .btn-cancel {
+      background: #fff;
+      color: #1e2d50;
+      border: 1.5px solid #e2e8f4;
+      padding: .65rem 1.5rem;
+      border-radius: 10px;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .btn-cancel:hover {
+      background: #f5f7fc
+    }
+
+    .btn-yes-submit {
+      background: #0d9488;
+      color: #fff;
+      border: none;
+      padding: .65rem 1.7rem;
+      border-radius: 10px;
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .btn-yes-submit:hover {
+      background: #0f7a72
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <a class="header-brand" href="dashboard-dept.html">
+      <div class="header-logo">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="#c9a227" stroke-width="1.6" />
+          <polygon points="20,6 23,15 32,15 25,20 28,29 20,24 12,29 15,20 8,15 17,15" fill="#c9a227" />
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">Rankings Tracker</div>
+        <div class="brand-sub">Department Portal</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <button class="bell-btn">🔔<span class="bell-dot"></span></button>
+      <div class="user-pill">
+        <div class="user-avatar">IT</div>
+        <div>
+          <div class="user-name">IT &amp; Digital Services</div>
+          <div class="user-role">Department User</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-section-label">Navigation</div>
+      <a class="nav-item" href="dashboard-dept.html"><span class="nav-icon">🏠</span> Home</a>
+      <a class="nav-item" href="ranking-forms.html"><span class="nav-icon">📋</span> My Ranking Forms</a>
+      <a class="nav-item nav-sub active" href="form-qs-sustainability.html"><span class="nav-icon">🌿</span> QS
+        Sustainability</a>
+      <a class="nav-item nav-sub" href="form-qs-wur.html"><span class="nav-icon">🏆</span> QS WUR</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">📊</span> THE WUR</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🎯</span> THE Impact</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🌱</span> Green Metric</a>
+      <a class="nav-item" href="progress.html"><span class="nav-icon">📈</span> Progress</a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
+      <div class="nav-spacer"></div>
+      <a class="nav-logout" href="login.html"><span class="nav-icon">🚪</span> Logout</a>
+    </aside>
+
+    <div class="main-wrap">
+      <div class="center">
+        <a href="ranking-forms.html" class="back-btn">← Back to My Ranking Forms</a>
+        <div class="page-title">QS Sustainability Rankings 2025</div>
+        <div class="page-sub">Complete environmental, social and governance metrics with supporting evidence</div>
+        <div class="banner banner-green">🌿 <span><strong>QS Sustainability Rankings 2025</strong> — Deadline:
+            <strong>June 15, 2025</strong>. You can refer to QS Sustainability Ranking guidelines for instructions and
+            definitions.</span></div>
+        <div class="banner banner-yellow">✦ All submissions are taken to be a true confirmation of that data point by
+          the university. Indicators marked ↔ will automatically update if they also appear in other QS ranking forms.
+        </div>
+
+        <!-- ════════════════════════════════════
+           1. ANNUAL REPORT
+      ════════════════════════════════════ -->
+        <div class="sec-block" id="s-annual">
+          <div class="sec-hdr" onclick="toggleSec('s-annual')"><span class="sec-hdr-title">Annual Report</span><span
+              class="sec-tog" id="t-s-annual">▲</span></div>
+          <div id="b-s-annual">
+            <div class="subsec">
+              <div class="subsec-hdr g-url">
+                <div>Annual Report ↔ &nbsp; Action</div>
+                <div>URL / Response</div>
+                <div>Status</div>
+                <div>Updated at</div>
+                <div>Action</div>
+              </div>
+
+              <!-- Q1 -->
+              <div class="q-row g-url"
+                onclick="selRow(this,'Does your institution publish an annual report?','An annual report for a higher education institution is an official document that summarizes financial performance, academic achievements, and strategic goals over the past year.')">
+                <div class="q-text">Does your institution publish an annual report? <span class="sync">↔</span></div>
+                <div>
+                  <div class="tick-label">Please select one option:</div>
+                  <label class="check-item"><input type="radio" name="ar1" checked> Yes</label>
+                  <label class="check-item"><input type="radio" name="ar1"> No</label>
+                </div>
+                <div class="status-cell">⏳</div>
+                <div class="date-cell">Feb 11, 2026</div>
+                <div class="action-cell"><button class="btn-submit-row">Submit</button></div>
+              </div>
+
+              <!-- Q2 -->
+              <div class="q-row g-url"
+                onclick="selRow(this,'Link to Annual Report','Please upload or provide the direct URL to your institution\'s most recent annual report. The URL must be permanent and publicly accessible.')">
+                <div class="q-text">If Yes, Please upload/provide the link to your last annual report. <span
+                    class="sync">↔</span></div>
+                <div>
+                  <div class="evidence-label">Link or PDF report:</div>
+                  <button class="btn-upload">⬆ Upload</button>
+                  <div class="or-divider">OR</div>
+                  <div class="url-wrap"><input class="url-input" type="url" placeholder="https://" /><button
+                      class="btn-open-link">↗ Open link</button></div>
+                </div>
+                <div class="status-cell">⏳</div>
+                <div class="date-cell">Feb 11, 2026</div>
+                <div class="action-cell"><button class="btn-submit-row">Submit</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════
+           2. ENVIRONMENTAL IMPACT
+      ════════════════════════════════════ -->
+        <div class="sec-block" id="s-env">
+          <div class="sec-hdr" onclick="toggleSec('s-env')"><span class="sec-hdr-title">Environmental Impact</span><span
+              class="sec-tog" id="t-s-env">▲</span></div>
+          <div id="b-s-env">
+
+            <!-- 2a Environmental Sustainability -->
+            <div class="subsec">
+              <div class="subsec-hdr g-url">
+                <div>Environmental Sustainability &nbsp; Action</div>
+                <div>URL / Response</div>
+                <div>Status</div>
+                <div>Updated At</div>
+                <div>Action</div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Link to sustainability/climate action policy','Provide the direct URL to your institution\'s published sustainability or climate action policy. Must be publicly accessible.')">
+                <div class="q-text">Link to your institution's sustainability/climate action policy.</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://sustainability.uob.edu.bh/sdg_policy/energy" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Mandatory annual dedicated training on environmental aspects of sustainability','Does the institution provide mandatory annual dedicated training on environmental aspects of sustainability for staff members (faculty and professional)? Include link to training or evidence description.')">
+                <div class="q-text">Does your institution provide mandatory annual dedicated training on environmental
+                  aspects of sustainability for staff members (faculty and professional staff members)? Please insert
+                  link to training/evidence description:</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <div class="group-label">Which of the following groups receive this training?</div>
+                  <label class="check-item"><input type="checkbox"> Students</label>
+                  <label class="check-item"><input type="checkbox"> Staff</label>
+                  <label class="check-item"><input type="checkbox" checked> Both</label>
+                  <div class="evidence-label">Please provide evidence to support your answers for the above</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 200 words</div>
+                </div>
+                <div class="status-cell">⏳</div>
+                <div class="date-cell">Apr 15, 2025</div>
+                <div class="action-cell"><button class="btn-submit-row">Submit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Assessment tool for assessing sustainability literacy of all staff','Does the institution use a formal assessment tool to measure sustainability literacy and knowledge of all staff (Academic and Professional)? If yes, is this tool Sulitest TASK?')">
+                <div class="q-text">Does your institution have an assessment tool for assessing sustainability literacy
+                  and knowledge of all staff (Academic and Professional)</div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <label class="check-item"><input type="checkbox"> If yes, is this tool Sulitest TASK?</label>
+                  <div class="evidence-label">If no, please provide evidence of the assessment tool used</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 100 words</div>
+                </div>
+                <div class="status-cell">⏳</div>
+                <div class="date-cell">Apr 15, 2025</div>
+                <div class="action-cell"><button class="btn-submit-row">Submit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Assessment tool for assessing sustainability literacy of all students','Does the institution use a formal assessment tool to measure sustainability literacy and knowledge of all students? If yes, is this tool Sulitest TASK?')">
+                <div class="q-text">Does your institution have an assessment tool for assessing sustainability literacy
+                  and knowledge of all students?</div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <label class="check-item"><input type="checkbox"> If yes, is this tool Sulitest TASK?</label>
+                  <div class="evidence-label">If no, please provide evidence of the assessment tool used</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 100 words</div>
+                </div>
+                <div class="status-cell">⏳</div>
+                <div class="date-cell">Apr 15, 2025</div>
+                <div class="action-cell"><button class="btn-submit-row">Submit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Sustainable procurement/purchasing policy','Provide the direct URL to your institution\'s sustainable procurement or purchasing policy.')">
+                <div class="q-text">Link to your institution's sustainable procurement / purchasing policy.</div>
+                <div>
+                  <label class="check-item"><input type="checkbox"> Tick if applicable</label>
+                  <div class="url-wrap"><input class="url-input" type="url" placeholder="http://" /><button
+                      class="btn-open-link">↗ Open link</button></div>
+                </div>
+                <div class="status-cell" style="color:#dc2626">✗</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-submit-row">Submit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Sustainable investment policy','Provide the direct URL to your institution\'s sustainable investment policy.')">
+                <div class="q-text">Link to your institution's sustainable investment policy.</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="http://sustainability.uob.edu.bh/sdg_events/the-ope" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Oct 27, 2023</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Student led society for sustainability','Provide the URL to a student-led society whose purpose is to engage with sustainability at your institution.')">
+                <div class="q-text">Link to student led society whose purpose is to engage with sustainability.</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/students-activities/" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#0891b2">❓</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Carbon emissions reporting (GHG Protocol)','Does your university report its carbon emissions in line with the GHG Protocol Corporate Standard or another commonly used standard? Please provide evidence of the last conducted inventory.')">
+                <div class="q-text">Does your university report its carbon emissions in line with the GHG Protocol
+                  Corporate Standard or another commonly used standard?</div>
+                <div>
+                  <div class="evidence-label">Please provide evidence of the last conducted inventory</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://uobhomesiteprod.s3.me-south-1.a" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Total Scope 1 and 2 carbon emissions','Provide the total Scope 1 and 2 carbon emissions in tCO2e (tonnes of CO2 equivalent). Also report Scope 3 estimate if available, and provide a supporting URL.')">
+                <div class="q-text">Please provide the total Scope 1 and 2 carbon emissions in tCO2e (tonnes (t) of
+                  carbon dioxide (CO2) equivalent (e)). Please see instructions.</div>
+                <div>
+                  <div class="evidence-label">Total Scope 1 &amp; 2 emissions in tCO2e</div>
+                  <input class="txt-input" type="number" placeholder="" />
+                  <div class="evidence-label">If you also report on Scope 3 emissions, please list your estimate here,
+                    in tCO2e</div>
+                  <input class="txt-input" type="number" placeholder="" />
+                  <div class="evidence-label">Please also provide a URL that supports the above figures</div>
+                  <div class="url-wrap"><input class="url-input" type="url" placeholder="http://" /><button
+                      class="btn-open-link">↗ Open link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Baseline year for GHG emissions recording','Please enter the year you began recording your emissions to GHG standards. Also provide the total Scope 1 &amp; 2 for the baseline year in tCO2e.')">
+                <div class="q-text">Please enter the year you began recording your emissions to GHG standards - see the
+                  definition tab for more detail.</div>
+                <div>
+                  <div class="evidence-label">Baseline year</div>
+                  <input class="txt-input" type="number" placeholder="e.g. 2019" style="width:120px" />
+                  <div class="evidence-label">Total Scope 1 &amp; 2 for the baseline year, in tco2e</div>
+                  <input class="txt-input" type="number" placeholder="" />
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Carbon reduction target covering Scope 1 &amp; 2 by at least 2050','Does your university have a carbon reduction target covering Scope 1 &amp; 2 emissions by at least 2050? If not, please leave the evidence field blank.')">
+                <div class="q-text">Does your university have a carbon reduction target covering Scope 1 &amp; 2
+                  emissions by at least 2050? If not, please leave the evidence field blank</div>
+                <div>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url" placeholder="http://" /><button
+                      class="btn-open-link">↗ Open link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Energy generated on campus from renewable sources','Please add the amount of energy generated in campus through renewable sources, in kWh, for the last reporting year. This includes energy consumed, stored or sold on.')">
+                <div class="q-text">Please add the amount of energy generated in campus through renewable sources, in
+                  kWh, for the last reporting year. This would include energy consumed, stored or sold on.</div>
+                <div>
+                  <div class="evidence-label">Total energy from renewables</div>
+                  <input class="txt-input" type="number" placeholder="" />
+                </div>
+                <div class="status-cell">▼</div>
+                <div class="date-cell">—</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Total campus building footprint','Please submit your total campus building footprint in square meters (sq^2). See instructions for what to include.')">
+                <div class="q-text">Please submit your total campus building footprint. See instructions.</div>
+                <div>
+                  <div class="evidence-label">Total campus building footprint in square meters (sq^2)</div>
+                  <input class="txt-input" type="number" placeholder="" />
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Year publicly committed to reaching net-zero','Please provide the year your institution has publicly committed to reaching net-zero. If you have not committed to this, please leave the evidence field blank.')">
+                <div class="q-text">Please provide the year your institution has publicly committed to reaching
+                  net-zero. If you have not committed to this, please leave the evidence field blank.</div>
+                <div>
+                  <div class="evidence-label">Year</div>
+                  <input class="txt-input" type="number" placeholder="e.g. 2023" style="width:120px" />
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url" placeholder="http://" /><button
+                      class="btn-open-link">↗ Open link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+            </div>
+
+            <!-- 2b Environmental Education -->
+            <div class="subsec">
+              <div class="subsec-hdr g-total">
+                <div>Environmental Education &nbsp; Action</div>
+                <div>URL / Response</div>
+                <div>Status</div>
+                <div>Updated At</div>
+                <div>Action</div>
+              </div>
+
+              <div class="q-row g-total"
+                onclick="selRow(this,'Courses that teach climate science and/or environmental sustainability','Do you offer courses that teach specifically on climate science and/or environmental sustainability? Tick if applicable and indicate whether they are linked to official credits or lead to a recognised qualification.')">
+                <div class="q-text">Do you offer courses that teach specifically on climate science and/or environmental
+                  sustainability?</div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <label class="check-item"><input type="checkbox" checked> We offer these courses and they are linked
+                    to officially recognised credits (e.g., European Credit Transfer and Accumulation System - ECTS, in
+                    Europe)</label>
+                  <label class="check-item"><input type="checkbox" checked> They lead to the award of an officially
+                    recognised qualification that specifically refers to climate science and environmental
+                    sustainability (e.g., MSc in Climate Change: Science, Society and Solutions at the University of
+                    Manchester in the UK; BSc in Climate Science and Adaptation at the University of Newcastle,
+                    Australia)</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url" placeholder="http://" /><button
+                      class="btn-open-link">↗ Open link</button></div>
+                </div>
+                <div></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+            </div>
+
+            <!-- 2c Environmental Research -->
+            <div class="subsec">
+              <div class="subsec-hdr"
+                style="display:grid;grid-template-columns:2fr 1.2fr .5fr .5fr .5fr .9fr;gap:.5rem;background:var(--orange-bg);padding:.5rem 1.2rem;border-bottom:1px solid var(--orange-border);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--orange-text)">
+                <div>Environmental Research</div>
+                <div>Total Number</div>
+                <div>Est.</div>
+                <div></div>
+                <div>Status</div>
+                <div>Updated At</div>
+              </div>
+
+              <div class="q-row"
+                style="display:grid;grid-template-columns:2fr 1.2fr .5fr .5fr .5fr .9fr;gap:.5rem;padding:.9rem 1.2rem;border-bottom:1px solid #f3f4f8;align-items:start;cursor:pointer;transition:background .12s"
+                onclick="selRow(this,'Research Centre focused on environmental sustainability','Does the institution have a dedicated Research Centre with a specific focus on environmental sustainability? Tick if applicable and indicate whether it has dedicated FTE staff and contributes to teaching.')">
+                <div class="q-text">Presence of a Research Centre with a specific focus on environmental sustainability
+                </div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <label class="check-item"><input type="checkbox" checked> The Research Centre has dedicated FTE
+                    staff.</label>
+                  <label class="check-item"><input type="checkbox" checked> This Research Centre contributes (through
+                    curriculum, teaching and supervision) to the teaching of undergraduate programmes and/or
+                    postgraduate programmes.</label>
+                  <div class="evidence-label">Please provide evidence or supporting statement</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 100 words</div>
+                </div>
+                <div></div>
+                <div></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════
+           3. SOCIAL IMPACT
+      ════════════════════════════════════ -->
+        <div class="sec-block" id="s-social">
+          <div class="sec-hdr" onclick="toggleSec('s-social')"><span class="sec-hdr-title">Social Impact</span><span
+              class="sec-tog" id="t-s-social">▲</span></div>
+          <div id="b-s-social">
+
+            <!-- 3a Equality -->
+            <div class="subsec">
+              <div class="subsec-hdr g-num">
+                <div>Equality</div>
+                <div>Full Time</div>
+                <div>Part Time</div>
+                <div>HC</div>
+                <div>FTE</div>
+                <div>Est.</div>
+                <div>Status</div>
+                <div>Updated At</div>
+              </div>
+
+              <div class="q-row g-num"
+                onclick="selRow(this,'Faculty Staff Male','Number of male academic faculty staff. Provide full time, part time, headcount (HC) and full-time equivalent (FTE) values.')">
+                <div class="q-text">Faculty Staff Male <span class="sync">↔</span></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell">⏳</div>
+                <div class="date-cell">Feb 11, 2026</div>
+                <div class="action-cell"><button class="btn-submit-row">Submit</button></div>
+              </div>
+
+              <div class="q-row g-num"
+                onclick="selRow(this,'Faculty Staff Female','Number of female academic faculty staff.')">
+                <div class="q-text">Faculty Staff Female <span class="sync">↔</span></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Feb 11, 2026</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-num"
+                onclick="selRow(this,'Faculty Staff Other','Faculty staff who identify as a gender other than male or female, or who have not disclosed their gender.')">
+                <div class="q-text">Faculty Staff Other <span class="sync">↔</span></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Apr 15, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-num"
+                onclick="selRow(this,'Students Female','Total number of female students enrolled at all levels.')">
+                <div class="q-text">Students Female <span class="sync">↔</span></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Feb 12, 2026</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-num"
+                onclick="selRow(this,'Students Other','Students who identify as a gender other than male or female, or who have not disclosed their gender.')">
+                <div class="q-text">Students Other <span class="sync">↔</span></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Feb 11, 2026</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-num"
+                onclick="selRow(this,'Number of members in your senior leadership team','Total number of individuals in the senior leadership team of the institution.')">
+                <div class="q-text">Number of members in your senior leadership team</div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-num"
+                onclick="selRow(this,'Number of senior leadership team members who are male','Number of the above members of your senior leadership team who are male.')">
+                <div class="q-text">Number of the above members of your senior leadership team who are male.</div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Current Equality, Diversity and Inclusion (EDI) policy','Does the institution have a current EDI policy? Please tick all that apply and list which protected characteristics are included.')">
+                <div class="q-text">Does your institution have a current Equality, Diversity and Inclusion (EDI) policy?
+                </div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> We have a current EDI policy or
+                    equivalent</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://governance.uob.edu.bh/wp-conter" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <div class="group-label">Which of the following main protected characteristics are included in this
+                    policy?</div>
+                  <div class="protected-grid">
+                    <label class="check-item"><input type="checkbox" checked> Age</label>
+                    <label class="check-item"><input type="checkbox" checked> Gender or gender reassignment</label>
+                    <label class="check-item"><input type="checkbox" checked> Disability</label>
+                    <label class="check-item"><input type="checkbox" checked> Race</label>
+                    <label class="check-item"><input type="checkbox" checked> Religion or belief</label>
+                    <label class="check-item"><input type="checkbox" checked> Sexual orientation</label>
+                    <label class="check-item"><input type="checkbox" checked> Marriage and civil partnership</label>
+                    <label class="check-item"><input type="checkbox"> Refugee and asylum seekers</label>
+                    <label class="check-item"><input type="checkbox" checked> Pregnancy and maternity</label>
+                  </div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+            </div>
+
+            <!-- 3b Disability -->
+            <div class="subsec">
+              <div class="subsec-hdr g-url">
+                <div>Disability Support &nbsp; Action</div>
+                <div>URL / Response</div>
+                <div>Status</div>
+                <div>Updated At</div>
+                <div>Action</div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Support services for people with disabilities','Does the institution offer support services for people with disabilities? Tick all that apply and provide evidence for each.')">
+                <div class="q-text">Do you offer support services for people with disabilities?</div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> Existence of Disability Support
+                    Office</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/deanship-of-stuc" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> Campus is easily
+                    accessible by people with disabilities</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 50 words</div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> Access schemes for
+                    people with disabilities such as mentoring or other targeted support</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/deanship-of-stuc" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox"> Our university offers
+                    on-campus accommodation for people with disabilities.</label>
+                  <label class="check-item" style="margin-top:.3rem"><input type="checkbox" checked> Our university has
+                    a policy or strategy that outlines the reasonable adjustments and provisions for people with
+                    disabilities, including adequate funding:</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://governance.uob.edu.bh/wp-conter" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+            </div>
+
+            <!-- 3c Social Training -->
+            <div class="subsec">
+              <div class="subsec-hdr g-url">
+                <div>Social Training &nbsp; Action</div>
+                <div>URL / Response</div>
+                <div>Status</div>
+                <div>Updated At</div>
+                <div>Action</div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Mandatory annual dedicated training on social aspects of sustainability','Does the institution provide mandatory annual dedicated training on social aspects of Sustainability for staff members (faculty and professional)? Include link to training or evidence description.')">
+                <div class="q-text">Does your institution provide mandatory annual dedicated training on social aspects
+                  of Sustainability for staff members (faculty and professional staff members)? Please insert link to
+                  training/evidence description:</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <div class="group-label">Which of the following groups receive this training?</div>
+                  <label class="check-item"><input type="checkbox"> Students</label>
+                  <label class="check-item"><input type="checkbox" checked> Staff</label>
+                  <label class="check-item"><input type="checkbox"> Both</label>
+                  <div class="evidence-label">Please provide evidence to support your answers for the above</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 200 words</div>
+                </div>
+                <div class="status-cell">⏳</div>
+                <div class="date-cell">Apr 15, 2025</div>
+                <div class="action-cell"><button class="btn-submit-row">Submit</button></div>
+              </div>
+            </div>
+
+            <!-- 3d Knowledge Exchange -->
+            <div class="subsec">
+              <div class="subsec-hdr g-total">
+                <div>Knowledge Exchange &nbsp; Action</div>
+                <div>URL / Response</div>
+                <div>Status</div>
+                <div>Updated At</div>
+                <div>Action</div>
+              </div>
+
+              <div class="q-row g-total"
+                onclick="selRow(this,'Outreach projects for the local community','Does the institution offer, manage or deliver outreach projects (education, health, information services, reading, community engagement, tutorials) for the local community?')">
+                <div class="q-text">Do you offer, manage or deliver outreach projects (education, health, information
+                  services, reading, community engagement, tutorials) for the local community?</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 200 words</div>
+                </div>
+                <div></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+            </div>
+
+            <!-- 3e Health and Wellbeing -->
+            <div class="subsec">
+              <div class="subsec-hdr g-total">
+                <div>Health and Wellbeing &nbsp; Action</div>
+                <div>URL / Response</div>
+                <div>Status</div>
+                <div>Updated At</div>
+                <div>Action</div>
+              </div>
+
+              <div class="q-row g-total"
+                onclick="selRow(this,'On-campus or local health and wellbeing services','Does the institution provide on-campus or local health and wellbeing services? Tick all that apply and provide evidence for each.')">
+                <div class="q-text">Do you provide on-campus or local health and wellbeing services?</div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> Provision of healthy and affordable food
+                    choices for all on campus</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 200 words</div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> Access to physical
+                    health-care services including information and education services</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/our-centers/heal" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> Access to sexual
+                    and reproductive health-care services including information and education services</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/sustainability/he" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> Access to mental
+                    health support for both staff and students</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/guidance-and-co" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════
+           4. GOVERNANCE
+      ════════════════════════════════════ -->
+        <div class="sec-block" id="s-gov">
+          <div class="sec-hdr" onclick="toggleSec('s-gov')"><span class="sec-hdr-title">Governance</span><span
+              class="sec-tog" id="t-s-gov">▲</span></div>
+          <div id="b-s-gov">
+            <div class="subsec">
+              <div class="subsec-hdr g-url">
+                <div>Good Governance &nbsp; Action</div>
+                <div>URL / Response</div>
+                <div>Status</div>
+                <div>Updated At</div>
+                <div>Action</div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Equality, diversity and inclusion committee, office or officer','Does the institution have an EDI committee, office or officer tasked by the administration or governing body to advise on and implement policies, programmes and trainings related to diversity, equity, inclusion and human rights on campus?')">
+                <div class="q-text">Do you have an equality, diversity and inclusion committee, office or officer (or
+                  the equivalent) tasked by the administration or governing body to advise on and implement policies,
+                  programmes and trainings related to diversity, equity, inclusion and human rights on campus?</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Existence of committee, office or
+                    officer</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://equalopportunity.uob.edu.bh/?lan" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> Existence of
+                    anti-discrimination and anti-harassment policies</label>
+                  <div class="evidence-label">Please provide Policy URLs</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://sustainability.uob.edu.bh/sdg_poli" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <div class="url-wrap" style="margin-top:.3rem"><input class="url-input" type="url"
+                      placeholder="http://" /><button class="btn-open-link">↗ Open link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Anti-bribery and corruption policy','Does the institution have a formally adopted anti-bribery and corruption policy? Tick if applicable and confirm if it has been reviewed in the last 3 years.')">
+                <div class="q-text">Do you have an Anti-bribery and corruption policy?</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Existence of anti-bribery and corruption
+                    policy or equivalent</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.bahrain.bh/wps/portal/en/BN" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> This policy has
+                    been reviewed in the last 3 years, i.e. on or after 2020 (tick if apply)</label>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Dedicated staff member for sustainable development','Does the institution have a dedicated staff member or team whose sole responsibility is to advance sustainable development at the institution?')">
+                <div class="q-text">Does your institution have a dedicated staff member or team whose sole
+                  responsibility is to advance sustainable development at the institution? If so, please provide
+                  evidence</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 200 words</div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Holistic ethical organisational culture','Does the organisation support and facilitate a holistic ethical organisational culture? Tick all that apply and provide evidence.')">
+                <div class="q-text">Does your organisation support and facilitate a holistic ethical organisational
+                  culture?</div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> Our organisation develops clear ethical
+                    values (e.g., diversity, honesty, respect, fairness) and these are enshrined in a publicly available
+                    strategic document.</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/about/" /><button class="btn-open-link">↗ Open link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> Our university
+                    provides training based on those values at all levels of the organisation.</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="http://  https://www.instagram.com/p/DA" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> There is an office
+                    for ethical compliance within our institution, with a designated official with oversight on ethical
+                    matters across the institution.</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="http://ttps://www.uob.edu.bh/our-centers" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                  <label class="check-item" style="margin-top:.5rem"><input type="checkbox" checked> Our organisation
+                    has an internal reporting system to assure the confidentiality of whistleblowers or a grievance
+                    procedure for staff concerning an employment matter</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="http://  https://governance.uob.edu.bh/w" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Student union','Does the university have a recognised student union? Tick all that apply.')">
+                <div class="q-text">Does your university have a student union?</div>
+                <div>
+                  <div class="tick-label">Please tick all answers that apply.</div>
+                  <label class="check-item"><input type="checkbox" checked> Our university has a recognised student
+                    union that represents both undergraduate and postgraduate students at university level</label>
+                  <label class="check-item"><input type="checkbox"> This student union is connected/affiliated to a
+                    wider national student union body</label>
+                  <label class="check-item"><input type="checkbox" checked> The student union elects its leadership,
+                    allowing students to vote.</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/deanship-of-stuc" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Sustainability committee','Has the institution formed a Sustainability committee? Does a member of the executive leadership team sit on this committee?')">
+                <div class="q-text">Has your institution formed a Sustainability committee?</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <label class="check-item"><input type="checkbox" checked> Does a member of your executive leadership
+                    team sit on this committee?</label>
+                  <div class="evidence-label">Please provide evidence to support your answers for the above</div>
+                  <div class="rich-editor" contenteditable="true"></div>
+                  <div class="word-count">0 words inserted &nbsp;&nbsp; Maximum 200 words</div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Financial reports published on annual basis','Does the institution publish financial reports on an annual basis? Tick all categories that apply.')">
+                <div class="q-text">Does your institution publish their financial reports on an annual basis? If
+                  applicable, please tick as appropriate:</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Income</label>
+                  <label class="check-item"><input type="checkbox" checked> Expenditure</label>
+                  <label class="check-item"><input type="checkbox"> Borrowing</label>
+                  <label class="check-item"><input type="checkbox"> Surplus</label>
+                  <div class="evidence-label">Please provide evidence</div>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.uob.edu.bh/about/annual-rep" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Decisions from annual general meeting publicly shared','Does the institution publicly share the decisions taken in your annual general meeting? Share the link.')">
+                <div class="q-text">Does your institution publicly share the decisions taken in your annual general
+                  meeting? If so, please share the link to these minutes.</div>
+                <div>
+                  <label class="check-item"><input type="checkbox" checked> Tick if applicable</label>
+                  <div class="url-wrap"><input class="url-input" type="url"
+                      value="https://www.bna.bh/en/HMKingratifies,issuesLaw4" /><button class="btn-open-link">↗ Open
+                      link</button></div>
+                </div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row g-url"
+                onclick="selRow(this,'Student representation on governing body','Does the university\'s governing body have student representation? If so, share the webpage link. If not, please leave blank.')">
+                <div class="q-text">Does your university's governing body have student representation? If so, please
+                  share the webpage link. If not, please leave blank.</div>
+                <div>
+                  <label class="check-item"><input type="checkbox"> Tick if applicable</label>
+                  <div class="url-wrap"><input class="url-input" type="url" placeholder="http://" /><button
+                      class="btn-open-link">↗ Open link</button></div>
+                </div>
+                <div class="status-cell">▼</div>
+                <div class="date-cell">—</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════
+           5. ADDITIONAL INFORMATION
+      ════════════════════════════════════ -->
+        <div class="sec-block" id="s-addl">
+          <div class="sec-hdr" onclick="toggleSec('s-addl')"><span class="sec-hdr-title">Additional
+              Information</span><span class="sec-tog" id="t-s-addl">▲</span></div>
+          <div id="b-s-addl">
+            <div class="subsec">
+              <div class="subsec-hdr"
+                style="display:grid;grid-template-columns:2.5fr 1.2fr .5fr .55fr .9fr;gap:.5rem;background:var(--orange-bg);padding:.5rem 1.2rem;border-bottom:1px solid var(--orange-border);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--orange-text)">
+                <div></div>
+                <div>Total Number</div>
+                <div>Est.</div>
+                <div>Status</div>
+                <div>Updated At</div>
+              </div>
+
+              <div class="q-row"
+                style="display:grid;grid-template-columns:2.5fr 1.2fr .5fr .55fr .9fr;gap:.5rem;padding:.9rem 1.2rem;border-bottom:1px solid #f3f4f8;align-items:center;cursor:pointer;transition:background .12s"
+                onclick="selRow(this,'Water consumption','Your institution\'s water consumption for the previous reporting year. Please use cubic meters (m3), where 1,000 L = 1 m3.')">
+                <div class="q-text">Your institution's water consumption for the previous reporting year. Please use
+                  cubic meters (m3), where 1,000 L = 1 m3.</div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div style="text-align:center"><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row"
+                style="display:grid;grid-template-columns:2.5fr 1.2fr .5fr .55fr .9fr;gap:.5rem;padding:.9rem 1.2rem;border-bottom:1px solid #f3f4f8;align-items:center;cursor:pointer;transition:background .12s"
+                onclick="selRow(this,'Energy consumption','Your institution\'s energy consumption for the previous reporting year. Please use kWh/year.')">
+                <div class="q-text">Your institution's energy consumption for the previous reporting year. Please use
+                  kWh/year.</div>
+                <div><input class="txt-input" type="number" placeholder="" /></div>
+                <div style="text-align:center"><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row"
+                style="display:grid;grid-template-columns:2.5fr 1.2fr .5fr .55fr .9fr;gap:.5rem;padding:.9rem 1.2rem;border-bottom:1px solid #f3f4f8;align-items:center;cursor:pointer;transition:background .12s"
+                onclick="selRow(this,'Scholarship covering 100% of fees','How many students receive a scholarship covering 100% of their fees? Enter N/A if not applicable.')">
+                <div class="q-text">How many students receive a scholarship covering 100% of their fees? <span
+                    class="sync">↔</span></div>
+                <div style="display:flex;gap:.4rem;align-items:center"><input class="txt-input" type="number"
+                    placeholder="" /><span style="font-size:.75rem;color:var(--subtext)">N/A</span></div>
+                <div style="text-align:center"><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+              <div class="q-row"
+                style="display:grid;grid-template-columns:2.5fr 1.2fr .5fr .55fr .9fr;gap:.5rem;padding:.9rem 1.2rem;align-items:center;cursor:pointer;transition:background .12s"
+                onclick="selRow(this,'Scholarship covering at least 50% of fees','How many students receive a scholarship covering at least 50% of fees? Enter N/A if not applicable.')">
+                <div class="q-text">How many students receive a scholarship covering at least 50% of fees? <span
+                    class="sync">↔</span></div>
+                <div style="display:flex;gap:.4rem;align-items:center"><input class="txt-input" type="number"
+                    placeholder="" /><span style="font-size:.75rem;color:var(--subtext)">N/A</span></div>
+                <div style="text-align:center"><input type="checkbox" style="accent-color:var(--teal)" /></div>
+                <div class="status-cell" style="color:#16a34a">✅</div>
+                <div class="date-cell">Aug 1, 2025</div>
+                <div class="action-cell"><button class="btn-edit">✎ Edit</button></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div style="height:4rem"></div>
+      </div>
+
+      <!-- DEFINITION PANEL -->
+      <div class="def-panel">
+        <div class="def-panel-hdr">
+          <div class="def-panel-hdr-title" id="defTitle">Click any question to see its definition</div>
+          <button class="def-close" onclick="this.closest('.def-panel').style.display='none'">✕</button>
+        </div>
+        <div class="def-tabs">
+          <div class="def-tab active" onclick="switchTab(this,'def')">Definition</div>
+          <div class="def-tab" onclick="switchTab(this,'hist')">History</div>
+        </div>
+        <div class="def-body" id="defBody">Select a question row to see its definition and guidance here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="submitModal" onclick="closeModalOnOverlay(event)">
+    <div class="modal">
+      <div class="modal-hdr"><span style="font-size:1.3rem">📋</span><span class="modal-hdr-title">Confirm
+          Submission</span></div>
+      <div class="modal-body">
+        <p class="modal-desc">You are about to save and submit all your answers for the <strong>QS Sustainability
+            Rankings 2025</strong>. Please confirm that all data is accurate and complete.</p>
+        <div class="modal-checks">
+          <div class="modal-check-item"><span class="modal-check-tick">✓</span>All data entered has been verified
+            against official institutional records.</div>
+          <div class="modal-check-item"><span class="modal-check-tick">✓</span>Any URLs provided lead to publicly
+            accessible, permanent pages.</div>
+          <div class="modal-check-item"><span class="modal-check-tick">✓</span>Supporting evidence accurately reflects
+            your institution's current practices.</div>
+        </div>
+        <div class="modal-warning"><span>⚠️</span>Submissions are taken as a true confirmation of the data by the
+          university. Deliberate submission of false data may result in ranking penalties or exclusion.</div>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-yes-submit" onclick="confirmSubmit()">Yes, Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <button class="btn-submit-fixed" onclick="openModal()">Submit</button>
+  </div>
+
+  <script>
+    // Auth check
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+
+    // Display user info
+    document.querySelector('.user-name').textContent = user.name || 'User';
+    document.querySelector('.user-role').textContent = user.role === 'admin' ? 'Administrator' : 'Department User';
+
+    const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    document.querySelector('.user-avatar').textContent = initials;
+
+    // Logout
+    document.querySelector('.nav-logout').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('http://localhost:3002/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    });
+    function toggleSec(id) { const b = document.getElementById('b-' + id); const t = document.getElementById('t-' + id); const open = b.style.display !== 'none'; b.style.display = open ? 'none' : ''; t.textContent = open ? '▼' : '▲' }
+    function selRow(row, title, def) { document.querySelectorAll('.q-row').forEach(r => r.classList.remove('selected')); row.classList.add('selected'); document.getElementById('defTitle').textContent = title; document.getElementById('defBody').innerHTML = def.split('\n\n').map(p => `<p style="margin-bottom:.65rem">${p}</p>`).join(''); document.querySelectorAll('.def-tab').forEach((t, i) => t.classList.toggle('active', i === 0)) }
+    function switchTab(tab, type) { document.querySelectorAll('.def-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); if (type === 'hist') { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions recorded for this indicator.</p>' } }
+    function openModal() { document.getElementById('submitModal').classList.add('show'); document.body.style.overflow = 'hidden' }
+    function closeModal() { document.getElementById('submitModal').classList.remove('show'); document.body.style.overflow = '' }
+    function closeModalOnOverlay(e) { if (e.target === document.getElementById('submitModal')) closeModal() }
+    function confirmSubmit() { closeModal(); const btn = document.querySelector('.btn-submit-fixed'); btn.textContent = '✓ Submitted!'; btn.style.background = '#10b981'; setTimeout(() => { btn.textContent = 'Submit'; btn.style.background = '' }, 3000) }
+
+  </script>
+</body>
+
+</html>

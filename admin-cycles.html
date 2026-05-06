@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ranking Cycles – UoB Rankings Tracker</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --navy: #0d1b3e;
+            --gold: #c9a227;
+            --teal: #0d9488;
+            --sidebar-w: 265px;
+            --header-h: 66px;
+            --light-bg: #f0f2f7;
+            --border: #e2e8f4;
+            --text: #1e2d50;
+            --subtext: #6b7c9e;
+            --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
+            --green: #16a34a;
+            --red: #dc2626;
+            --amber: #f59e0b;
+            --blue: #0891b2;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--light-bg);
+            color: var(--text);
+            overflow: hidden
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-h);
+            z-index: 200;
+            background: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem 0 0;
+            border-bottom: 2px solid var(--gold)
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0 1.2rem;
+            height: 100%;
+            gap: .75rem;
+            text-decoration: none
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            background: var(--gold);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 1rem;
+            color: var(--navy);
+            flex-shrink: 0
+        }
+
+        .brand-title {
+            font-weight: 700;
+            font-size: .9rem;
+            color: #fff;
+            line-height: 1.2
+        }
+
+        .brand-sub {
+            font-size: .6rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: .8
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem
+        }
+
+        .notif-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.1rem;
+            position: relative
+        }
+
+        .notif-dot {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--amber);
+            border: 2px solid var(--navy)
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: .7rem
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--teal);
+            color: #fff;
+            font-size: .82rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .user-name {
+            font-size: .86rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2
+        }
+
+        .user-role {
+            font-size: .68rem;
+            color: rgba(255, 255, 255, .55)
+        }
+
+        .layout {
+            display: flex;
+            margin-top: var(--header-h);
+            height: calc(100vh - var(--header-h))
+        }
+
+        .sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            background: var(--navy);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .nav-label {
+            font-size: .6rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            padding: .9rem 1.4rem .4rem
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .7rem 1.4rem;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: .84rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            transition: all .16s;
+            cursor: pointer
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, .85)
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--gold)
+        }
+
+        .nav-icon {
+            font-size: .95rem;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--amber);
+            color: var(--navy);
+            font-size: .65rem;
+            font-weight: 700;
+            padding: .15rem .5rem;
+            border-radius: 999px
+        }
+
+        .nav-spacer {
+            flex: 1
+        }
+
+        .nav-logout {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .7rem 1.4rem;
+            color: #f87171;
+            font-size: .84rem;
+            font-weight: 600;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: background .16s
+        }
+
+        .nav-logout:hover {
+            background: rgba(248, 113, 113, 0.08)
+        }
+
+        .nav-children {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height .25s ease
+        }
+
+        .nav-children.open {
+            max-height: 300px
+        }
+
+        /* Matching dept dashboard nav-sub style */
+        .nav-child {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .72rem 1.4rem .72rem 2.6rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: .82rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            transition: background .16s, color .16s
+        }
+
+        .nav-child:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, .75)
+        }
+
+        .nav-child.active {
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--gold);
+            background: rgba(255, 255, 255, .06)
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .1);
+            border-radius: 4px
+        }
+
+        .main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 1.8rem 4rem
+        }
+
+        .main::-webkit-scrollbar {
+            width: 5px
+        }
+
+        .main::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, .1);
+            border-radius: 4px
+        }
+
+        .page-hdr {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: .75rem
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--navy)
+        }
+
+        .page-sub {
+            font-size: .84rem;
+            color: var(--subtext);
+            margin-top: .2rem
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            font-size: .85rem;
+            font-weight: 700;
+            padding: .55rem 1.2rem;
+            border-radius: 9px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: background .14s
+        }
+
+        .btn-primary:hover {
+            background: #1a3060
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            font-size: .8rem;
+            font-weight: 600;
+            padding: .42rem .9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: background .14s;
+            text-decoration: none
+        }
+
+        .btn-outline:hover {
+            background: #f0f2f7
+        }
+
+        /* FILTERS */
+        .filters-bar {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap
+        }
+
+        .filter-count {
+            margin-left: auto;
+            font-size: .8rem;
+            color: var(--subtext);
+            font-weight: 500
+        }
+
+        .select-input {
+            background: #fff;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: .42rem .85rem;
+            font-size: .82rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            outline: none;
+            cursor: pointer
+        }
+
+        .select-input:focus {
+            border-color: var(--teal)
+        }
+
+        /* CYCLES GRID */
+        .cycles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1rem
+        }
+
+        .cycle-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: box-shadow .18s, transform .18s
+        }
+
+        .cycle-card:hover {
+            box-shadow: 0 6px 28px rgba(13, 27, 62, .12);
+            transform: translateY(-2px)
+        }
+
+        .cycle-card-top {
+            padding: 1.1rem 1.2rem .8rem;
+            border-bottom: 3px solid transparent
+        }
+
+        .cycle-card.qs-sus .cycle-card-top {
+            border-color: #16a34a
+        }
+
+        .cycle-card.qs-wur .cycle-card-top {
+            border-color: #c9a227
+        }
+
+        .cycle-card.the-wur .cycle-card-top {
+            border-color: #8b5cf6
+        }
+
+        .cycle-card.the-impact .cycle-card-top {
+            border-color: #f97316
+        }
+
+        .cycle-card.greenmetric .cycle-card-top {
+            border-color: #0d9488
+        }
+
+        .cycle-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: .6rem
+        }
+
+        .cycle-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            font-size: .72rem;
+            font-weight: 700;
+            padding: .22rem .7rem;
+            border-radius: 999px
+        }
+
+        .badge-qs-sus {
+            background: #f0fdf4;
+            color: #15803d
+        }
+
+        .badge-qs-wur {
+            background: #fefce8;
+            color: #8a6000
+        }
+
+        .badge-the-wur {
+            background: #f5f3ff;
+            color: #6d28d9
+        }
+
+        .badge-the-impact {
+            background: #fff7ed;
+            color: #c2410c
+        }
+
+        .badge-greenmetric {
+            background: #f0fdfa;
+            color: #0f766e
+        }
+
+        .status-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            font-size: .72rem;
+            font-weight: 700;
+            padding: .22rem .7rem;
+            border-radius: 999px
+        }
+
+        .dot-active {
+            background: #f0fdf4;
+            color: #15803d
+        }
+
+        .dot-closed {
+            background: #f1f5f9;
+            color: #64748b
+        }
+
+        .dot-draft {
+            background: #fefce8;
+            color: #b45309
+        }
+
+        .cycle-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: .35rem;
+            line-height: 1.25
+        }
+
+        .cycle-dates {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .76rem;
+            color: var(--subtext);
+            margin-bottom: .3rem
+        }
+
+        .cycle-desc {
+            font-size: .78rem;
+            color: var(--subtext);
+            line-height: 1.5;
+            margin-bottom: .7rem
+        }
+
+        .cycle-progress-row {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            margin-bottom: .2rem
+        }
+
+        .cycle-prog-label {
+            font-size: .72rem;
+            color: var(--subtext);
+            min-width: 60px
+        }
+
+        .prog-bar {
+            flex: 1;
+            height: 5px;
+            background: #e8ecf4;
+            border-radius: 999px;
+            overflow: hidden
+        }
+
+        .prog-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width .4s ease
+        }
+
+        .prog-pct {
+            font-size: .75rem;
+            font-weight: 700;
+            min-width: 32px;
+            text-align: right
+        }
+
+        .cycle-card-bottom {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            padding: .8rem 1.2rem;
+            background: #fafbfe;
+            border-top: 1px solid var(--border)
+        }
+
+        .btn-open-form {
+            flex: 1;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            padding: .5rem;
+            border-radius: 8px;
+            font-size: .8rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: background .14s;
+            text-align: center;
+            text-decoration: none;
+            display: block
+        }
+
+        .btn-open-form:hover {
+            background: #1a3060
+        }
+
+        .btn-edit-cycle {
+            background: #fff;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            padding: .5rem .9rem;
+            border-radius: 8px;
+            font-size: .8rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: .3rem
+        }
+
+        .btn-edit-cycle:hover {
+            background: #f0f2f7
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 27, 62, .45);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px)
+        }
+
+        .modal-overlay.show {
+            display: flex
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 20px 60px rgba(13, 27, 62, .25);
+            overflow: hidden;
+            animation: mIn .25s cubic-bezier(.34, 1.56, .64, 1) both
+        }
+
+        @keyframes mIn {
+            from {
+                opacity: 0;
+                transform: scale(.92) translateY(16px)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0)
+            }
+        }
+
+        .modal-hdr {
+            background: var(--navy);
+            color: #fff;
+            padding: 1.3rem 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between
+        }
+
+        .modal-hdr-title {
+            font-size: 1.1rem;
+            font-weight: 700
+        }
+
+        .modal-hdr-sub {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, .55);
+            margin-top: .2rem
+        }
+
+        .modal-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .15);
+            border: none;
+            color: #fff;
+            font-size: .85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-left: .5rem
+        }
+
+        .modal-body {
+            padding: 1.4rem 1.5rem
+        }
+
+        .form-group {
+            margin-bottom: 1rem
+        }
+
+        .form-label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+            color: var(--subtext);
+            margin-bottom: .4rem
+        }
+
+        .form-label span {
+            color: var(--red)
+        }
+
+        .form-input {
+            width: 100%;
+            background: #f5f7fc;
+            border: 1.5px solid transparent;
+            border-radius: 8px;
+            padding: .62rem .9rem;
+            font-size: .86rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--navy);
+            outline: none;
+            transition: border-color .14s, background .14s
+        }
+
+        .form-input:focus {
+            border-color: var(--teal);
+            background: #fff
+        }
+
+        .form-input[readonly] {
+            color: var(--subtext);
+            cursor: default
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .85rem
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 72px
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: .65rem;
+            padding: 0 1.5rem 1.4rem
+        }
+
+        .btn-cancel-m {
+            background: #fff;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            padding: .6rem 1.4rem;
+            border-radius: 9px;
+            font-size: .85rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .btn-cancel-m:hover {
+            background: #f5f7fc
+        }
+
+        .btn-create {
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            padding: .6rem 1.6rem;
+            border-radius: 9px;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            transition: background .14s
+        }
+
+        .btn-create:hover {
+            background: #1a3060
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <a class="header-brand" href="dashboard-admin.html">
+            <div class="brand-logo">UoB</div>
+            <div>
+                <div class="brand-title">QS Rankings Tracker</div>
+                <div class="brand-sub">Admin — University of Bahrain</div>
+            </div>
+        </a>
+        <div class="header-right">
+            <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+            <div class="user-pill">
+                <div style="text-align:right">
+                    <div class="user-name" id="adminName">Admin</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+                <div class="user-avatar" id="adminAvatar">SA</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="nav-label">Main</div>
+            <a class="nav-item" href="dashboard-admin.html"><span class="nav-icon">📊</span> Dashboard</a>
+
+            <!-- Ranking Cycles: label is a link, arrow is separate toggle -->
+            <div class="nav-item active" style="padding-right:.8rem">
+                <a href="admin-cycles.html"
+                    style="display:flex;align-items:center;gap:.85rem;flex:1;color:inherit;text-decoration:none">
+                    <span class="nav-icon">🏆</span> Ranking Cycles
+                </a>
+                <span onclick="toggleCycles()" style="cursor:pointer;font-size:.7rem;padding:.2rem .3rem"
+                    id="cyclesArrow">▴</span>
+            </div>
+            <div class="nav-children open" id="navCycles">
+                <a class="nav-child" href="admin-cycles.html?type=qs-sustainability"><span class="nav-icon">🌿</span> QS
+                    Sustainability</a>
+                <a class="nav-child" href="admin-cycles.html?type=qs-wur"><span class="nav-icon">🏆</span> QS WUR</a>
+                <a class="nav-child" href="admin-cycles.html?type=the-wur"><span class="nav-icon">📊</span> THE WUR</a>
+                <a class="nav-child" href="admin-cycles.html?type=the-impact"><span class="nav-icon">🎯</span> THE
+                    Impact</a>
+                <a class="nav-child" href="admin-cycles.html?type=greenmetric"><span class="nav-icon">🌱</span>
+                    GreenMetric</a>
+            </div>
+
+            <div class="nav-label">Monitoring</div>
+            <a class="nav-item" href="admin-progress.html"><span class="nav-icon">📈</span> Progress</a>
+            <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Reminders <span class="nav-badge">4</span></a>
+            <a class="nav-item" href="#"><span class="nav-icon">🏛️</span> Departments</a>
+            <div class="nav-spacer"></div>
+            <div class="nav-logout" onclick="logout()"><span class="nav-icon">🚪</span> Logout</div>
+        </aside>
+
+        <main class="main">
+            <div class="page-hdr">
+                <div>
+                    <div class="page-title">Ranking Cycles</div>
+                    <div class="page-sub">Create and manage ranking submission cycles</div>
+                </div>
+                <button class="btn-primary" onclick="openCreateModal()">+ New Cycle</button>
+            </div>
+
+            <div class="filters-bar">
+                <select class="select-input" id="filterType" onchange="renderCycles()">
+                    <option value="">All Types</option>
+                    <option value="QS Sustainability Rankings">QS Sustainability Rankings</option>
+                    <option value="QS World University Rankings">QS World University Rankings</option>
+                    <option value="THE World University Rankings">THE World University Rankings</option>
+                    <option value="THE Impact Rankings">THE Impact Rankings</option>
+                    <option value="UI GreenMetric">UI GreenMetric</option>
+                </select>
+                <select class="select-input" id="filterYear" onchange="renderCycles()">
+                    <option value="">All Years</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                </select>
+                <div class="filter-count" id="cycleCount">— cycles</div>
+            </div>
+
+            <div class="cycles-grid" id="cyclesGrid">
+                <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--subtext)">Loading cycles...
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- CREATE CYCLE MODAL -->
+    <div class="modal-overlay" id="createModal" onclick="closeOnOverlay(event,'createModal')">
+        <div class="modal">
+            <div class="modal-hdr">
+                <div>
+                    <div class="modal-hdr-title">Create Ranking Cycle</div>
+                    <div class="modal-hdr-sub">Set up a new data collection cycle. Once created, you'll be taken
+                        straight to the form.</div>
+                </div>
+                <button class="modal-close" onclick="closeModal('createModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Ranking Type <span>*</span></label>
+                    <select class="form-input" id="newType" onchange="updateAutoName()">
+                        <option value="">— Select Ranking Type —</option>
+                        <option value="QS Sustainability Rankings">QS Sustainability Rankings</option>
+                        <option value="QS World University Rankings">QS World University Rankings</option>
+                        <option value="THE World University Rankings">THE World University Rankings</option>
+                        <option value="THE Impact Rankings">THE Impact Rankings</option>
+                        <option value="UI GreenMetric">UI GreenMetric</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Year <span>*</span></label>
+                        <select class="form-input" id="newYear" onchange="updateAutoName()">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Auto-Generated Name</label>
+                        <input class="form-input" id="newAutoName" type="text" placeholder="Fill Type + Year"
+                            readonly />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Start Date <span>*</span></label>
+                        <input class="form-input" id="newStart" type="date" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">End / Deadline <span>*</span></label>
+                        <input class="form-input" id="newDeadline" type="date" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description / Notes (optional)</label>
+                    <textarea class="form-input form-textarea" id="newDesc"
+                        placeholder="Any notes about this cycle..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel-m" onclick="closeModal('createModal')">Cancel</button>
+                <button class="btn-create" onclick="createCycle()">Create &amp; Open Form →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (!token || user.role !== 'admin') window.location.href = 'login.html';
+
+        document.getElementById('adminName').textContent = user.name || 'Admin';
+        document.getElementById('adminAvatar').textContent = (user.name || 'AD').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+        // ── URL param → filter map ──────────────────────────────
+        const typeParamMap = {
+            'qs-sustainability': 'QS Sustainability Rankings',
+            'qs-wur': 'QS World University Rankings',
+            'the-wur': 'THE World University Rankings',
+            'the-impact': 'THE Impact Rankings',
+            'greenmetric': 'UI GreenMetric'
+        };
+
+        // Read ?type= from URL and apply filter + highlight sidebar
+        const urlParams = new URLSearchParams(window.location.search);
+        const typeParam = urlParams.get('type') || '';
+        const mappedType = typeParamMap[typeParam] || '';
+
+        if (mappedType) {
+            document.getElementById('filterType').value = mappedType;
+        }
+
+        // Highlight matching sidebar child
+        document.querySelectorAll('.nav-child').forEach(a => {
+            const url = new URL(a.href, location.href);
+            if (url.searchParams.get('type') === typeParam && typeParam) {
+                a.classList.add('active');
+            }
+        });
+
+        // ── Sidebar toggle ──────────────────────────────────────
+        function toggleCycles() {
+            const el = document.getElementById('navCycles');
+            const ar = document.getElementById('cyclesArrow');
+            el.classList.toggle('open');
+            ar.textContent = el.classList.contains('open') ? '▴' : '▾';
+        }
+
+        function logout() {
+            fetch('http://localhost:3002/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+            localStorage.clear(); window.location.href = 'login.html';
+        }
+
+        // ── Ranking type config ─────────────────────────────────
+        const rankingConfig = {
+            'QS Sustainability Rankings': { cls: 'qs-sus', badge: 'badge-qs-sus', icon: '🌿', formUrl: 'form-qs-sustainability.html' },
+            'QS World University Rankings': { cls: 'qs-wur', badge: 'badge-qs-wur', icon: '🏆', formUrl: 'form-qs-wur.html' },
+            'THE World University Rankings': { cls: 'the-wur', badge: 'badge-the-wur', icon: '📊', formUrl: '#' },
+            'THE Impact Rankings': { cls: 'the-impact', badge: 'badge-the-impact', icon: '🎯', formUrl: '#' },
+            'UI GreenMetric': { cls: 'greenmetric', badge: 'badge-greenmetric', icon: '🌱', formUrl: '#' },
+        };
+
+        const badgeShort = {
+            'QS Sustainability Rankings': 'QS Sus',
+            'QS World University Rankings': 'QS WUR',
+            'THE World University Rankings': 'THE WUR',
+            'THE Impact Rankings': 'THE Impact',
+            'UI GreenMetric': 'GreenMetric',
+        };
+        function getConfig(name) {
+            for (const [key, val] of Object.entries(rankingConfig)) {
+                if (name.toLowerCase().includes(key.toLowerCase())) return val;
+            }
+            return { cls: 'qs-wur', badge: 'badge-qs-wur', icon: '🏆', formUrl: '#' };
+        }
+
+        function getProgColor(pct) {
+            if (pct === 100) return '#16a34a';
+            if (pct >= 60) return '#0d9488';
+            if (pct >= 30) return '#f59e0b';
+            return '#dc2626';
+        }
+
+        let allCycles = [];
+
+        async function loadCycles() {
+            try {
+                const res = await fetch('http://localhost:3002/api/admin/cycles', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                allCycles = await res.json();
+                renderCycles();
+            } catch (e) {
+                document.getElementById('cyclesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--subtext)">Failed to load cycles.</div>';
+            }
+        }
+
+        function renderCycles() {
+            const typeFilter = document.getElementById('filterType').value;
+            const yearFilter = document.getElementById('filterYear').value;
+
+            const filtered = allCycles.filter(c => {
+                if (typeFilter && !c.name.toLowerCase().includes(typeFilter.toLowerCase())) return false;
+                if (yearFilter && String(c.year) !== yearFilter) return false;
+                return true;
+            });
+
+            document.getElementById('cycleCount').textContent = `${filtered.length} cycle${filtered.length !== 1 ? 's' : ''}`;
+
+            if (!filtered.length) {
+                document.getElementById('cyclesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--subtext)">No cycles found. Create one with the "+ New Cycle" button.</div>';
+                return;
+            }
+
+            document.getElementById('cyclesGrid').innerHTML = filtered.map(c => {
+                const cfg = getConfig(c.name);
+                const total = c.total_questions || 0;
+                const submitted = c.submitted_questions || 0;
+                const pct = total ? Math.round((submitted / total) * 100) : 0;
+                const statusCls = c.status === 'active' ? 'dot-active' : c.status === 'closed' ? 'dot-closed' : 'dot-draft';
+                const statusLabel = c.status === 'active' ? '● Active' : c.status === 'closed' ? '○ Closed' : '◐ Draft';
+                const startFmt = c.start_date ? new Date(c.start_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                const endFmt = c.deadline ? new Date(c.deadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                return `
+    <div class="cycle-card ${cfg.cls}">
+      <div class="cycle-card-top">
+        <div class="cycle-top-row">
+          <span class="cycle-type-badge ${cfg.badge}">${cfg.icon} ${c.name.includes('World University') ? (c.name.startsWith('QS') ? 'QS WUR' : 'THE WUR') : c.name.split(' ').slice(0, 2).join(' ')}</span>
+          <span class="status-dot ${statusCls}">${statusLabel}</span>
+        </div>
+        <div class="cycle-title">${c.name}</div>
+        <div class="cycle-dates">📅 Start: ${startFmt} &nbsp;🗓️ End: ${endFmt}</div>
+        <div class="cycle-desc">${c.description || 'No description provided.'}</div>
+        <div class="cycle-progress-row">
+          <span class="cycle-prog-label">Completion</span>
+          <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${getProgColor(pct)}"></div></div>
+          <span class="prog-pct" style="color:${getProgColor(pct)}">${pct}%</span>
+        </div>
+      </div>
+      <div class="cycle-card-bottom">
+        <a class="btn-open-form" href="admin-form.html?cycle=${c.id}">Open Form</a>
+        <button class="btn-edit-cycle" onclick="editCycle(${c.id})">✎ Edit</button>
+      </div>
+    </div>`;
+            }).join('');
+        }
+
+        function openCreateModal() {
+            document.getElementById('createModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        function closeOnOverlay(e, id) {
+            if (e.target === document.getElementById(id)) closeModal(id);
+        }
+        function updateAutoName() {
+            const type = document.getElementById('newType').value;
+            const year = document.getElementById('newYear').value;
+            document.getElementById('newAutoName').value = type && year ? `${type} ${year}` : '';
+        }
+        function editCycle(id) {
+            window.location.href = `admin-form.html?cycle=${id}&edit=true`;
+        }
+
+        async function createCycle() {
+            const type = document.getElementById('newType').value;
+            const year = document.getElementById('newYear').value;
+            const start = document.getElementById('newStart').value;
+            const deadline = document.getElementById('newDeadline').value;
+            const desc = document.getElementById('newDesc').value;
+
+            if (!type || !year || !start || !deadline) { alert('Please fill in all required fields.'); return; }
+
+            const name = `${type} ${year}`;
+            try {
+                const res = await fetch('http://localhost:3002/api/admin/cycles', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ name, year: parseInt(year), deadline, start_date: start, description: desc })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    closeModal('createModal');
+                    window.location.href = `admin-form.html?cycle=${data.id}`;
+                } else {
+                    alert(data.error || 'Failed to create cycle');
+                }
+            } catch (e) {
+                alert('Server error. Make sure the server is running.');
+            }
+        }
+
+        loadCycles();
+    </script>
+</body>
+
+</html>

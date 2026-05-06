@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Ranking Forms – UoB Rankings Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --navy: #0d1b3e;
+      --gold: #c9a227;
+      --sidebar-w: 265px;
+      --header-h: 66px;
+      --light-bg: #f0f2f7;
+      --white: #fff;
+      --border: #e2e8f4;
+      --text: #1e2d50;
+      --subtext: #6b7c9e;
+      --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light-bg);
+      color: var(--text);
+      overflow: hidden
+    }
+
+    /* ══ HEADER ══ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-h);
+      z-index: 100;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem 0 0;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0 1.2rem;
+      height: 100%;
+      gap: .85rem;
+      text-decoration: none;
+    }
+
+    .header-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .header-logo svg {
+      width: 40px;
+      height: 40px
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: .95rem;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .brand-sub {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold)
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem
+    }
+
+    .bell-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      position: relative
+    }
+
+    .bell-dot {
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      border: 2px solid var(--navy)
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: .7rem
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #16a34a;
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .user-name {
+      font-size: .86rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2
+    }
+
+    .user-role {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .6)
+    }
+
+    /* ══ LAYOUT ══ */
+    .layout {
+      display: flex;
+      margin-top: var(--header-h);
+      height: calc(100vh - var(--header-h))
+    }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.07)
+    }
+
+    .nav-section-label {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      padding: .9rem 1.4rem .5rem
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .72rem 1.4rem;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: .86rem;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      transition: background .16s, color .16s;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, .85)
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-weight: 600;
+      border-left-color: var(--gold)
+    }
+
+    .nav-icon {
+      font-size: 1rem;
+      width: 22px;
+      text-align: center;
+      flex-shrink: 0
+    }
+
+    .nav-spacer {
+      flex: 1
+    }
+
+    .nav-sub {
+      padding-left: 2.6rem;
+      font-size: .82rem;
+      color: rgba(255, 255, 255, 0.5)
+    }
+
+    .nav-sub:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, .75)
+    }
+
+    .nav-sub.active {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-weight: 600;
+      border-left-color: var(--gold)
+    }
+
+    .nav-logout {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .72rem 1.4rem;
+      cursor: pointer;
+      color: #f87171;
+      font-size: .86rem;
+      font-weight: 600;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      transition: background .16s
+    }
+
+    .nav-logout:hover {
+      background: rgba(248, 113, 113, 0.1)
+    }
+
+    /* ══ MAIN ══ */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      gap: 1.4rem;
+      padding: 1.8rem 1.4rem 1.8rem 2rem
+    }
+
+    .center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.3rem;
+      min-width: 0
+    }
+
+    /* Page title */
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: .2rem
+    }
+
+    .page-sub {
+      font-size: .88rem;
+      color: var(--subtext);
+      margin-bottom: .6rem
+    }
+
+    /* ══ RANKING FORM CARDS ══ */
+    .form-card {
+      background: #fff;
+      border-radius: 16px;
+      display: flex;
+      align-items: stretch;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      transition: box-shadow .18s, transform .16s;
+      min-height: 150px;
+    }
+
+    .form-card:hover {
+      box-shadow: 0 6px 28px rgba(13, 27, 62, 0.12);
+      transform: translateY(-2px)
+    }
+
+    .form-card-icon {
+      width: 170px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.4rem;
+      position: relative;
+      border-radius: 16px 0 0 16px;
+      overflow: hidden;
+    }
+
+    .form-card-icon::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .form-card-body {
+      flex: 1;
+      padding: 1.6rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: .7rem;
+      min-width: 0;
+      border-radius: 0 16px 16px 0;
+    }
+
+    .form-card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.3
+    }
+
+    .form-card-desc {
+      font-size: .88rem;
+      color: var(--subtext);
+      line-height: 1.6
+    }
+
+    .form-card-footer {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: .1rem
+    }
+
+    .form-due {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .82rem;
+      color: var(--subtext);
+      font-weight: 500
+    }
+
+    .btn-open {
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      padding: .42rem 1.2rem;
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background .16s, transform .12s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+
+    .btn-open:hover {
+      background: #d4aa2e;
+      transform: scale(1.03)
+    }
+
+    /* Color themes */
+    .fc-green .form-card-icon {
+      background: #f0fdf4
+    }
+
+    .fc-green .form-card-icon::after {
+      background: #10b981
+    }
+
+    .fc-green .form-card-title {
+      color: #065f46
+    }
+
+    .fc-teal .form-card-icon {
+      background: #e0f7fa
+    }
+
+    .fc-teal .form-card-icon::after {
+      background: #0891b2
+    }
+
+    .fc-purple .form-card-icon {
+      background: #f5f3ff
+    }
+
+    .fc-purple .form-card-icon::after {
+      background: #7c3aed
+    }
+
+    .fc-red .form-card-icon {
+      background: #fff0f0
+    }
+
+    .fc-red .form-card-icon::after {
+      background: #ef4444
+    }
+
+    .fc-emerald .form-card-icon {
+      background: #ecfdf5
+    }
+
+    .fc-emerald .form-card-icon::after {
+      background: #22c55e
+    }
+
+    /* ══ RIGHT COLUMN – CALENDAR ══ */
+    .right-col {
+      width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem
+    }
+
+    .calendar-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.3rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border)
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .2rem
+    }
+
+    .cal-month {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy)
+    }
+
+    .cal-sub {
+      font-size: .75rem;
+      color: var(--subtext);
+      margin-bottom: 1rem
+    }
+
+    .cal-nav {
+      display: flex;
+      gap: .3rem
+    }
+
+    .cal-nav-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: #f0f2f7;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      color: var(--subtext);
+      transition: background .16s;
+    }
+
+    .cal-nav-btn:hover {
+      background: #e2e6f0
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: .18rem;
+      text-align: center
+    }
+
+    .cal-day-name {
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--subtext);
+      padding: .3rem 0;
+      letter-spacing: .04em
+    }
+
+    .cal-day {
+      font-size: .78rem;
+      color: var(--text);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 0 auto;
+      position: relative;
+      transition: background .14s, color .14s;
+      font-weight: 500;
+    }
+
+    .cal-day:hover {
+      background: #eef1f8
+    }
+
+    .cal-day.today {
+      background: var(--navy);
+      color: #fff;
+      font-weight: 700
+    }
+
+    .cal-day.has-event::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .cal-day.today.has-event::after {
+      background: var(--gold)
+    }
+
+    .cal-day.other-month {
+      color: #c4cad8
+    }
+
+    .cal-day.weekend {
+      color: #8b99b8
+    }
+
+    .cal-day.highlight {
+      background: #fef9ec;
+      color: var(--navy);
+      font-weight: 600
+    }
+
+    /* Schedule */
+    .schedule-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1.1rem 0 .75rem
+    }
+
+    .schedule-title {
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--navy)
+    }
+
+    .see-all {
+      font-size: .78rem;
+      color: var(--navy);
+      opacity: .6;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600
+    }
+
+    .see-all:hover {
+      opacity: 1
+    }
+
+    .schedule-item {
+      display: flex;
+      gap: .85rem;
+      align-items: flex-start;
+      padding: .65rem 0;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .schedule-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0
+    }
+
+    .sched-date {
+      flex-shrink: 0;
+      text-align: center
+    }
+
+    .sched-day-num {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1
+    }
+
+    .sched-mon {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--subtext)
+    }
+
+    .sched-info {}
+
+    .sched-name {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: .22rem
+    }
+
+    .sched-desc {
+      font-size: .74rem;
+      color: var(--subtext);
+      margin-bottom: .3rem
+    }
+
+    .sched-day-pill {
+      display: inline-block;
+      background: #f0f2f7;
+      color: var(--subtext);
+      font-size: .68rem;
+      font-weight: 700;
+      padding: .16rem .55rem;
+      border-radius: 4px;
+    }
+
+    /* scrollbars */
+    .main::-webkit-scrollbar,
+    .sidebar::-webkit-scrollbar {
+      width: 5px
+    }
+
+    .main::-webkit-scrollbar-track,
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    .main::-webkit-scrollbar-thumb,
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, .12);
+      border-radius: 4px
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header class="header">
+    <a class="header-brand" href="dashboard-dept.html">
+      <div class="header-logo">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="#c9a227" stroke-width="1.6" />
+          <polygon points="20,6 23,15 32,15 25,20 28,29 20,24 12,29 15,20 8,15 17,15" fill="#c9a227" />
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">Rankings Tracker</div>
+        <div class="brand-sub">Department Portal</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <button class="bell-btn">🔔<span class="bell-dot"></span></button>
+      <div class="user-pill">
+        <div class="user-avatar">IT</div>
+        <div>
+          <div class="user-name">IT &amp; Digital Services</div>
+          <div class="user-role">Department User</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ LAYOUT ══ -->
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="nav-section-label">Navigation</div>
+      <a class="nav-item " href="dashboard-dept.html"><span class="nav-icon">🏠</span> Home</a>
+      <a class="nav-item active" href="#"><span class="nav-icon">📋</span> My Ranking Forms</a>
+      <a class="nav-item nav-sub " href="form-qs-sustainability.html"><span class="nav-icon">🌿</span> QS
+        Sustainability</a>
+      <a class="nav-item nav-sub " href="form-qs-wur.html"><span class="nav-icon">🏆</span> QS WUR</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">📊</span> THE WUR</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🎯</span> THE Impact</a>
+      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🌱</span> Green Metric</a>
+      <a class="nav-item " href="progress.html"><span class="nav-icon">📈</span> Progress</a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
+      <div class="nav-spacer"></div>
+      <a class="nav-logout" href="login.html"><span class="nav-icon">🚪</span> Logout</a>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+
+      <!-- CENTER -->
+      <div class="center">
+        <div>
+          <div class="page-title">My Ranking Forms</div>
+          <div class="page-sub">Access and complete your institutional data submissions</div>
+        </div>
+        <div id="formsList"></div>
+      </div><!-- /center -->
+
+      <!-- RIGHT COL – CALENDAR -->
+      <div class="right-col">
+        <div class="calendar-card">
+
+          <!-- Month header -->
+          <div class="cal-header">
+            <div>
+              <div class="cal-month">March 2026</div>
+            </div>
+            <div class="cal-nav">
+              <button class="cal-nav-btn">‹</button>
+              <button class="cal-nav-btn">›</button>
+            </div>
+          </div>
+          <div class="cal-sub">Submission Deadlines</div>
+
+          <!-- Day names -->
+          <div class="cal-grid">
+            <div class="cal-day-name">Mo</div>
+            <div class="cal-day-name">Tu</div>
+            <div class="cal-day-name">We</div>
+            <div class="cal-day-name">Th</div>
+            <div class="cal-day-name">Fr</div>
+            <div class="cal-day-name">Sa</div>
+            <div class="cal-day-name">Su</div>
+
+            <!-- Week 1: Mar starts on Sunday → empty Mon-Sat -->
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day">1</div>
+
+            <!-- Week 2 -->
+            <div class="cal-day">2</div>
+            <div class="cal-day">3</div>
+            <div class="cal-day">4</div>
+            <div class="cal-day">5</div>
+            <div class="cal-day">6</div>
+            <div class="cal-day weekend">7</div>
+            <div class="cal-day weekend">8</div>
+
+            <!-- Week 3 -->
+            <div class="cal-day">9</div>
+            <div class="cal-day">10</div>
+            <div class="cal-day">11</div>
+            <div class="cal-day">12</div>
+            <div class="cal-day">13</div>
+            <div class="cal-day weekend">14</div>
+            <div class="cal-day today">15</div>
+
+            <!-- Week 4 -->
+            <div class="cal-day">16</div>
+            <div class="cal-day">17</div>
+            <div class="cal-day">18</div>
+            <div class="cal-day">19</div>
+            <div class="cal-day">20</div>
+            <div class="cal-day weekend">21</div>
+            <div class="cal-day weekend">22</div>
+
+            <!-- Week 5 -->
+            <div class="cal-day">23</div>
+            <div class="cal-day">24</div>
+            <div class="cal-day">25</div>
+            <div class="cal-day">26</div>
+            <div class="cal-day">27</div>
+            <div class="cal-day weekend highlight">28</div>
+            <div class="cal-day weekend highlight">29</div>
+
+            <!-- Week 6 -->
+            <div class="cal-day highlight">30</div>
+            <div class="cal-day has-event highlight">31</div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+            <div class="cal-day other-month"></div>
+          </div>
+
+          <!-- Schedule -->
+          <div class="schedule-header">
+            <div class="schedule-title">Schedule</div>
+            <a href="#" class="see-all">See All</a>
+          </div>
+
+          <div class="schedule-item">
+            <div class="sched-date">
+              <div class="sched-day-num">31</div>
+              <div class="sched-mon">Mar</div>
+            </div>
+            <div class="sched-info">
+              <div class="sched-name">QS WUR 2025</div>
+              <div class="sched-desc">Data submission deadline</div>
+              <span class="sched-day-pill">Tue</span>
+            </div>
+          </div>
+
+          <div class="schedule-item">
+            <div class="sched-date">
+              <div class="sched-day-num">30</div>
+              <div class="sched-mon">Apr</div>
+            </div>
+            <div class="sched-info">
+              <div class="sched-name">THE WUR 2025</div>
+              <div class="sched-desc">Data submission deadline</div>
+              <span class="sched-day-pill">Thu</span>
+            </div>
+          </div>
+
+          <div class="schedule-item">
+            <div class="sched-date">
+              <div class="sched-day-num">15</div>
+              <div class="sched-mon">May</div>
+            </div>
+            <div class="sched-info">
+              <div class="sched-name">THE Impact 2025</div>
+              <div class="sched-desc">Data submission deadline</div>
+              <span class="sched-day-pill">Fri</span>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /right-col -->
+
+    </div><!-- /main -->
+  </div><!-- /layout -->
+  <script>
+    // Auth check
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!token) window.location.href = 'login.html';
+
+    // Show user info
+    document.querySelector('.user-name').textContent = user.name || 'User';
+    const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    document.querySelector('.user-avatar').textContent = initials;
+
+    // Ranking config
+    const rankingConfig = {
+      'QS Sustainability': { icon: '🌿', color: '#16a34a', bg: '#f0fdf4', formUrl: 'form.html' },
+      'QS WUR': { icon: '🏆', color: '#c9a227', bg: '#fefce8', formUrl: 'form.html' },
+      'THE WUR': { icon: '📊', color: '#8b5cf6', bg: '#f5f3ff', formUrl: 'form.html' },
+      'THE Impact': { icon: '🎯', color: '#f97316', bg: '#fff7ed', formUrl: 'form.html' },
+      'GreenMetric': { icon: '🌱', color: '#0d9488', bg: '#f0fdfa', formUrl: 'form.html' },
+    };
+
+    function getConfig(name) {
+      for (const [key, val] of Object.entries(rankingConfig)) {
+        if (name.toLowerCase().includes(key.toLowerCase())) return val;
+      }
+      return rankingConfig['QS WUR'];
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    // Load assigned ranking cycles
+    async function loadRankings() {
+      try {
+        const res = await fetch('http://localhost:3002/api/questions/my-rankings', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const rankings = await res.json();
+
+        const container = document.getElementById('formsList');
+        if (!container) return;
+
+        if (!rankings.length) {
+          container.innerHTML = `
+        <div style="text-align:center;padding:3rem;color:var(--subtext)">
+          <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
+          <div style="font-weight:600;margin-bottom:.3rem">No forms assigned yet</div>
+          <div style="font-size:.84rem">Contact your administrator to get questions assigned to your department.</div>
+        </div>`;
+          return;
+        }
+
+        container.innerHTML = rankings.map(r => {
+          const cfg = getConfig(r.name);
+          const pct = r.assigned ? Math.round((r.submitted / r.assigned) * 100) : 0;
+          const deadline = formatDate(r.deadline);
+          return `
+            <div class="form-card" onclick="window.location.href='${cfg.formUrl}?cycle=${r.id}'" style="cursor:pointer">
+              <div class="form-card-icon" style="background:${cfg.bg}">${cfg.icon}</div>
+              <div class="form-card-body">
+                <div class="form-card-title" style="color:${cfg.color}">${r.name}</div>
+                <div class="form-card-desc">${r.description || 'Complete your assigned data submissions.'}</div>
+                <div class="form-card-footer">
+                  <span class="form-due">📅 Due: ${deadline} &nbsp;·&nbsp; ${r.submitted}/${r.assigned} answered</span>
+                  <a href="${cfg.formUrl}?cycle=${r.id}" class="btn-open">Open →</a>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Logout
+    document.querySelector('.nav-logout').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('http://localhost:3002/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    });
+
+    loadRankings();
+  </script>
+</body>
+
+</html>

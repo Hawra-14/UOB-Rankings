@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ranking Form – UoB Rankings Tracker</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --navy: #0d1b3e;
+            --gold: #c9a227;
+            --teal: #0d9488;
+            --sidebar-w: 265px;
+            --header-h: 66px;
+            --light-bg: #f0f2f7;
+            --border: #e2e8f4;
+            --text: #1e2d50;
+            --subtext: #6b7c9e;
+            --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
+            --orange-bg: #fdf0d5;
+            --orange-text: #8a6000;
+            --orange-border: #f0c070;
+            --green: #16a34a;
+            --red: #dc2626;
+            --amber: #f59e0b;
+            --blue: #0891b2;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--light-bg);
+            color: var(--text);
+            overflow: hidden
+        }
+
+        /* HEADER */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-h);
+            z-index: 200;
+            background: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem 0 0;
+            border-bottom: 2px solid var(--gold)
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0 1.2rem;
+            height: 100%;
+            gap: .85rem;
+            text-decoration: none
+        }
+
+        .header-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .header-logo svg {
+            width: 40px;
+            height: 40px
+        }
+
+        .brand-title {
+            font-weight: 700;
+            font-size: .95rem;
+            color: #fff;
+            line-height: 1.2
+        }
+
+        .brand-sub {
+            font-size: .62rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--gold)
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem
+        }
+
+        .bell-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.1rem;
+            position: relative
+        }
+
+        .bell-dot {
+            position: absolute;
+            top: 6px;
+            right: 7px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f59e0b;
+            border: 2px solid var(--navy)
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: .7rem
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #16a34a;
+            color: #fff;
+            font-size: .82rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .user-name {
+            font-size: .86rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2
+        }
+
+        .user-role {
+            font-size: .72rem;
+            color: rgba(255, 255, 255, .6)
+        }
+
+        /* SIDEBAR */
+        .layout {
+            display: flex;
+            margin-top: var(--header-h);
+            height: calc(100vh - var(--header-h))
+        }
+
+        .sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            background: var(--navy);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.07)
+        }
+
+        .nav-section-label {
+            font-size: .62rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+            padding: .9rem 1.4rem .5rem
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .72rem 1.4rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: .86rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            transition: background .16s, color .16s
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, .85)
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--gold)
+        }
+
+        .nav-icon {
+            font-size: 1rem;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0
+        }
+
+        .nav-spacer {
+            flex: 1
+        }
+
+        .nav-logout {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .72rem 1.4rem;
+            color: #f87171;
+            font-size: .86rem;
+            font-weight: 600;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            transition: background .16s;
+            cursor: pointer
+        }
+
+        .nav-logout:hover {
+            background: rgba(248, 113, 113, 0.1)
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .15);
+            border-radius: 4px
+        }
+
+        /* MAIN */
+        .main-wrap {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .center {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.4rem 1.5rem 2rem;
+        }
+
+        .questions-panel-wrap {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            /* key: lets sticky work */
+        }
+
+        .sections-area {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .center::-webkit-scrollbar {
+            width: 5px
+        }
+
+        .center::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, .1);
+            border-radius: 4px
+        }
+
+        .content-panel-wrap {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* PAGE TOP */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            font-size: .8rem;
+            font-weight: 600;
+            padding: .45rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-bottom: 1.1rem;
+            transition: background .14s;
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .back-btn:hover {
+            background: #f5f7fc
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: .25rem
+        }
+
+        .page-sub {
+            font-size: .84rem;
+            color: var(--subtext);
+            margin-bottom: 1rem
+        }
+
+        .banner {
+            border-radius: 9px;
+            padding: .65rem 1rem;
+            font-size: .8rem;
+            line-height: 1.55;
+            margin-bottom: .65rem;
+            display: flex;
+            align-items: flex-start;
+            gap: .5rem
+        }
+
+        .banner-green {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #065f46
+        }
+
+        .banner-yellow {
+            background: #fefce8;
+            border: 1px solid #fde68a;
+            color: #713f12
+        }
+
+        .banner strong {
+            font-weight: 700
+        }
+
+        /* THE WUR SUBJECT TABS */
+        .subject-tabs {
+            display: flex;
+            gap: .4rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            display: none
+        }
+
+        .subject-tab {
+            padding: .38rem .85rem;
+            border-radius: 7px;
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            color: var(--subtext);
+            transition: all .15s;
+            white-space: nowrap
+        }
+
+        .subject-tab:hover {
+            background: #f0f2f7;
+            color: var(--text)
+        }
+
+        .subject-tab.active {
+            background: #8b5cf6;
+            color: #fff;
+            border-color: #8b5cf6
+        }
+
+        /* SECTION BLOCK */
+        .sec-block {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 1.1rem
+        }
+
+        .sec-hdr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .85rem 1.3rem;
+            cursor: pointer;
+            transition: background .14s;
+            background: #f8f8f8;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .sec-hdr:hover {
+            background: #f0f2f7
+        }
+
+        .sec-hdr-title {
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--navy)
+        }
+
+        .sec-tog {
+            font-size: .78rem;
+            color: var(--subtext)
+        }
+
+        /* TABLE */
+        .subsec-hdr {
+            display: grid;
+            gap: 1.2rem;
+            background: var(--orange-bg);
+            padding: .55rem 1.3rem;
+            border-bottom: 1px solid var(--orange-border);
+            align-items: center;
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--orange-text)
+        }
+
+        .g-main {
+            grid-template-columns: 2fr 1.8fr .5fr .9fr .8fr
+        }
+
+        .g-wur {
+            grid-template-columns: 2.5fr 1.4fr .5fr .9fr .8fr
+        }
+
+        .g-eq {
+            grid-template-columns: 2fr .7fr .7fr .7fr .7fr .5fr .9fr .8fr
+        }
+
+        .q-row.g-eq {
+            grid-template-columns: 2fr .7fr .7fr .7fr .7fr .5fr .9fr .8fr
+        }
+
+        .eq-input {
+            width: 100%;
+            background: #f5f7fc;
+            border: 1.5px solid transparent;
+            border-radius: 6px;
+            padding: .3rem .4rem;
+            font-size: .78rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--navy);
+            outline: none;
+            text-align: center;
+            transition: border-color .14s
+        }
+
+        .eq-input:focus {
+            border-color: var(--teal);
+            background: #fff
+        }
+
+        .q-row {
+            display: grid;
+            gap: 1.2rem;
+            padding: 1rem 1.3rem;
+            border-bottom: 1px solid #f0f2f8;
+            align-items: start;
+            cursor: pointer;
+            transition: background .12s;
+            min-width: 0;
+            overflow: hidden
+        }
+
+        .q-row:last-child {
+            border-bottom: none
+        }
+
+        .q-row:hover {
+            background: #fafbff
+        }
+
+        .q-row.selected {
+            background: #f0fdf4
+        }
+
+        .q-row.g-main {
+            grid-template-columns: 2fr 1.8fr .5fr .9fr .8fr
+        }
+
+        .q-row.g-wur {
+            grid-template-columns: 2.5fr 1.4fr .5fr .9fr .8fr
+        }
+
+        .q-text {
+            font-size: .83rem;
+            color: var(--text);
+            line-height: 1.5;
+            word-break: break-word
+        }
+
+        .kpi-num {
+            font-size: .7rem;
+            font-weight: 700;
+            color: var(--subtext);
+            background: #f0f2f7;
+            padding: .12rem .42rem;
+            border-radius: 4px;
+            margin-right: .4rem;
+            flex-shrink: 0;
+            display: inline-block
+        }
+
+        .date-cell {
+            font-size: .74rem;
+            color: var(--subtext);
+            white-space: nowrap;
+            padding-top: .15rem
+        }
+
+        .status-cell {
+            text-align: center;
+            font-size: .95rem;
+            padding-top: .1rem
+        }
+
+        /* INPUTS */
+        .txt-input {
+            width: 100%;
+            background: #f5f7fc;
+            border: 1.5px solid transparent;
+            border-radius: 7px;
+            padding: .35rem .6rem;
+            font-size: .79rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--navy);
+            outline: none;
+            transition: border-color .14s, background .14s
+        }
+
+        .txt-input:focus {
+            border-color: var(--teal);
+            background: #fff
+        }
+
+        .url-wrap {
+            display: flex;
+            gap: .4rem;
+            align-items: center;
+            margin-top: .35rem
+        }
+
+        .url-input {
+            flex: 1;
+            background: #f5f7fc;
+            border: 1.5px solid transparent;
+            border-radius: 7px;
+            padding: .35rem .55rem;
+            font-size: .76rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--navy);
+            outline: none;
+            min-width: 0
+        }
+
+        .url-input:focus {
+            border-color: var(--teal);
+            background: #fff
+        }
+
+        .btn-open-link {
+            background: #e2e8f4;
+            color: var(--navy);
+            border: none;
+            padding: .3rem .65rem;
+            border-radius: 6px;
+            font-size: .72rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .btn-open-link:hover {
+            background: #d0d8ec
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: .45rem;
+            font-size: .8rem;
+            color: var(--text);
+            margin: .3rem 0;
+            line-height: 1.4
+        }
+
+        .check-item input {
+            accent-color: var(--teal);
+            width: 13px;
+            height: 13px;
+            margin-top: .15rem;
+            flex-shrink: 0;
+            cursor: pointer
+        }
+
+        .rich-editor {
+            background: #f5f7fc;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            min-height: 70px;
+            padding: .5rem;
+            font-size: .78rem;
+            color: var(--text);
+            margin-top: .3rem;
+            outline: none
+        }
+
+        .rich-editor:focus {
+            border-color: var(--teal);
+            background: #fff
+        }
+
+        .evidence-label {
+            font-size: .75rem;
+            color: var(--subtext);
+            margin: .4rem 0 .2rem
+        }
+
+        /* STATUS LEGEND */
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+            margin-left: .55rem;
+            flex-wrap: wrap
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            font-size: .75rem;
+            color: var(--subtext);
+            font-weight: 500
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1.5px solid #d1d5db;
+            background: #fff
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1.5px solid #d1d5db;
+            background: #fff;
+            vertical-align: middle;
+            flex-shrink: 0
+        }
+
+        .status-dot.accepted {
+            background: var(--green);
+            border-color: var(--green)
+        }
+
+        .status-dot.pending {
+            background: var(--amber);
+            border-color: var(--amber)
+        }
+
+        .status-dot.rejected {
+            background: var(--red);
+            border-color: var(--red)
+        }
+
+        .status-dot.queried {
+            background: var(--blue);
+            border-color: var(--blue)
+        }
+
+        /* ACTION BUTTONS */
+        .btn-edit {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            border: 1.5px solid var(--teal);
+            background: #fff;
+            color: var(--teal);
+            font-size: .74rem;
+            font-weight: 600;
+            padding: .3rem .75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            white-space: nowrap;
+            transition: all .12s
+        }
+
+        .btn-edit:hover {
+            background: var(--teal);
+            color: #fff
+        }
+
+        .btn-submit-row {
+            background: var(--teal);
+            color: #fff;
+            border: none;
+            padding: .32rem .75rem;
+            border-radius: 6px;
+            font-size: .74rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            white-space: nowrap;
+            transition: background .14s
+        }
+
+        .btn-submit-row:hover {
+            background: #0f7a72
+        }
+
+        .action-cell {
+            display: flex;
+            align-items: flex-start;
+            padding-top: .05rem
+        }
+
+        /* DEF PANEL */
+        .def-panel {
+            width: 268px;
+            flex-shrink: 0;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+            /* sticks to top of .center scroll container */
+            max-height: calc(100vh - var(--header-h) - 2rem);
+            align-self: flex-start;
+        }
+
+        .def-panel-hdr {
+            background: var(--teal);
+            color: #fff;
+            padding: .85rem 1rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: .5rem;
+            flex-shrink: 0
+        }
+
+        .def-panel-title {
+            font-size: .82rem;
+            font-weight: 700;
+            line-height: 1.4;
+            flex: 1
+        }
+
+        .def-close {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .25);
+            border: none;
+            color: #fff;
+            font-size: .78rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .def-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0
+        }
+
+        .def-tab {
+            flex: 1;
+            text-align: center;
+            padding: .52rem;
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--subtext);
+            border-bottom: 2.5px solid transparent;
+            transition: color .14s, border-color .14s
+        }
+
+        .def-tab.active {
+            color: var(--teal);
+            border-bottom-color: var(--teal)
+        }
+
+        .def-body {
+            padding: 1rem;
+            font-size: .79rem;
+            color: #3a4a6b;
+            line-height: 1.62;
+            overflow-y: auto;
+            flex: 1
+        }
+
+        .def-body p {
+            margin-bottom: .6rem
+        }
+
+        .def-body::-webkit-scrollbar {
+            width: 4px
+        }
+
+        .def-body::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, .1);
+            border-radius: 4px
+        }
+
+        /* BOTTOM BAR */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: var(--sidebar-w);
+            padding: .8rem 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: .7rem;
+            background: linear-gradient(to top, #f0f2f7 55%, transparent);
+            pointer-events: none;
+            z-index: 100
+        }
+
+        .bottom-bar>* {
+            pointer-events: all
+        }
+
+        .btn-submit-all {
+            background: #16a34a;
+            color: #fff;
+            border: none;
+            padding: .6rem 1.6rem;
+            border-radius: 9px;
+            font-size: .86rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: background .14s
+        }
+
+        .btn-submit-all:hover {
+            background: #15803d
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 27, 62, .45);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px)
+        }
+
+        .modal-overlay.show {
+            display: flex
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 60px rgba(13, 27, 62, .25);
+            overflow: hidden;
+            animation: mIn .25s cubic-bezier(.34, 1.56, .64, 1) both
+        }
+
+        @keyframes mIn {
+            from {
+                opacity: 0;
+                transform: scale(.92) translateY(16px)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0)
+            }
+        }
+
+        .modal-hdr {
+            background: #0d9488;
+            color: #fff;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: .75rem
+        }
+
+        .modal-hdr-title {
+            font-size: 1.05rem;
+            font-weight: 700
+        }
+
+        .modal-body {
+            padding: 1.5rem 1.6rem
+        }
+
+        .modal-desc {
+            font-size: .88rem;
+            color: #3a4a6b;
+            line-height: 1.65;
+            margin-bottom: 1.2rem
+        }
+
+        .modal-checks {
+            display: flex;
+            flex-direction: column;
+            gap: .65rem;
+            margin-bottom: 1rem
+        }
+
+        .modal-check-item {
+            background: #f0fdf9;
+            border: 1px solid #a7f3d0;
+            border-radius: 10px;
+            padding: .75rem 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: .75rem;
+            font-size: .84rem;
+            color: #065f46;
+            line-height: 1.5
+        }
+
+        .modal-check-tick {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0
+        }
+
+        .modal-warning {
+            background: #fefce8;
+            border: 1px solid #fde68a;
+            border-radius: 10px;
+            padding: .75rem 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: .65rem;
+            font-size: .82rem;
+            color: #713f12;
+            line-height: 1.55;
+            margin-bottom: 1.4rem
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: .75rem;
+            justify-content: flex-end
+        }
+
+        .btn-cancel {
+            background: #fff;
+            color: #1e2d50;
+            border: 1.5px solid #e2e8f4;
+            padding: .65rem 1.5rem;
+            border-radius: 10px;
+            font-size: .88rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .btn-cancel:hover {
+            background: #f5f7fc
+        }
+
+        .btn-yes-submit {
+            background: #0d9488;
+            color: #fff;
+            border: none;
+            padding: .65rem 1.7rem;
+            border-radius: 10px;
+            font-size: .88rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .btn-yes-submit:hover {
+            background: #0f7a72
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <a class="header-brand" href="dashboard-dept.html">
+            <div class="header-logo">
+                <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" fill="none" stroke="#c9a227" stroke-width="1.6" />
+                    <polygon points="20,6 23,15 32,15 25,20 28,29 20,24 12,29 15,20 8,15 17,15" fill="#c9a227" />
+                </svg>
+            </div>
+            <div>
+                <div class="brand-title">Rankings Tracker</div>
+                <div class="brand-sub">Department Portal</div>
+            </div>
+        </a>
+        <div class="header-right">
+            <button class="bell-btn">🔔<span class="bell-dot"></span></button>
+            <div class="user-pill">
+                <div class="user-avatar" id="userAvatar">IT</div>
+                <div>
+                    <div class="user-name" id="userName">User</div>
+                    <div class="user-role">Department User</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="nav-section-label">Navigation</div>
+            <a class="nav-item" href="dashboard-dept.html"><span class="nav-icon">🏠</span> Home</a>
+            <a class="nav-item active" href="ranking-forms.html"><span class="nav-icon">📋</span> My Ranking Forms</a>
+            <a class="nav-item" href="progress.html"><span class="nav-icon">📈</span> Progress</a>
+            <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
+            <div class="nav-spacer"></div>
+            <div class="nav-logout" onclick="logout()"><span class="nav-icon">🚪</span> Logout</div>
+        </aside>
+
+        <div class="main-wrap">
+            <div class="center">
+                <a href="ranking-forms.html" class="back-btn">← Back to My Ranking Forms</a>
+                <div class="page-title" id="pageTitle">Loading...</div>
+                <div class="page-sub" id="pageSub"></div>
+                <div class="banner banner-green" id="deadlineBanner"></div>
+                <div class="banner banner-yellow">✦ All submissions are taken to be a true confirmation of that data
+                    point by the university. Indicators marked ↔ will automatically update if they also appear in other
+                    ranking forms.</div>
+                <div class="subject-tabs" id="subjectTabs"></div>
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-dot"
+                            style="background:var(--green);border-color:var(--green)"></span> Accepted</div>
+                    <div class="legend-item"><span class="legend-dot"
+                            style="background:var(--amber);border-color:var(--amber)"></span> Pending</div>
+                    <div class="legend-item"><span class="legend-dot"></span> No Status</div>
+                </div>
+
+                <!-- FLEX WRAPPER STARTS HERE — at questions level -->
+                <div class="questions-panel-wrap">
+                    <div id="sectionsContainer" class="sections-area">
+                        <div style="text-align:center;padding:3rem;color:var(--subtext)">Loading your assigned
+                            questions...</div>
+                    </div>
+
+                    <div class="def-panel">
+                        <div class="def-panel-hdr">
+                            <div class="def-panel-title" id="defTitle">Click any question to see its definition</div>
+                            <button class="def-close"
+                                onclick="this.closest('.def-panel').style.display='none'">✕</button>
+                        </div>
+                        <div class="def-tabs">
+                            <div class="def-tab active" onclick="switchTab(this,'def')">Definition</div>
+                            <div class="def-tab" onclick="switchTab(this,'hist')">History</div>
+                        </div>
+                        <div class="def-body" id="defBody">Select a question row to see its definition and guidance
+                            here.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBMIT MODAL -->
+        <div class="modal-overlay" id="submitModal" onclick="closeModalOnOverlay(event)">
+            <div class="modal">
+                <div class="modal-hdr"><span style="font-size:1.3rem">📋</span><span class="modal-hdr-title">Confirm
+                        Submission</span></div>
+                <div class="modal-body">
+                    <p class="modal-desc">You are about to submit all your answers. Please confirm that all data is
+                        accurate
+                        and complete.</p>
+                    <div class="modal-checks">
+                        <div class="modal-check-item"><span class="modal-check-tick">✓</span>All data entered has
+                            been
+                            verified against official institutional records.</div>
+                        <div class="modal-check-item"><span class="modal-check-tick">✓</span>Any URLs provided lead
+                            to
+                            publicly accessible, permanent pages.</div>
+                        <div class="modal-check-item"><span class="modal-check-tick">✓</span>Supporting evidence
+                            accurately
+                            reflects your institution's current practices.</div>
+                    </div>
+                    <div class="modal-warning"><span>⚠️</span>Submissions are taken as a true confirmation of the
+                        data by
+                        the university.</div>
+                    <div class="modal-actions">
+                        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                        <button class="btn-yes-submit" onclick="submitAll()">Yes, Submit All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn-submit-all" onclick="openModal()">Submit All</button>
+        </div>
+
+        <script>
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!token) window.location.href = 'login.html';
+
+            document.getElementById('userName').textContent = user.name || 'User';
+            document.getElementById('userAvatar').textContent = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+            const params = new URLSearchParams(window.location.search);
+            const cycleId = params.get('cycle');
+            if (!cycleId) window.location.href = 'ranking-forms.html';
+
+            const THE_WUR_SUBJECTS = [
+                'Arts and Humanities', 'Clinical and Health', 'Engineering and Technology',
+                'Computer Science', 'Life Sciences', 'Physical Sciences', 'Social Sciences',
+                'Business and Economics', 'Psychology', 'Law', 'Education'
+            ];
+
+            let isTheWur = false;
+            let allQuestions = [];
+            let currentSubject = null;
+
+            function switchTab(tab, type) {
+                document.querySelectorAll('.def-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (type === 'hist') {
+                    const taskId = window._selectedTaskId;
+                    if (!taskId) {
+                        document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>';
+                        return;
+                    }
+                    document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Loading history...</p>';
+                    fetch(`http://localhost:3002/api/submissions/history/${taskId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }).then(r => r.json()).then(rows => {
+                        if (!rows.length) {
+                            document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions recorded.</p>';
+                            return;
+                        }
+                        document.getElementById('defBody').innerHTML = rows.map(h => {
+                            const date = h.changed_at ? new Date(h.changed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                            let val = h.answer_text || (h.answer_number !== null ? String(h.answer_number) : '—');
+                            try {
+                                const parsed = JSON.parse(val);
+                                if (parsed && typeof parsed === 'object') {
+                                    if ('ft' in parsed) {
+                                        // Equality grid
+                                        val = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-top:.2rem">
+                                        <div><span style="font-size:.7rem;color:var(--subtext)">Full Time</span><div style="font-weight:600">${parsed.ft}</div></div>
+                                        <div><span style="font-size:.7rem;color:var(--subtext)">Part Time</span><div style="font-weight:600">${parsed.pt}</div></div>
+                                        <div><span style="font-size:.7rem;color:var(--subtext)">HC</span><div style="font-weight:600">${parsed.hc}</div></div>
+                                        <div><span style="font-size:.7rem;color:var(--subtext)">FTE</span><div style="font-weight:600">${parsed.fte}</div></div>
+                                    </div>`;
+                                    } else {
+                                        // Multi-item — look up labels from allQuestions
+                                        const q = (window.questions || []).find(q =>
+                                            String(q.task_id) === String(h.task_assignment_id)
+                                        );
+                                        const items = q?.items || [];
+                                        const lines = Object.entries(parsed).map(([idx, v]) => {
+                                            const item = items[parseInt(idx)];
+                                            const label = item
+                                                ? item.label.split(' — ').pop()
+                                                : `Field ${parseInt(idx) + 1}`;
+                                            if (item?.answer_type === 'checkbox') {
+                                                const ticked = v === 'yes';
+                                                return `<div style="display:flex;align-items:center;gap:.4rem;margin:.2rem 0">
+                                                <span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:3px;border:1.5px solid ${ticked ? 'var(--teal)' : '#d1d5db'};background:${ticked ? 'var(--teal)' : '#fff'};flex-shrink:0;font-size:.65rem;color:#fff">${ticked ? '✓' : ''}</span>
+                                                <span style="font-size:.8rem;color:${ticked ? 'var(--text)' : 'var(--subtext)'}">${label}</span>
+                                            </div>`;
+                                            }
+                                            if (!v) return '';
+                                            return `<div style="margin:.25rem 0">
+                                            <div style="font-size:.7rem;color:var(--subtext);margin-bottom:.1rem">${label}</div>
+                                            <div style="font-size:.8rem;color:var(--text);word-break:break-word">${v}</div>
+                                        </div>`;
+                                        }).filter(Boolean).join('');
+                                        val = lines || '—';
+                                    }
+                                }
+                            } catch (e) { }
+                            return `<div style="border-bottom:1px solid #f0f2f8;padding:.65rem 0">
+                            <div style="font-size:.72rem;color:var(--subtext);font-weight:500">${date} · ${h.changed_by_name || 'Unknown'}</div>
+                            <div style="font-size:.8rem;color:var(--text);margin-top:.35rem;line-height:1.55">${val}</div>
+                        </div>`;
+                        }).join('');
+                    }).catch(() => {
+                        document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Failed to load history.</p>';
+                    });
+                }
+            }
+
+            function selectRow(row, title, desc, taskId) {
+                document.querySelectorAll('.q-row').forEach(r => r.classList.remove('selected'));
+                row.classList.add('selected');
+                window._selectedTaskId = taskId || null;
+                document.getElementById('defTitle').textContent = title;
+                document.getElementById('defBody').innerHTML = `<p>${desc || 'No definition available.'}</p>`;
+                document.querySelectorAll('.def-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+            }
+
+            function getStatusDot(status) {
+                if (status === 'submitted' || status === 'accepted') return '<span class="status-dot accepted"></span>';
+                if (status === 'rejected') return '<span class="status-dot rejected"></span>';
+                if (status === 'queried') return '<span class="status-dot queried"></span>';
+                if (status === 'pending') return '<span class="status-dot pending"></span>';
+                return '<span class="status-dot"></span>';
+            }
+
+            function formatDate(d) {
+                if (!d) return '—';
+                try {
+                    const date = new Date(d);
+                    if (isNaN(date)) return '—';
+                    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                } catch (e) { return '—'; }
+            }
+
+            function toggleSec(id) {
+                const b = document.getElementById('body_' + id);
+                const t = document.getElementById('tog_' + id);
+                const open = b.style.display !== 'none';
+                b.style.display = open ? 'none' : '';
+                t.textContent = open ? '▼' : '▲';
+            }
+
+            function calcEq(taskId) {
+                const ft = parseFloat(document.getElementById(`item_${taskId}_0`)?.value) || 0;
+                const pt = parseFloat(document.getElementById(`item_${taskId}_1`)?.value) || 0;
+                const hcEl = document.getElementById(`item_${taskId}_2`);
+                const fteEl = document.getElementById(`item_${taskId}_3`);
+                if (hcEl) hcEl.value = ft + pt;
+                if (fteEl) fteEl.value = Math.round(ft + (pt / 3));
+            }
+
+            function updateWordCount(editorId, counterId) {
+                const el = document.getElementById(editorId);
+                const counter = document.getElementById(counterId);
+                if (!el || !counter) return;
+                const words = el.innerText.trim().split(/\s+/).filter(w => w.length > 0).length;
+                counter.textContent = `${words} words inserted`;
+            }
+
+            function initQuillEditors() {
+                document.querySelectorAll('[id^="quill_container_"]').forEach(container => {
+                    const itemId = container.id.replace('quill_container_', '');
+                    const toolbarId = 'quill_toolbar_' + itemId;
+                    const editorEl = document.getElementById(itemId);
+                    if (!editorEl || editorEl._quill) return;
+
+                    const q = window.questions?.find(q =>
+                        (q.items || []).some((_, i) => `item_${q.task_id}_${i}` === itemId)
+                    );
+                    const locked = q ? (q.task_status && q.task_status !== 'pending') : false;
+
+                    const quill = new Quill(editorEl, {
+                        modules: { toolbar: '#' + toolbarId },
+                        theme: 'snow',
+                        readOnly: locked
+                    });
+
+                    // Set existing value from the q object directly
+                    if (q) {
+                        const itemIndex = parseInt(itemId.split('_').pop());
+                        let savedVal = '';
+                        if (q.answer_text) {
+                            try {
+                                const parsed = JSON.parse(q.answer_text);
+                                if (parsed && typeof parsed === 'object') {
+                                    savedVal = parsed[itemIndex] ?? parsed[String(itemIndex)] ?? '';
+                                }
+                            } catch (e) {
+                                savedVal = q.answer_text;
+                            }
+                        }
+                        if (savedVal) quill.root.innerHTML = savedVal;
+                    }
+
+                    quill.on('text-change', () => {
+                        const wcEl = document.getElementById('wc_' + itemId);
+                        if (wcEl) {
+                            const words = quill.getText().trim().split(/\s+/).filter(w => w.length > 0).length;
+                            wcEl.textContent = `${words} words inserted`;
+                        }
+                    });
+
+                    editorEl._quill = quill;
+                });
+            }
+
+            function buildInput(q, locked = false) {
+                const taskId = q.task_id;
+                const dis = locked ? 'disabled' : '';
+                const ro = locked ? 'readonly' : '';
+                const ls = locked ? 'background:#f0f2f7;color:var(--subtext)' : '';
+                const items = q.items || [];
+
+                if (items.length > 0) {
+                    // Parse saved multi-item answers from answer_text JSON
+                    let savedItems = {};
+                    if (q.answer_text) {
+                        try {
+                            const parsed = JSON.parse(q.answer_text);
+                            if (parsed && typeof parsed === 'object' && !('ft' in parsed)) {
+                                savedItems = parsed; // keyed by index string
+                            }
+                        } catch (e) {
+                            // answer_text is a plain string (e.g. a URL) — applies to single-item questions
+                            if (items.length === 1) savedItems = { 0: q.answer_text };
+                        }
+                    }
+                    // Also fall back to answer_number for single numeric items
+                    if (items.length === 1 && items[0].answer_type === 'number' && q.answer_number != null && !savedItems[0]) {
+                        savedItems = { 0: String(q.answer_number) };
+                    }
+                    let html = '';
+                    let i = 0;
+                    while (i < items.length) {
+                        const item = items[i];
+                        const itemId = `item_${taskId}_${i}`;
+                        const existingVal = savedItems[i] ?? q.item_answers?.[i] ?? '';
+
+                        // Detect group: consecutive checkboxes sharing "X — Y" pattern
+                        if (item.answer_type === 'checkbox' && item.label.includes(' — ')) {
+                            const [groupLabel] = item.label.split(' — ');
+                            const groupItems = [];
+                            let j = i;
+                            while (j < items.length && items[j].answer_type === 'checkbox' && items[j].label.startsWith(groupLabel + ' — ')) {
+                                groupItems.push({ item: items[j], idx: j });
+                                j++;
+                            }
+                            if (groupItems.length > 1) {
+                                html += `<div class="evidence-label" style="margin-top:1.5rem;font-weight:600;color:var(--text)">${groupLabel}</div>`;
+                                groupItems.forEach(({ item: gi, idx }) => {
+                                    const gId = `item_${taskId}_${idx}`;
+                                    const optLabel = gi.label.split(' — ')[1];
+                                    const isChecked = (savedItems[idx] === 'yes' || savedItems[idx] === true) ? 'checked' : '';
+                                    html += `<label class="check-item" style="margin-top:.25rem">
+                                    <input type="checkbox" id="${gId}" ${isChecked} ${dis}> ${optLabel}
+                                </label>`;
+                                });
+                                i = j;
+                                continue;
+                            }
+                        }
+
+                        switch (item.answer_type) {
+                            case 'checkbox': {
+                                const isFirst = i === 0;
+                                const isChecked = (existingVal === 'yes' || existingVal === true) ? 'checked' : '';
+                                html += `<label class="check-item" style="margin-top:${isFirst ? '.35rem' : '.9rem'};${!isFirst ? 'padding-top:.7rem;border-top:1px solid #f0f2f8;' : ''}">
+                                <input type="checkbox" id="${itemId}" ${isChecked} ${dis}> ${item.label}
+                            </label>`;
+                                break;
+                            }
+                            case 'url':
+                                html += `<div class="evidence-label" style="margin-top:.8rem">${item.label}</div>
+                                <div class="url-wrap">
+                                    <input class="url-input" type="url" id="${itemId}" value="${existingVal}" placeholder="https://..." ${ro} style="${ls}"/>
+                                    <button class="btn-open-link" onclick="window.open(document.getElementById('${itemId}').value,'_blank')">↗ Open</button>
+                                </div>`;
+                                break;
+                            case 'number':
+                                html += `<div class="evidence-label" style="margin-top:1.5rem">${item.label}</div>
+                                <input class="txt-input" type="number" id="${itemId}" value="${existingVal}" placeholder="—" style="width:180px;${ls}" ${ro}/>`;
+                                break;
+                            case 'richtext':
+                            case 'text':
+                                html += `<div class="evidence-label" style="margin-top:1rem">${item.label}</div>
+                                <div id="quill_container_${itemId}" style="margin-top:.3rem">
+                                    <div id="quill_toolbar_${itemId}">
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                            <button class="ql-script" value="super"></button>
+                                            <button class="ql-script" value="sub"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered"></button>
+                                            <button class="ql-list" value="bullet"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-link"></button>
+                                            <button class="ql-clean"></button>
+                                            <button class="ql-undo">↩</button>
+                                            <button class="ql-redo">↪</button>
+                                        </span>
+                                    </div>
+                                    <div id="${itemId}" style="min-height:80px;font-size:.78rem;font-family:'DM Sans',sans-serif"></div>
+                                </div>
+                                ${item.max_words ? `<div style="display:flex;justify-content:space-between;font-size:.71rem;color:var(--subtext);margin-top:.2rem">
+                                    <span id="wc_${itemId}">0 words inserted</span>
+                                    <span>Maximum ${item.max_words} words</span>
+                                </div>` : ''}`;
+                                break;
+                            default:
+                                html += `<div class="evidence-label" style="margin-top:1.5rem">${item.label}</div>
+                                <input class="txt-input" type="text" id="${itemId}" value="${existingVal}" placeholder="Enter answer" ${ro} style="${ls}"/>`;
+                        }
+                        i++;
+                    }
+                    return html;
+                }
+
+                // Fallback: no items
+                const existing = q.answer_text || '';
+                const existingNum = q.answer_number || '';
+                switch (q.question_type) {
+                    case 'yesno':
+                        return `<div style="font-size:.8rem;font-weight:600;color:var(--teal);margin-bottom:.3rem">Please select one option:</div>
+                        <label class="check-item"><input type="radio" name="q${taskId}" value="yes" ${existing === 'yes' ? 'checked' : ''} ${dis}> Yes</label>
+                        <label class="check-item"><input type="radio" name="q${taskId}" value="no"  ${existing === 'no' ? 'checked' : ''} ${dis}> No</label>`;
+                    case 'url':
+                        return `<div class="evidence-label">Link or URL:</div>
+                        <div class="url-wrap">
+                            <input class="url-input" type="url" id="input_${taskId}" value="${existing}" placeholder="https://..." ${ro} style="${ls}"/>
+                            <button class="btn-open-link" onclick="window.open(document.getElementById('input_${taskId}').value,'_blank')">↗ Open</button>
+                        </div>`;
+                    case 'number':
+                        return `<div class="evidence-label">Value:</div>
+                        <input class="txt-input" type="number" id="input_${taskId}" value="${existingNum}" placeholder="Enter number" style="width:200px;${ls}" ${ro}/>`;
+                    case 'checkbox':
+                        return `<label class="check-item"><input type="checkbox" id="input_${taskId}" ${existing === 'yes' ? 'checked' : ''} ${dis}> Tick if applicable</label>`;
+                    default:
+                        return `<input class="txt-input" type="text" id="input_${taskId}" value="${existing}" placeholder="Enter answer" ${ro} style="${ls}"/>`;
+                }
+            }
+
+            function buildWurInput(q, locked = false) {
+                const taskId = q.task_id;
+                const val = q.answer_number ?? '';
+                const ls = locked ? 'background:#f0f2f7;color:var(--subtext)' : '';
+                const ro = locked ? 'readonly' : '';
+                return `<input class="txt-input" type="number" id="input_${taskId}" value="${val}" placeholder="—" style="width:150px;${ls}" ${ro}/>`;
+            }
+
+            function getAnswerValue(q) {
+                const taskId = q.task_id;
+                const items = q.items || [];
+
+                // Equality grid rows (EQ pattern: exactly 4 items ft/pt/hc/fte)
+                if (items.length === 4 && document.getElementById(`item_${taskId}_0`)) {
+                    const ftVal = parseFloat(document.getElementById(`item_${taskId}_0`)?.value) || 0;
+                    const ptVal = parseFloat(document.getElementById(`item_${taskId}_1`)?.value) || 0;
+                    const hcVal = ftVal + ptVal;
+                    const fteVal = Math.round(ftVal + (ptVal / 3));
+                    return { answer_text: JSON.stringify({ ft: ftVal, pt: ptVal, hc: hcVal, fte: fteVal }), answer_number: null };
+                }
+
+                // Multi-item questions: collect all item values into a JSON object keyed by index
+                if (items.length > 0) {
+                    const collected = {};
+                    items.forEach((item, i) => {
+                        const el = document.getElementById(`item_${taskId}_${i}`);
+                        if (!el) return;
+                        if (item.answer_type === 'checkbox') {
+                            collected[i] = el.checked ? 'yes' : 'no';
+                        } else if (item.answer_type === 'richtext' || item.answer_type === 'text') {
+                            const quill = document.getElementById(`item_${taskId}_${i}`)._quill;
+                            collected[i] = quill ? quill.root.innerHTML : (el.innerText || el.textContent || '');
+                        } else {
+                            collected[i] = el.value || '';
+                        }
+                    });
+                    // If only one item, save its value directly as answer_text
+                    const keys = Object.keys(collected);
+                    if (keys.length === 1) {
+                        const item = items[0];
+                        const val = collected[0];
+                        if (item.answer_type === 'number') return { answer_text: null, answer_number: val ? parseFloat(val) : null };
+                        return { answer_text: val || null, answer_number: null };
+                    }
+                    return { answer_text: JSON.stringify(collected), answer_number: null };
+                }
+
+                // WUR numeric
+                if (isTheWur) {
+                    const val = document.getElementById(`input_${taskId}`)?.value || null;
+                    return { answer_text: null, answer_number: val ? parseFloat(val) : null };
+                }
+
+                // Standard single-answer questions
+                switch (q.question_type) {
+                    case 'yesno': {
+                        const checked = document.querySelector(`input[name="q${taskId}"]:checked`);
+                        return { answer_text: checked ? checked.value : null, answer_number: null };
+                    }
+                    case 'url': {
+                        const val = document.getElementById(`input_${taskId}`)?.value || null;
+                        return { answer_text: val, answer_number: null };
+                    }
+                    case 'number': {
+                        const val = document.getElementById(`input_${taskId}`)?.value || null;
+                        return { answer_text: null, answer_number: val ? parseFloat(val) : null };
+                    }
+                    case 'checkbox': {
+                        const checked = document.getElementById(`input_${taskId}`)?.checked;
+                        return { answer_text: checked ? 'yes' : 'no', answer_number: null };
+                    }
+                    default: {
+                        const val = document.getElementById(`input_${taskId}`)?.value || null;
+                        return { answer_text: val, answer_number: null };
+                    }
+                }
+            }
+
+            async function submitQuestion(taskId, btn) {
+                const q = window.questions?.find(x => x.task_id === taskId);
+                if (!q) return;
+
+                const row = btn.closest('.q-row');
+                const isEqRow = row && row.classList.contains('g-eq');
+
+                // Edit mode — unlock inputs
+                if (btn.classList.contains('btn-edit')) {
+                    q.task_status = 'pending';
+                    if (row) {
+                        if (isEqRow) {
+                            row.outerHTML = window._renderEqualityRow(q);
+                        } else {
+                            if (row.children[1]) row.children[1].innerHTML = buildInput(q, false);
+                            setTimeout(initQuillEditors, 0);
+                            btn.textContent = 'Submit';
+                            btn.classList.remove('btn-edit');
+                            btn.classList.add('btn-submit-row');
+                        }
+                    }
+                    return;
+                }
+
+                const answerData = getAnswerValue(q);
+                try {
+                    btn.textContent = '...';
+                    btn.disabled = true;
+                    const res = await fetch('http://localhost:3002/api/submissions/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ task_assignment_id: taskId, answers: answerData, user_id: user.id })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        // Update answer on q object so re-render shows new value
+                        q.answer_text = answerData.answer_text;
+                        q.answer_number = answerData.answer_number;
+                        q.task_status = 'submitted';
+                        q.answer_updated_at = new Date().toISOString();
+
+                        btn.textContent = '✓ Saved';
+                        btn.style.background = '#16a34a';
+                        setTimeout(() => {
+                            btn.textContent = '✎ Edit';
+                            btn.classList.remove('btn-submit-row');
+                            btn.classList.add('btn-edit');
+                            btn.style.background = '';
+                            btn.disabled = false;
+
+                            const row = btn.closest('.q-row');
+                            if (row) {
+                                if (row.classList.contains('g-eq')) {
+                                    // Lock FT and PT inputs
+                                    [0, 1].forEach(i => {
+                                        const inp = row.querySelector(`#item_${taskId}_${i}`);
+                                        if (inp) { inp.setAttribute('readonly', ''); inp.style.background = '#f0f2f7'; inp.style.color = 'var(--subtext)'; }
+                                    });
+                                } else {
+                                    if (row.children[1]) row.children[1].innerHTML = buildInput(q, true);
+                                    setTimeout(initQuillEditors, 0);
+                                }
+                                const statusCell = row.querySelector('.status-cell');
+                                if (statusCell) statusCell.innerHTML = getStatusDot('submitted');
+                                const dateCell = row.querySelector('.date-cell');
+                                if (dateCell) dateCell.textContent = formatDate(q.answer_updated_at);
+                            }
+                        }, 1500);
+                    } else {
+                        btn.textContent = 'Submit';
+                        btn.disabled = false;
+                        alert(data.error || 'Failed to save');
+                    }
+                } catch (e) {
+                    btn.textContent = 'Submit';
+                    btn.disabled = false;
+                    alert('Server error');
+                }
+            }
+
+            function groupByTheme(questions) {
+                const groups = {};
+                const order = [];
+                questions.forEach(q => {
+                    const key = q.theme || 'General';
+                    if (!groups[key]) { groups[key] = []; order.push(key); }
+                    groups[key].push(q);
+                });
+                return order.map(k => [k, groups[k]]);
+            }
+
+            const SUB_SECTION_MAP = {
+                'AR': 'Annual Report',
+                'ES': 'Environmental Sustainability',
+                'EE': 'Environmental Education',
+                'ER': 'Environmental Research',
+                'EQ': 'Equality',
+                'DI': 'Equality',
+                'ST': 'Equality',
+                'KE': 'Knowledge Exchange',
+                'HW': 'Health and Wellbeing',
+                'GG': 'Good Governance',
+                'AI': 'Additional Information'
+            };
+
+            const THEMES_WITH_SUBSECTIONS = ['Environmental Impact', 'Social Impact', 'Governance'];
+
+            function getSubSection(code) {
+                const prefix = (code || '').match(/^[A-Z]+/)?.[0] || '';
+                return SUB_SECTION_MAP[prefix] || null;
+            }
+
+            function renderStandardQuestions(questions) {
+                const groups = groupByTheme(questions);
+                const container = document.getElementById('sectionsContainer');
+
+                if (!questions.length) {
+                    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)">
+                    <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
+                    <div style="font-weight:600">No questions assigned to your department for this ranking.</div>
+                </div>`;
+                    window.questions = [];
+                    return;
+                }
+
+                function renderRow(q) {
+                    const locked = q.task_status && q.task_status !== 'pending';
+                    const updatedAt = formatDate(q.answer_updated_at);
+                    const inputHtml = buildInput(q, locked);
+                    const actionBtn = locked
+                        ? `<button class="btn-edit" onclick="submitQuestion(${q.task_id}, this)">✎ Edit</button>`
+                        : `<button class="btn-submit-row" onclick="submitQuestion(${q.task_id}, this)">Submit</button>`;
+                    return `<div class="q-row g-main" onclick="selectRow(this,'${q.title.replace(/'/g, "\\'")}','${(q.description || '').replace(/'/g, "\\'")}',${q.task_id || 'null'})">
+                    <div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div>
+                    <div style="padding-top:.1rem">${inputHtml}</div>
+                    <div class="status-cell">${getStatusDot(q.task_status)}</div>
+                    <div class="date-cell">${updatedAt}</div>
+                    <div class="action-cell">${actionBtn}</div>
+                </div>`;
+                }
+
+                function renderEqualityRow(q) {
+                    const locked = q.task_status && q.task_status !== 'pending';
+                    const updatedAt = formatDate(q.answer_updated_at);
+                    const tid = q.task_id;
+                    const ls = locked ? 'background:#f0f2f7;color:var(--subtext)' : '';
+                    const ro = locked ? 'readonly' : '';
+
+                    // Parse saved values
+                    let savedFT = '', savedPT = '', savedHC = '', savedFTE = '';
+                    if (q.answer_text) {
+                        try {
+                            const p = JSON.parse(q.answer_text);
+                            savedFT = p.ft ?? '';
+                            savedPT = p.pt ?? '';
+                            savedHC = p.hc ?? '';
+                            savedFTE = p.fte ?? '';
+                        } catch (e) { }
+                    }
+
+                    const ftInput = `<div><input class="eq-input" type="number" id="item_${tid}_0" placeholder="—" value="${savedFT}"  style="${ls}" ${ro} oninput="calcEq(${tid})"/></div>`;
+                    const ptInput = `<div><input class="eq-input" type="number" id="item_${tid}_1" placeholder="—" value="${savedPT}"  style="${ls}" ${ro} oninput="calcEq(${tid})"/></div>`;
+                    const hcInput = `<div><input class="eq-input" type="number" id="item_${tid}_2" placeholder="—" value="${savedHC}"  style="background:#f0f2f7;color:var(--subtext)" readonly/></div>`;
+                    const fteInput = `<div><input class="eq-input" type="number" id="item_${tid}_3" placeholder="—" value="${savedFTE}" style="background:#f0f2f7;color:var(--subtext)" readonly/></div>`;
+
+                    const actionBtn = locked
+                        ? `<button class="btn-edit"       onclick="submitQuestion(${tid}, this)">✎ Edit</button>`
+                        : `<button class="btn-submit-row" onclick="submitQuestion(${tid}, this)">Submit</button>`;
+
+                    return `<div class="q-row g-eq" onclick="selectRow(this,'${q.title.replace(/'/g, "\\'")}','${(q.description || '').replace(/'/g, "\\'")}',${tid || 'null'})">
+                    <div class="q-text">${q.title}</div>
+                    ${ftInput}${ptInput}${hcInput}${fteInput}
+                    <div class="status-cell">${getStatusDot(q.task_status)}</div>
+                    <div class="date-cell">${updatedAt}</div>
+                    <div class="action-cell">${actionBtn}</div>
+                </div>`;
+                }
+                // Expose globally so submitQuestion can call it
+                window._renderEqualityRow = renderEqualityRow;
+                let secIdx = 0;
+                container.innerHTML = groups.map(([theme, qs]) => {
+                    const sid = 'sec_' + (secIdx++);
+                    const answered = qs.filter(q => q.task_status && q.task_status !== 'pending').length;
+                    const useSubSections = THEMES_WITH_SUBSECTIONS.includes(theme);
+                    let rowsHtml = '';
+
+                    if (useSubSections) {
+                        const subGroups = {};
+                        const subOrder = [];
+                        qs.forEach(q => {
+                            const sub = getSubSection(q.code) || theme;
+                            if (!subGroups[sub]) { subGroups[sub] = []; subOrder.push(sub); }
+                            subGroups[sub].push(q);
+                        });
+
+                        subOrder.forEach(sub => {
+                            const subQs = subGroups[sub];
+                            const isEquality = sub === 'Equality';
+
+                            if (isEquality) {
+                                const gridQs = subQs.filter(q => /^EQ[1-9]$/.test(q.code) && (q.items || []).length === 4);
+                                const normalQs = subQs.filter(q => !(/^EQ[1-9]$/.test(q.code) && (q.items || []).length === 4));
+
+                                if (gridQs.length) {
+                                    rowsHtml += `<div class="subsec-hdr g-eq">
+                                    <div>Equality</div>
+                                    <div>Full Time</div><div>Part Time</div>
+                                    <div>HC</div><div>FTE</div>
+                                    <div>Status</div><div>Updated At</div><div>Action</div>
+                                </div>`;
+                                    gridQs.forEach(q => { rowsHtml += renderEqualityRow(q); });
+                                }
+
+                                if (normalQs.length) {
+                                    rowsHtml += `<div class="subsec-hdr g-main">
+                                    <div>Equality</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div>
+                                </div>`;
+                                    normalQs.forEach(q => { rowsHtml += renderRow(q); });
+                                }
+                            } else {
+                                rowsHtml += `<div class="subsec-hdr g-main">
+                                <div>${sub}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div>
+                            </div>`;
+                                subQs.forEach(q => { rowsHtml += renderRow(q); });
+                            }
+                        });
+                    } else {
+                        // No sub-sections: use theme name as column header
+                        rowsHtml = `<div class="subsec-hdr g-main">
+                        <div>${theme}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div>
+                    </div>`;
+                        qs.forEach(q => { rowsHtml += renderRow(q); });
+                    }
+
+                    return `<div class="sec-block">
+                    <div class="sec-hdr" onclick="toggleSec('${sid}')">
+                        <span class="sec-hdr-title">${theme}</span>
+                        <div style="display:flex;align-items:center;gap:.6rem">
+                            <span style="font-size:.75rem;color:var(--subtext)">${answered}/${qs.length} answered</span>
+                            <span class="sec-tog" id="tog_${sid}">▲</span>
+                        </div>
+                    </div>
+                    <div id="body_${sid}">${rowsHtml}</div>
+                </div>`;
+                }).join('');
+
+                window.questions = questions;
+                setTimeout(initQuillEditors, 0);
+            }
+
+            function renderWurSections(questions) {
+                const container = document.getElementById('sectionsContainer');
+
+                if (!questions.length) {
+                    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)">
+                    <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
+                    <div style="font-weight:600">No THE WUR questions assigned to your department yet.</div>
+                </div>`;
+                    window.questions = [];
+                    return;
+                }
+
+                const subjectMap = {};
+                questions.forEach(q => {
+                    const s = q.theme || 'General';
+                    if (!subjectMap[s]) subjectMap[s] = [];
+                    subjectMap[s].push(q);
+                });
+
+                Object.values(subjectMap).forEach(qs =>
+                    qs.sort((a, b) => (a.kpi_index || 0) - (b.kpi_index || 0))
+                );
+
+                const orderedSubjects = THE_WUR_SUBJECTS.filter(s => subjectMap[s]);
+
+                let secIdx = 0;
+                container.innerHTML = orderedSubjects.map(subject => {
+                    const qs = subjectMap[subject];
+                    const sid = 'wur_' + (secIdx++);
+                    const answered = qs.filter(q => q.task_status && q.task_status !== 'pending').length;
+
+                    const rows = qs.map((q, i) => {
+                        const locked = q.task_status && q.task_status !== 'pending';
+                        const updatedAt = formatDate(q.answer_updated_at);
+                        const inputHtml = buildWurInput(q, locked);
+                        const actionBtn = locked
+                            ? `<button class="btn-edit" onclick="submitQuestion(${q.task_id}, this)">✎ Edit</button>`
+                            : `<button class="btn-submit-row" onclick="submitQuestion(${q.task_id}, this)">Submit</button>`;
+                        return `<div class="q-row g-wur" onclick="selectRow(this,'${q.title.replace(/'/g, "\\'")}','${(q.description || '').replace(/'/g, "\\'")}',${q.task_id || 'null'})">
+                        <div class="q-text"><span class="kpi-num">${q.kpi_index || (i + 1)}</span>${q.title}</div>
+                        <div>${inputHtml}</div>
+                        <div class="status-cell">${getStatusDot(q.task_status)}</div>
+                        <div class="date-cell">${updatedAt}</div>
+                        <div class="action-cell">${actionBtn}</div>
+                    </div>`;
+                    }).join('');
+
+                    return `<div class="sec-block">
+                    <div class="sec-hdr" onclick="toggleSec('${sid}')">
+                        <span class="sec-hdr-title">${subject}</span>
+                        <div style="display:flex;align-items:center;gap:.6rem">
+                            <span style="font-size:.75rem;color:var(--subtext)">${answered}/${qs.length} answered</span>
+                            <span class="sec-tog" id="tog_${sid}">▲</span>
+                        </div>
+                    </div>
+                    <div id="body_${sid}">
+                        <div class="subsec-hdr g-wur">
+                            <div>KPI</div><div>Value</div><div>Status</div><div>Updated At</div><div>Action</div>
+                        </div>
+                        ${rows}
+                    </div>
+                </div>`;
+                }).join('');
+
+                window.questions = questions;
+                setTimeout(initQuillEditors, 0);
+            }
+
+            async function loadCycleInfo() {
+                try {
+                    const res = await fetch(`http://localhost:3002/api/questions/my-rankings`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    const cycle = data.find(r => String(r.id) === String(cycleId));
+                    if (cycle) {
+                        document.getElementById('pageTitle').textContent = cycle.name;
+                        document.title = cycle.name + ' – UoB Rankings Tracker';
+                        document.getElementById('pageSub').textContent = `Complete your assigned questions with supporting evidence`;
+                        document.getElementById('deadlineBanner').innerHTML = `🗓️ <strong>${cycle.name}</strong> — Deadline: <strong>${formatDate(cycle.deadline)}</strong>`;
+                        const name = (cycle.name || '').toLowerCase();
+                        isTheWur = name.includes('the world') || name.includes('the wur') || name.includes('times higher');
+                    }
+                } catch (e) { console.error(e); }
+            }
+
+            async function loadQuestions() {
+                try {
+                    const res = await fetch(`http://localhost:3002/api/questions/my-questions/${cycleId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    allQuestions = await res.json();
+                } catch (e) {
+                    document.getElementById('sectionsContainer').innerHTML =
+                        '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions. Make sure the server is running.</div>';
+                    return;
+                }
+
+                const hasKpiIndex = allQuestions.some(q => q.kpi_index != null);
+                if (hasKpiIndex) isTheWur = true;
+
+                if (isTheWur) {
+                    renderWurSections(allQuestions);
+                } else {
+                    renderStandardQuestions(allQuestions);
+                }
+            }
+
+            function openModal() { document.getElementById('submitModal').classList.add('show'); document.body.style.overflow = 'hidden'; }
+            function closeModal() { document.getElementById('submitModal').classList.remove('show'); document.body.style.overflow = ''; }
+            function closeModalOnOverlay(e) { if (e.target === document.getElementById('submitModal')) closeModal(); }
+
+            async function submitAll() {
+                closeModal();
+                const qs = window.questions || [];
+                let success = 0;
+                for (const q of qs) {
+                    const answerData = getAnswerValue(q);
+                    try {
+                        const res = await fetch('http://localhost:3002/api/submissions/submit', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({ task_assignment_id: q.task_id, answers: answerData, user_id: user.id })
+                        });
+                        const data = await res.json();
+                        if (data.success) success++;
+                    } catch (e) { console.error(e); }
+                }
+                alert(`✓ ${success}/${qs.length} questions submitted successfully!`);
+                loadQuestions();
+            }
+
+            function logout() {
+                fetch('http://localhost:3002/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+
+            Promise.all([loadCycleInfo(), loadQuestions()]);
+        </script>
+</body>
+
+</html>

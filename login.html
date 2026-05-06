@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In – UoB Rankings Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --navy: #0d1b3e;
+      --navy-mid: #183065;
+      --gold: #c9a227;
+      --light-bg: #f4f6fb;
+      --border: #dde3f0;
+      --input-bg: #eef1f9;
+      --text: #1e2d50;
+      --subtext: #6b7c9e;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden
+    }
+
+    .page {
+      display: flex;
+      height: 100vh;
+      width: 100vw
+    }
+
+    .left {
+      flex: 0 0 60%;
+      position: relative;
+      background: #1a2a1a;
+      overflow: hidden;
+    }
+
+    .left-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.1) 40%, rgba(13, 20, 10, 0.65) 100%),
+        url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/University_of_Bahrain_aerial.jpg/1280px-University_of_Bahrain_aerial.jpg') center/cover no-repeat;
+    }
+
+    .left-bg-fallback {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1a2e1a 0%, #2d4a1e 30%, #3d5a28 55%, #c9a227 100%);
+      opacity: 0;
+    }
+
+    .back-link {
+      position: absolute;
+      top: 1.6rem;
+      left: 1.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color .18s;
+    }
+
+    .back-link:hover {
+      color: #fff
+    }
+
+    .back-link::before {
+      content: '←';
+      font-size: .9rem
+    }
+
+    .left-content {
+      position: absolute;
+      bottom: 3rem;
+      left: 2.5rem;
+      right: 2.5rem;
+    }
+
+    .left-label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .9rem;
+    }
+
+    .left-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: .9rem;
+    }
+
+    .left-desc {
+      font-size: .9rem;
+      color: rgba(255, 255, 255, 0.72);
+      line-height: 1.65;
+      max-width: 440px;
+    }
+
+    .right {
+      flex: 1;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 3rem;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .collapse-btn {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 50px;
+      background: #e8ecf4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px 0 0 6px;
+      cursor: pointer;
+      color: #6b7c9e;
+      font-size: .8rem;
+      border: 1px solid var(--border);
+      border-right: none;
+    }
+
+    .form-wrap {
+      width: 100%;
+      max-width: 360px
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 1.8rem
+    }
+
+    .logo-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--navy);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: .75rem;
+    }
+
+    .logo-circle svg {
+      width: 46px;
+      height: 46px
+    }
+
+    .logo-name {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: .35rem
+    }
+
+    .form-sub {
+      font-size: .85rem;
+      color: var(--subtext);
+      margin-bottom: 1.6rem
+    }
+
+    .role-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .6rem;
+      margin-bottom: 1.5rem
+    }
+
+    .role-card {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: .9rem .8rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .18s, background .18s, box-shadow .18s;
+      background: #fff;
+    }
+
+    .role-card.active {
+      border-color: var(--navy);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(13, 27, 62, 0.08);
+    }
+
+    .role-icon {
+      font-size: 1.4rem;
+      margin-bottom: .3rem;
+      display: block
+    }
+
+    .role-name {
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--navy);
+      display: block
+    }
+
+    .role-sub {
+      font-size: .72rem;
+      color: var(--subtext);
+      display: block
+    }
+
+    .field {
+      margin-bottom: 1.1rem
+    }
+
+    .field label {
+      display: block;
+      font-size: .83rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: .45rem
+    }
+
+    .field-input-wrap {
+      position: relative
+    }
+
+    .field input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1.5px solid transparent;
+      border-radius: 10px;
+      padding: .75rem 1rem;
+      font-size: .9rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--navy);
+      outline: none;
+      transition: border-color .18s, background .18s;
+    }
+
+    .field input:focus {
+      border-color: var(--navy-mid);
+      background: #fff
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: .85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--subtext);
+      font-size: 1rem;
+      padding: .25rem;
+      transition: color .16s;
+    }
+
+    .eye-btn:hover {
+      color: var(--navy)
+    }
+
+    .btn-signin {
+      width: 100%;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      padding: .85rem;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      transition: background .18s, transform .12s;
+      margin-bottom: 1.4rem;
+    }
+
+    .btn-signin:hover {
+      background: #1a2f5a;
+      transform: translateY(-1px)
+    }
+
+    .demo-box {
+      background: #f8f9fc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .demo-box::-webkit-scrollbar {
+      width: 4px
+    }
+
+    .demo-box::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px
+    }
+
+    .demo-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--subtext);
+      margin-bottom: .75rem;
+    }
+
+    .demo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .55rem .65rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .16s;
+      border: 1px solid transparent;
+      margin-bottom: .4rem;
+    }
+
+    .demo-row:last-child {
+      margin-bottom: 0
+    }
+
+    .demo-row:hover {
+      background: #eef1f9;
+      border-color: var(--border)
+    }
+
+    .demo-name {
+      font-size: .83rem;
+      font-weight: 600;
+      color: var(--navy)
+    }
+
+    .demo-creds {
+      font-size: .72rem;
+      color: var(--subtext);
+      font-family: monospace;
+      margin-left: .5rem;
+      display: block;
+    }
+
+    .demo-badge {
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .22rem .6rem;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    .badge-admin {
+      background: #fdf0c8;
+      color: #8a6a00
+    }
+
+    .badge-dept {
+      background: #e0f0ff;
+      color: #1a5a9a
+    }
+
+    /* SUCCESS SCREEN */
+    .success-screen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #183065;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .success-screen.show {
+      display: flex
+    }
+
+    .success-check {
+      font-size: 3rem;
+      color: var(--navy);
+      margin-bottom: 1.4rem;
+      animation: popIn .4s cubic-bezier(.34, 1.56, .64, 1) both;
+    }
+
+    .success-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .5rem;
+      animation: fadeUp .4s .2s ease both;
+    }
+
+    .success-bar {
+      width: 80px;
+      height: 2.5px;
+      background: var(--gold);
+      border-radius: 2px;
+      animation: fadeUp .4s .3s ease both;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(.4)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1)
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      20%,
+      60% {
+        transform: translateX(-6px)
+      }
+
+      40%,
+      80% {
+        transform: translateX(6px)
+      }
+    }
+
+    .shake {
+      animation: shake .35s ease
+    }
+
+    .error-msg {
+      font-size: .78rem;
+      color: #dc2626;
+      margin-top: .5rem;
+      display: none
+    }
+
+    .error-msg.show {
+      display: block
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-check">✓</div>
+    <div class="success-name" id="successName">Welcome, Admin</div>
+    <div class="success-bar"></div>
+  </div>
+
+  <!-- MAIN PAGE -->
+  <div class="page">
+
+    <!-- LEFT: Campus photo -->
+    <div class="left">
+      <div class="left-bg"></div>
+      <div class="left-bg-fallback"></div>
+      <a href="index.html" class="back-link">Back to Rankings Info</a>
+      <div class="left-content">
+        <div class="left-label">Welcome to University of Bahrain</div>
+        <h1 class="left-title">Rankings Data<br>Collection Portal</h1>
+        <p class="left-desc">The road to excellence starts at UoB. One centralised system for QS, THE, and GreenMetric
+          ranking submissions across all departments.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: Sign in form -->
+    <div class="right">
+      <div class="collapse-btn">›</div>
+
+      <div class="form-wrap">
+
+        <!-- Logo -->
+        <div class="logo-area">
+          <div class="logo-circle">
+            <svg viewBox="0 0 46 46" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="23" cy="23" r="20" fill="none" stroke="#c9a227" stroke-width="1.8" />
+              <polygon points="23,7 26,17 37,17 29,23 32,33 23,27 14,33 17,23 9,17 20,17" fill="#c9a227"
+                opacity=".95" />
+            </svg>
+          </div>
+          <div class="logo-name">University of Bahrain</div>
+        </div>
+
+        <!-- Title -->
+        <div class="form-title">Sign in</div>
+        <div class="form-sub">Enter your department credentials to access the portal.</div>
+
+        <!-- Role toggle -->
+        <div class="role-toggle">
+          <div class="role-card active" id="roleAdmin" onclick="selectRole('admin')">
+            <span class="role-icon">🛡️</span>
+            <span class="role-name">Admin</span>
+            <span class="role-sub">Full access</span>
+          </div>
+          <div class="role-card" id="roleDept" onclick="selectRole('dept')">
+            <span class="role-icon">🏛️</span>
+            <span class="role-name">Department</span>
+            <span class="role-sub">Submit data</span>
+          </div>
+        </div>
+
+        <!-- Fields -->
+        <div class="field">
+          <label for="email">Email</label>
+          <div class="field-input-wrap">
+            <input type="email" id="email" placeholder="Enter email" autocomplete="email" />
+          </div>
+          <div class="error-msg" id="userError">Please enter your email.</div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="field-input-wrap">
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+            <button class="eye-btn" onclick="togglePwd()" type="button" id="eyeBtn">👁</button>
+          </div>
+          <div class="error-msg" id="passError">Incorrect username or password.</div>
+        </div>
+
+        <!-- Sign In button -->
+        <button class="btn-signin" onclick="doSignIn()">Sign In &nbsp;→</button>
+
+        <!-- Demo accounts -->
+        <div class="demo-box">
+          <div class="demo-label">Demo Accounts — Click to Fill</div>
+
+          <div class="demo-row" onclick="fillDemo('admin@uob.edu.bh','admin123','Dr. Ali','admin')">
+            <div>
+              <span class="demo-name">Dr. Ali</span>
+              <span class="demo-creds">admin@uob.edu.bh / admin123</span>
+            </div>
+            <span class="demo-badge badge-admin">Admin</span>
+          </div>
+
+          <div class="demo-row" onclick="fillDemo('financial@uob.edu.bh','financial123','Financial Resources','dept')">
+            <div>
+              <span class="demo-name">Financial Resources</span>
+              <span class="demo-creds">financial@uob.edu.bh / financial123</span>
+            </div>
+            <span class="demo-badge badge-dept">Dept</span>
+          </div>
+
+          <div class="demo-row"
+            onclick="fillDemo('communication@uob.edu.bh','communication123','Communication Directorate','dept')">
+            <div>
+              <span class="demo-name">Communication Directorate</span>
+              <span class="demo-creds">communication@uob.edu.bh / communication123</span>
+            </div>
+            <span class="demo-badge badge-dept">Dept</span>
+          </div>
+
+          <div class="demo-row"
+            onclick="fillDemo('admission@uob.edu.bh','admission123','Admission & Registration','dept')">
+            <div>
+              <span class="demo-name">Admission &amp; Registration</span>
+              <span class="demo-creds">admission@uob.edu.bh / admission123</span>
+            </div>
+            <span class="demo-badge badge-dept">Dept</span>
+          </div>
+
+          <div class="demo-row" onclick="fillDemo('alumni@uob.edu.bh','alumni123','Alumni Affairs Directorate','dept')">
+            <div>
+              <span class="demo-name">Alumni Affairs Directorate</span>
+              <span class="demo-creds">alumni@uob.edu.bh / alumni123</span>
+            </div>
+            <span class="demo-badge badge-dept">Dept</span>
+          </div>
+
+          <div class="demo-row" onclick="fillDemo('hr@uob.edu.bh','hr123','Human Resources Directorate','dept')">
+            <div>
+              <span class="demo-name">Human Resources Directorate</span>
+              <span class="demo-creds">hr@uob.edu.bh / hr123</span>
+            </div>
+            <span class="demo-badge badge-dept">Dept</span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function selectRole(role) {
+      document.getElementById('roleAdmin').classList.toggle('active', role === 'admin');
+      document.getElementById('roleDept').classList.toggle('active', role === 'dept');
+    }
+
+    function togglePwd() {
+      const pwd = document.getElementById('password');
+      const btn = document.getElementById('eyeBtn');
+      if (pwd.type === 'password') { pwd.type = 'text'; btn.textContent = '🙈'; }
+      else { pwd.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    function fillDemo(email, password, name, role) {
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = password;
+      selectRole(role);
+    }
+
+    async function doSignIn() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      document.getElementById('userError').classList.remove('show');
+      document.getElementById('passError').classList.remove('show');
+
+      if (!email) { document.getElementById('userError').classList.add('show'); return; }
+      if (!password) { document.getElementById('passError').classList.add('show'); return; }
+
+      try {
+        const res = await fetch('http://localhost:3002/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          document.getElementById('passError').textContent = data.error || 'Invalid email or password.';
+          document.getElementById('passError').classList.add('show');
+          document.querySelector('.form-wrap').classList.add('shake');
+          setTimeout(() => document.querySelector('.form-wrap').classList.remove('shake'), 400);
+          return;
+        }
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        document.getElementById('successName').textContent = 'Welcome, ' + data.user.name;
+        document.getElementById('successScreen').classList.add('show');
+
+        setTimeout(() => {
+          if (data.user.role === 'admin') {
+            window.location.href = 'dashboard-admin.html';
+          } else {
+            window.location.href = 'dashboard-dept.html';
+          }
+        }, 2200);
+
+      } catch (err) {
+        document.getElementById('passError').textContent = 'Could not connect to server.';
+        document.getElementById('passError').classList.add('show');
+      }
+    }
+  </script>
+</body>
+
+</html>
