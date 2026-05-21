@@ -34,6 +34,7 @@
             --orange-text: #8a6000;
             --orange-border: #f0c070;
             --green: #16a34a;
+            --maron: #972121;
             --red: #dc2626;
             --amber: #f59e0b;
             --blue: #0891b2;
@@ -186,30 +187,31 @@
             border-right: 1px solid rgba(255, 255, 255, 0.07)
         }
 
-        .nav-section-label {
-            font-size: .62rem;
+        .nav-label {
+            font-size: .6rem;
             font-weight: 700;
             letter-spacing: .14em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.35);
-            padding: .9rem 1.4rem .5rem
+            color: rgba(255, 255, 255, 0.3);
+            padding: .9rem 1.4rem .4rem
         }
 
         .nav-item {
             display: flex;
             align-items: center;
             gap: .85rem;
-            padding: .72rem 1.4rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: .86rem;
+            padding: .7rem 1.4rem;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: .84rem;
             font-weight: 500;
             border-left: 3px solid transparent;
             text-decoration: none;
-            transition: background .16s, color .16s
+            transition: all .16s;
+            cursor: pointer
         }
 
         .nav-item:hover {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
             color: rgba(255, 255, 255, .85)
         }
 
@@ -221,10 +223,20 @@
         }
 
         .nav-icon {
-            font-size: 1rem;
-            width: 22px;
+            font-size: .95rem;
+            width: 20px;
             text-align: center;
             flex-shrink: 0
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--amber);
+            color: var(--navy);
+            font-size: .65rem;
+            font-weight: 700;
+            padding: .15rem .5rem;
+            border-radius: 999px
         }
 
         .nav-spacer {
@@ -235,9 +247,9 @@
             display: flex;
             align-items: center;
             gap: .85rem;
-            padding: .72rem 1.4rem;
+            padding: .7rem 1.4rem;
             color: #f87171;
-            font-size: .86rem;
+            font-size: .84rem;
             font-weight: 600;
             border-left: 3px solid transparent;
             cursor: pointer;
@@ -245,7 +257,43 @@
         }
 
         .nav-logout:hover {
-            background: rgba(248, 113, 113, 0.1)
+            background: rgba(248, 113, 113, 0.08)
+        }
+
+        .nav-children {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height .25s ease
+        }
+
+        .nav-children.open {
+            max-height: 300px
+        }
+
+        /* Matching dept dashboard nav-sub style */
+        .nav-child {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .72rem 1.4rem .72rem 2.6rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: .82rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            transition: background .16s, color .16s
+        }
+
+        .nav-child:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, .75)
+        }
+
+        .nav-child.active {
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--gold);
+            background: rgba(255, 255, 255, .06)
         }
 
         .sidebar::-webkit-scrollbar {
@@ -253,7 +301,7 @@
         }
 
         .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, .15);
+            background: rgba(255, 255, 255, .1);
             border-radius: 4px
         }
 
@@ -336,8 +384,8 @@
             align-items: center;
             gap: .4rem;
             background: #fff;
-            color: var(--red);
-            border: 1.5px solid var(--red);
+            color: var(--maron);
+            border: 1.5px solid var(--maron);
             font-size: .78rem;
             font-weight: 700;
             padding: .44rem 1rem;
@@ -348,7 +396,7 @@
         }
 
         .btn-close-form:hover {
-            background: var(--red);
+            background: var(--maron);
             color: #fff
         }
 
@@ -368,6 +416,7 @@
             font-weight: 700;
             padding: .44rem 1rem;
             border-radius: 8px;
+            border: 2px solid var(--teal);
             cursor: pointer;
             font-family: 'DM Sans', sans-serif;
             transition: background .14s
@@ -378,11 +427,13 @@
         }
 
         .btn-edit-mode.active {
-            background: #dc2626
+            background: var(--red);
+            border: 2px solid var(--red);
         }
 
         .btn-edit-mode.active:hover {
-            background: #b91c1c
+            background: var(--maron);
+            border: 2px solid var(--maron);
         }
 
         .page-title {
@@ -461,7 +512,13 @@
             border: 1.5px solid #d1d5db;
             background: #fff;
             vertical-align: middle;
-            flex-shrink: 0
+            flex-shrink: 0;
+            margin-bottom: 5px;
+        }
+
+        .status-dot.submitted {
+            background: var(--blue);
+            border-color: var(--blue)
         }
 
         .status-dot.accepted {
@@ -574,11 +631,16 @@
             text-transform: uppercase;
             color: var(--orange-text);
             padding: .5rem 1rem;
-            text-align: left;
+            text-align: center;
             background: var(--orange-bg);
             border-bottom: 1px solid var(--orange-border);
             white-space: nowrap;
             overflow: hidden
+        }
+
+        .q-table th:first-child {
+            white-space: normal;
+            text-align: left;
         }
 
         .q-table td {
@@ -586,7 +648,7 @@
             border-bottom: 1px solid #f3f4f8;
             font-size: .82rem;
             color: var(--text);
-            vertical-align: top;
+            /* vertical-align: top; */
             overflow: hidden
         }
 
@@ -611,10 +673,8 @@
         }
 
         .kpi-num {
-            font-size: .7rem;
+            font-size: .9rem;
             font-weight: 700;
-            color: var(--subtext);
-            background: #f0f2f7;
             padding: .12rem .42rem;
             border-radius: 4px;
             margin-right: .4rem
@@ -623,7 +683,8 @@
         .date-cell {
             font-size: .74rem;
             color: var(--subtext);
-            white-space: nowrap
+            white-space: normal;
+            text-align: center;
         }
 
         .status-cell {
@@ -731,7 +792,7 @@
         .btn-assign {
             background: var(--navy);
             color: #fff;
-            border: none;
+            border: 1.5px solid var(--navy);
             padding: .3rem .75rem;
             border-radius: 6px;
             font-size: .74rem;
@@ -768,6 +829,7 @@
         .dept-tag {
             display: inline-flex;
             align-items: center;
+            text-align: center;
             gap: .3rem;
             background: #e0f2fe;
             color: #0369a1;
@@ -977,13 +1039,67 @@
             background: #0f7a72
         }
 
+        .btn-modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f0f2f7;
+            border: none;
+            font-size: .85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--subtext)
+        }
+
+        .btn-accept {
+            background: #16a34a;
+            color: #fff;
+            border: none;
+            padding: .6rem 1.4rem;
+            border-radius: 9px;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .btn-reject {
+            background: #dc2626;
+            color: #fff;
+            border: none;
+            padding: .6rem 1.4rem;
+            border-radius: 9px;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif
+        }
+
+        .review-comment-wrap {
+            margin-top: 3rem;
+            text-align: left
+        }
+
+        .review-comment-textarea {
+            resize: vertical;
+            min-height: 90px;
+            padding: .6rem .9rem;
+            font-size: .84rem
+        }
+
         /* Edit mode toggle */
         .action-col {
             display: none
         }
 
         body.edit-mode .action-col {
-            display: table-cell
+            display: table-cell;
+            text-align: center;
         }
 
         body.edit-mode .q-table th.action-col {
@@ -1080,24 +1196,25 @@
         .btn-save-row {
             background: var(--teal);
             color: #fff;
-            border: none;
-            padding: .35rem .9rem;
+            border: 1.5px solid var(--teal);
+            padding: .25rem .4rem;
             border-radius: 6px;
-            font-size: .76rem;
+            font-size: .72rem;
             font-weight: 700;
             cursor: pointer;
             font-family: 'DM Sans', sans-serif;
             white-space: nowrap;
             transition: background .14s;
             display: none;
-            width: 100%;
-            justify-content: center;
-            align-items: center;
-            gap: .3rem;
+            width: auto;
+            line-height: 1;
+            vertical-align: middle;
         }
 
         .btn-save-row.visible {
-            display: flex
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-save-row:hover {
@@ -1111,6 +1228,114 @@
 
         tr.dirty td {
             background: #fffbeb !important
+        }
+
+        .num-inline-cell {
+            display: flex;
+            flex-direction: column;
+            min-width: 100px;
+            flex: 1;
+        }
+
+        .num-inline-cell .evidence-label {
+            margin: 0 0 .2rem;
+        }
+
+        .num-inline-cell .txt-input {
+            width: 100%;
+        }
+
+        .confirm-modal {
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+
+        .confirm-modal-body {
+            padding: 2rem 1.8rem 1.2rem;
+        }
+
+        .confirm-modal-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem;
+            font-size: 2.8rem;
+        }
+
+        .confirm-modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: .5rem;
+        }
+
+        .confirm-modal-desc {
+            font-size: .84rem;
+            color: var(--subtext);
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+        }
+
+        .confirm-modal-warning {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 9px;
+            padding: .65rem 1rem;
+            font-size: .8rem;
+            color: #991b1b;
+            margin-bottom: .4rem;
+        }
+
+        .confirm-modal-footer {
+            display: flex;
+            justify-content: center;
+            gap: .75rem;
+            padding: 0 1.8rem 1.8rem;
+        }
+
+        .gm-tab {
+            padding: .7rem .5rem;
+            text-align: center;
+            font-size: .78rem;
+            font-weight: 500;
+            color: var(--subtext);
+            background: #e8eaf0;
+            cursor: pointer;
+            border-right: 1px solid var(--border);
+            transition: background .14s, color .14s;
+            line-height: 1.4;
+        }
+
+        .gm-tab:last-child {
+            border-right: none;
+        }
+
+        .gm-tab span {
+            display: block;
+            font-size: .72rem;
+            font-weight: 600;
+            color: #9aa3b8;
+            margin-top: .15rem;
+        }
+
+        .gm-tab:hover {
+            background: #f0f2f7;
+            color: var(--text);
+        }
+
+        .gm-tab.active {
+            background: #fff;
+            color: var(--navy);
+            font-weight: 700;
+            box-shadow: inset 0 -3px 0 var(--teal);
+        }
+
+        .gm-tab.active span {
+            color: var(--teal);
         }
     </style>
 </head>
@@ -1144,10 +1369,27 @@
 
     <div class="layout">
         <aside class="sidebar">
-            <div class="nav-section-label">Main</div>
+            <div class="nav-label">Main</div>
             <a class="nav-item" href="dashboard-admin.html"><span class="nav-icon">📊</span> Dashboard</a>
-            <a class="nav-item active" href="admin-cycles.html"><span class="nav-icon">🏆</span> Ranking Cycles</a>
-            <div class="nav-section-label">Monitoring</div>
+            <div class="nav-item active" style="padding-right:.8rem">
+                <a href="admin-cycles.html"
+                    style="display:flex;align-items:center;gap:.85rem;flex:1;color:inherit;text-decoration:none">
+                    <span class="nav-icon">🏆</span> Ranking Cycles
+                </a>
+                <span onclick="toggleCycles()" style="cursor:pointer;font-size:.7rem;padding:.2rem .3rem"
+                    id="cyclesArrow">▴</span>
+            </div>
+            <div class="nav-children open" id="navCycles">
+                <a class="nav-child" href="admin-cycles.html?type=qs-sustainability"><span class="nav-icon">🌿</span> QS
+                    Sustainability</a>
+                <a class="nav-child" href="admin-cycles.html?type=qs-wur"><span class="nav-icon">🏆</span> QS WUR</a>
+                <a class="nav-child" href="admin-cycles.html?type=the-wur"><span class="nav-icon">📊</span> THE WUR</a>
+                <a class="nav-child" href="admin-cycles.html?type=the-impact"><span class="nav-icon">🎯</span> THE
+                    Impact</a>
+                <a class="nav-child" href="admin-cycles.html?type=greenmetric"><span class="nav-icon">🌱</span>
+                    GreenMetric</a>
+            </div>
+            <div class="nav-label">Monitoring</div>
             <a class="nav-item" href="admin-progress.html"><span class="nav-icon">📈</span> Progress</a>
             <a class="nav-item" href="#"><span class="nav-icon">🏛️</span> Departments</a>
             <div class="nav-spacer"></div>
@@ -1179,23 +1421,57 @@
                     department.
                 </div>
                 <div class="banner banner-green" id="deadlineBanner"></div>
-                <div class="banner banner-yellow">☆ Indicators marked ↔ automatically sync across ranking forms. All
-                    submissions are confirmed as true data by the department.</div>
+                <div class="banner banner-yellow" style="display:none">☆ Indicators marked ↔ automatically sync across
+                    ranking forms. All submissions are confirmed as true data by the department.</div>
 
                 <div class="legend">
                     <div class="legend-item"><span class="legend-dot"
-                            style="background:var(--green);border-color:var(--green)"></span> Accepted</div>
+                            style="background:var(--blue);border-color:var(--blue)"></span> Submitted <span
+                            id="count-submitted" style="font-weight:700;color:var(--blue)"></span></div>
                     <div class="legend-item"><span class="legend-dot"
-                            style="background:var(--amber);border-color:var(--amber)"></span> Pending</div>
-                    <div class="legend-item"><span class="legend-dot"></span> No Status</div>
+                            style="background:var(--green);border-color:var(--green)"></span> Accepted <span
+                            id="count-accepted" style="font-weight:700;color:var(--green)"></span></div>
+                    <div class="legend-item"><span class="legend-dot"
+                            style="background:var(--amber);border-color:var(--amber)"></span> Pending <span
+                            id="count-pending" style="font-weight:700;color:var(--amber)"></span></div>
+                    <div class="legend-item"><span class="legend-dot"
+                            style="background:var(--red);border-color:var(--red)"></span> Rejected <span
+                            id="count-rejected" style="font-weight:700;color:var(--red)"></span></div>
+                    <div class="legend-item"><span class="legend-dot"></span> No Status <span id="count-nostatus"
+                            style="font-weight:700;color:var(--subtext)"></span></div>
                 </div>
 
+                <!-- GreenMetric Category Tabs -->
+                <div id="gmTabsWrap" style="display:none;margin-bottom:1.1rem">
+                    <div
+                        style="display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#e8eaf0">
+                        <div class="gm-tab active" onclick="switchGMTab(this,'SI')" data-cat="SI">Setting &amp;
+                            Infrastructure
+                            <span>(SI)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'EC')" data-cat="EC">Energy &amp; Climate Change
+                            <span>(EC)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'WS')" data-cat="WS">Waste <span>(WS)</span></div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'WR')" data-cat="WR">Water <span>(WR)</span></div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'TR')" data-cat="TR">Transportation
+                            <span>(TR)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'ED')" data-cat="ED">Education &amp; Research
+                            <span>(ED)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'GD')" data-cat="GD">Governance &amp;
+                            Digitalization
+                            <span>(GD)</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="questions-panel-wrap">
                     <div id="sectionsContainer" class="sections-area">
                         <div style="text-align:center;padding:3rem;color:var(--subtext)">Loading questions...</div>
                     </div>
 
-                    <div class="def-panel">
+                    <div class="def-panel" style="display:none">
                         <div class="def-panel-hdr">
                             <div class="def-panel-title" id="defTitle">Click any question to see its definition</div>
                             <button class="def-close"
@@ -1214,52 +1490,81 @@
 
         <!-- ASSIGN MODAL -->
         <div class="modal-overlay" id="assignModal" onclick="if(event.target===this)closeAssignModal()">
-            <div class="modal">
-                <div class="modal-hdr"><span style="font-size:1.3rem">🏛️</span><span class="modal-hdr-title">Assign
-                        Question</span></div>
-                <div class="modal-body">
-                    <p class="modal-desc" id="assignModalSub">Select a department to assign this question to.</p>
-                    <div style="margin-bottom:1rem">
-                        <label
-                            style="display:block;font-size:.72rem;font-weight:700;color:var(--subtext);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em">Department
-                            <span style="color:var(--red)">*</span></label>
+            <div class="modal confirm-modal">
+                <div class="confirm-modal-body">
+                    <div class="confirm-modal-icon">🏛️</div>
+                    <div class="confirm-modal-title">Assign Question</div>
+                    <div class="confirm-modal-desc" id="assignModalSub">Select a department to assign this question to.
+                    </div>
+                    <div style="margin-bottom:1rem;text-align:left">
+                        <label class="form-label">Department <span style="color:var(--red)">*</span></label>
                         <select id="assignDept" class="form-select">
                             <option value="">— Select Department —</option>
                         </select>
                     </div>
-                    <div style="margin-bottom:1.2rem">
-                        <label
-                            style="display:block;font-size:.72rem;font-weight:700;color:var(--subtext);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em">Due
-                            Date <span style="color:var(--red)">*</span></label>
+                    <div style="margin-bottom:1rem;text-align:left">
+                        <label class="form-label">Due Date <span style="color:var(--red)">*</span></label>
                         <input id="assignDeadline" type="date" class="form-select" style="cursor:pointer" />
                     </div>
-                    <div class="modal-actions">
-                        <button class="btn-cancel" onclick="closeAssignModal()">Cancel</button>
-                        <button class="btn-yes-submit" onclick="saveAssignment()">Save Assignment</button>
-                    </div>
+                </div>
+                <div class="confirm-modal-footer">
+                    <button class="btn-cancel" onclick="closeAssignModal()">Cancel</button>
+                    <button class="btn-yes-submit" onclick="saveAssignment()">Save Assignment</button>
                 </div>
             </div>
         </div>
 
         <!-- CLOSE FORM MODAL -->
         <div class="modal-overlay" id="closeFormModal" onclick="if(event.target===this)closeCloseModal()">
-            <div class="modal">
-                <div class="modal-hdr" style="background:var(--red)">
-                    <span style="font-size:1.3rem">🔒</span>
-                    <span class="modal-hdr-title">Close Ranking Form</span>
+            <div class="modal confirm-modal">
+                <div class="confirm-modal-body">
+                    <div class="confirm-modal-icon">🔒</div>
+                    <div class="confirm-modal-title">Close Ranking Form</div>
+                    <div class="confirm-modal-desc">Are you sure you want to close this ranking form? Once closed,
+                        departments will no longer be able to submit or edit answers.</div>
+                    <div class="confirm-modal-warning">⚠️ This action cannot be undone from this page.</div>
                 </div>
-                <div class="modal-body">
-                    <p class="modal-desc">Are you sure you want to close this ranking form? Once closed, departments
-                        will no longer be able to submit or edit answers.</p>
-                    <div
-                        style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:.75rem 1rem;font-size:.82rem;color:#991b1b;margin-bottom:1.4rem">
-                        ⚠️ This action cannot be undone from this page.
+                <div class="confirm-modal-footer">
+                    <button class="btn-cancel" onclick="closeCloseModal()">Cancel</button>
+                    <button class="btn-yes-submit" style="background:var(--maron); width: 12rem;"
+                        onclick="confirmCloseForm()">Yes, Close
+                        Form</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERT MODAL -->
+        <div class="modal-overlay" id="alertModal" onclick="if(event.target===this)closeModal('alertModal')">
+            <div class="modal confirm-modal">
+                <div class="confirm-modal-body">
+                    <div class="confirm-modal-icon">⚠️</div>
+                    <div id="alertTitle" class="confirm-modal-title"></div>
+                    <div id="alertMsg" class="confirm-modal-desc"></div>
+                </div>
+                <div class="confirm-modal-footer">
+                    <button id="alertConfirmBtn" class="btn-yes-submit" style="background:#e05c5c">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- REVIEW MODAL -->
+        <div class="modal-overlay" id="reviewModal" onclick="if(event.target===this)closeModal('reviewModal')">
+            <div class="modal confirm-modal">
+                <div class="confirm-modal-body">
+                    <button class="btn-modal-close" onclick="closeModal('reviewModal')">✕</button>
+                    <div class="confirm-modal-icon">📋</div>
+                    <div class="confirm-modal-title" id="reviewModalTitle">Evaluate Submission</div>
+                    <div class="confirm-modal-desc" id="reviewModalSub"></div>
+                    <div class="review-comment-wrap">
+                        <label class="form-label">Comment <span
+                                style="font-weight:400;font-style:italic;text-transform:none">(optional)</span></label>
+                        <textarea id="reviewComment" class="form-select review-comment-textarea"
+                            placeholder="Add a comment for the department..."></textarea>
                     </div>
-                    <div class="modal-actions">
-                        <button class="btn-cancel" onclick="closeCloseModal()">Cancel</button>
-                        <button class="btn-yes-submit" style="background:var(--red)" onclick="confirmCloseForm()">Yes,
-                            Close Form</button>
-                    </div>
+                </div>
+                <div class="confirm-modal-footer">
+                    <button class="btn-accept" onclick="submitReview('accepted')">✓ Accept</button>
+                    <button class="btn-reject" onclick="submitReview('rejected')">✕ Reject</button>
                 </div>
             </div>
         </div>
@@ -1275,10 +1580,13 @@
             const params = new URLSearchParams(window.location.search);
             const cycleId = params.get('cycle');
             if (!cycleId) window.location.href = 'admin-cycles.html';
+            const editMode = params.get('edit') === 'true';
 
             let departments = [];
             let allQuestions = [];
             let currentAssignQuestionId = null;
+            let isGreenMetric = false;
+            let activeGMTab = 'SI';
 
             // ── Helpers ────────────────────────────────────────────────
             function toggleEditMode() {
@@ -1288,7 +1596,12 @@
                 document.body.classList.toggle('edit-mode', active);
                 btn.textContent = active ? '✓ Exit Edit Mode' : '✎ Edit Mode';
                 banner.style.display = active ? 'flex' : 'none';
-                renderSections();
+                // ← respect GreenMetric tab
+                if (isGreenMetric) {
+                    renderSections(allQuestions.filter(q => q.gm_category === activeGMTab));
+                } else {
+                    renderSections();
+                }
             }
 
             function formatDate(d) {
@@ -1297,11 +1610,12 @@
             }
 
             function getStatusDot(status) {
-                if (status === 'submitted' || status === 'accepted') return '<span class="status-dot accepted"></span>';
-                if (status === 'rejected') return '<span class="status-dot rejected"></span>';
-                if (status === 'queried') return '<span class="status-dot queried"></span>';
-                if (status === 'pending') return '<span class="status-dot pending"></span>';
-                return '<span class="status-dot"></span>';
+                if (status === 'submitted') return '<span class="status-dot submitted" title="Submitted"></span>';
+                if (status === 'accepted') return '<span class="status-dot accepted" title="Accepted"></span>';
+                if (status === 'rejected') return '<span class="status-dot rejected" title="Rejected"></span>';
+                if (status === 'queried') return '<span class="status-dot queried" title="Queried"></span>';
+                if (status === 'pending') return '<span class="status-dot pending" title="Pending"></span>';
+                return '<span class="status-dot" title="No Status"></span>';
             }
 
             function toggleSec(id) {
@@ -1316,9 +1630,13 @@
                 tab.classList.add('active');
                 if (type === 'hist') {
                     const taskId = window._selectedTaskId;
-                    if (!taskId) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>'; return; }
+                    const questionId = window._selectedQuestionId;
+                    if (!taskId && !questionId) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>'; return; }
                     document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Loading history...</p>';
-                    fetch(`http://localhost:3002/api/submissions/history/${taskId}`, { headers: { 'Authorization': `Bearer ${token}` } })
+                    const histUrl = taskId
+                        ? `http://localhost:3002/api/submissions/history-all/${taskId}`
+                        : `http://localhost:3002/api/submissions/history-by-question/${questionId}`;
+                    fetch(histUrl, { headers: { 'Authorization': `Bearer ${token}` } })
                         .then(r => r.json()).then(rows => {
                             if (!rows.length) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions.</p>'; return; }
                             document.getElementById('defBody').innerHTML = rows.map(h => {
@@ -1337,11 +1655,8 @@
                                     </div>`;
                                         } else {
                                             // Multi-item — look up labels from allQuestions
-                                            const q = allQuestions.find(q =>
-                                                String(q.task_id) === String(h.task_assignment_id) ||
-                                                String(q.task_id) === String(h.task_id) ||
-                                                String(q.task_id) === String(h.question_id)
-                                            );
+                                            const title = document.getElementById('defTitle').textContent;
+                                            const q = (window.questions || allQuestions || []).find(q => q.title === title);
                                             const items = q?.items || [];
                                             const lines = Object.entries(parsed).map(([idx, v]) => {
                                                 const item = items[parseInt(idx)];
@@ -1353,20 +1668,27 @@
                                                 <span style="font-size:.8rem;color:${ticked ? 'var(--text)' : 'var(--subtext)'}">${label}</span>
                                             </div>`;
                                                 }
-                                                if (!v) return '';
+                                                const isEmpty = !v || v === '' || v === '<p><br></p>' || v === '<p></p>';
+                                                if (isEmpty && item?.answer_type !== 'url' && item?.answer_type !== 'richtext' && item?.answer_type !== 'text') return '';
                                                 return `<div style="margin:.25rem 0">
-                                            <div style="font-size:.7rem;color:var(--subtext);margin-bottom:.1rem">${label}</div>
-                                            <div style="font-size:.8rem;color:var(--text);word-break:break-word">${v}</div>
-                                        </div>`;
+                                                    <div style="font-size:.7rem;color:var(--subtext);margin-bottom:.1rem">${label}</div>
+                                                    <div style="font-size:.8rem;color:var(--text);word-break:break-word">
+                                                        ${isEmpty ? '<span style="color:var(--subtext);font-style:italic">Not provided</span>' : v}
+                                                    </div>
+                                                </div>`;
                                             }).filter(Boolean).join('');
                                             val = lines || '—';
                                         }
                                     }
                                 } catch (e) { }
                                 return `<div style="border-bottom:1px solid #f0f2f8;padding:.65rem 0">
-                            <div style="font-size:.72rem;color:var(--subtext);font-weight:500">${date} · ${h.changed_by_name || 'Unknown'}</div>
-                            <div style="font-size:.8rem;color:var(--text);margin-top:.35rem;line-height:1.55">${val}</div>
-                        </div>`;
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.25rem">
+                                        <span style="font-size:.7rem;font-weight:700;background:#eef2ff;color:#3730a3;padding:.15rem .45rem;border-radius:4px">${h.year || ''}</span>
+                                        <span style="font-size:.7rem;color:var(--subtext)">${date}</span>
+                                    </div>
+                                    <div style="font-size:.72rem;color:var(--subtext);margin-bottom:.2rem">${h.changed_by_name || 'Unknown'}</div>
+                                    <div style="font-size:.8rem;color:var(--text);line-height:1.55">${val}</div>
+                                </div>`;
                             }).join('');
                         }).catch(() => { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Failed to load history.</p>'; });
                 } else {
@@ -1374,10 +1696,24 @@
                 }
             }
 
-            function selectRow(row, title, desc, taskId) {
+            function getTableHeaderColor() {
+                const name = (currentCycleName || '').toLowerCase();
+                if (name.includes('qs sustainability')) return { bg: '#e8f5e9', text: '#2e7d32', border: '#a5d6a7' };
+                if (name.includes('qs world university rankings')) return { bg: '#fef9e7', text: '#7a6000', border: '#f0d060' };
+                if (name.includes('the world university rankings')) return { bg: '#f3e5f5', text: '#6a1b9a', border: '#ce93d8' };
+                if (name.includes('the impact')) return { bg: '#fff3e0', text: '#e65100', border: '#ffcc80' };
+                if (name.includes('greenmetric')) return { bg: '#e0f2f1', text: '#00695c', border: '#80cbc4' };
+            }
+
+            function selectRow(row) {
                 document.querySelectorAll('.q-table tr.selected').forEach(r => r.classList.remove('selected'));
                 row.classList.add('selected');
+                const taskId = row.dataset.taskid ? parseInt(row.dataset.taskid) : null;
+                const questionId = row.dataset.qid ? parseInt(row.dataset.qid) : null;
+                const title = row.dataset.title || '';
+                const desc = row.dataset.desc || '';
                 window._selectedTaskId = taskId || null;
+                window._selectedQuestionId = questionId || null;
                 window._selectedDesc = desc;
                 document.getElementById('defTitle').textContent = title;
                 document.getElementById('defBody').innerHTML = `<p>${desc || 'No definition available.'}</p>`;
@@ -1391,8 +1727,8 @@
                     const editorEl = document.getElementById(itemId);
                     if (!editorEl || editorEl._quill) return;
 
-                    const q = window.questions?.find(q =>
-                        (q.items || []).some((_, i) => `item_${q.task_id}_${i}` === itemId)
+                    const q = (window.questions || allQuestions)?.find(q =>
+                        (q.items || []).some((_, i) => `item_${q.task_id || q.id}_${i}` === itemId)
                     );
                     const locked = q ? (q.task_status && q.task_status !== 'pending') : false;
 
@@ -1425,6 +1761,11 @@
                             const words = quill.getText().trim().split(/\s+/).filter(w => w.length > 0).length;
                             wcEl.textContent = `${words} words inserted`;
                         }
+                        // Find the question this editor belongs to and mark dirty
+                        const q = (window.questions || allQuestions)?.find(q =>
+                            (q.items || []).some((_, i) => `item_${q.task_id || q.id}_${i}` === itemId)
+                        );
+                        if (q) markDirty(q.task_id || q.id);
                     });
 
                     editorEl._quill = quill;
@@ -1475,7 +1816,9 @@
                                 groupItems.push({ item: items[j], idx: j }); j++;
                             }
                             if (groupItems.length > 1) {
-                                html += `<div class="evidence-label" style="margin-top:1.5rem;font-weight:600;color:var(--text)">${groupLabel}</div>`;
+                                if (!isGreenMetric) {
+                                    html += `<div class="evidence-label" style="margin-top:1.5rem;font-weight:600;color:var(--text)">${groupLabel}</div>`;
+                                }
                                 groupItems.forEach(({ item: gi, idx }) => {
                                     const gVal = savedItems[idx] ?? savedItems[String(idx)] ?? '';
                                     const checked = (gVal === 'yes' || gVal === true) ? 'checked' : '';
@@ -1492,20 +1835,33 @@
                             case 'checkbox': {
                                 const checked = (savedVal === 'yes' || savedVal === true) ? 'checked' : '';
                                 html += `<label class="check-item" style="margin-top:${i === 0 ? '.35rem' : '.9rem'};${i > 0 ? 'padding-top:.7rem;border-top:1px solid #f0f2f8;' : ''}">
-                            <input type="checkbox" class="admin-input" data-itemidx="${i}" ${checked} ${dis}
-                                onchange="markDirty(${q.task_id || q.id})"> ${item.label}
-                        </label>`; break;
+                                    <input type="checkbox" class="admin-input" data-itemidx="${i}" ${checked} ${dis}
+                                        onchange="markDirty(${q.task_id || q.id})"> ${item.label}
+                                </label>`; break;
+                            }
+                            case 'radio': {
+                                const checked = (savedVal === 'yes' || savedVal === true) ? 'checked' : '';
+                                html += `<label class="check-item" style="margin-top:${i === 0 ? '.35rem' : '.25rem'}">
+                                    <input type="radio" name="radio_${taskId}" class="admin-input" data-itemidx="${i}" 
+                                        value="${item.label}" ${savedVal === item.label ? 'checked' : ''} ${dis}
+                                        onchange="markDirty(${q.task_id || q.id})"> ${item.label.includes(' — ') ? item.label.split(' — ')[1] : item.label}
+                                </label>`; break;
                             }
                             case 'url':
-                                html += `<div class="evidence-label" style="margin-top:.8rem">${item.label}</div>
-                            <div class="url-wrap"><input class="url-input admin-input" type="url" data-itemidx="${i}"
-                                placeholder="https://..." value="${savedVal}" style="${ls}" ${ro}
-                                oninput="markDirty(${q.task_id || q.id})"/></div>`; break;
+                                html += `<div style="margin-bottom:.8rem">
+                                <div class="evidence-label" style="margin-top:1.3rem">${item.label}</div>
+                                <div class="url-wrap"><input class="url-input admin-input" type="url" data-itemidx="${i}"
+                                    placeholder="https://..." value="${savedVal}" style="${ls}" ${ro}
+                                    oninput="markDirty(${q.task_id || q.id})"/></div>
+                            </div>`; break;
                             case 'number':
-                                html += `<div class="evidence-label" style="margin-top:1.5rem">${item.label}</div>
-                            <input class="txt-input admin-input" type="number" data-itemidx="${i}"
-                                placeholder="—" value="${savedVal}" style="width:180px;${ls}" ${ro}
-                                oninput="markDirty(${q.task_id || q.id})"/>`; break;
+                                html += `<div style="margin-bottom:1.5rem">
+                                    ${isGreenMetric ? '' : `<div class="evidence-label">${item.label}</div>`}
+                                    <input class="txt-input admin-input" type="number" id="${itemId}" data-itemidx="${i}" value="${savedVal}" 
+                                        placeholder="—" style="${ls}" ${ro}
+                                        oninput="markDirty(${q.task_id || q.id});calcEmployment(${taskId})"/>
+                                </div>`;
+                                break;
                             case 'richtext':
                             case 'text':
                                 html += `<div class="evidence-label" style="margin-top:1rem">${item.label}</div>
@@ -1526,8 +1882,6 @@
                                         <span class="ql-formats">
                                             <button class="ql-link"></button>
                                             <button class="ql-clean"></button>
-                                            <button class="ql-undo">↩</button>
-                                            <button class="ql-redo">↪</button>
                                         </span>
                                     </div>
                                     <div id="${itemId}" style="min-height:80px;font-size:.78rem;font-family:'DM Sans',sans-serif"></div>
@@ -1537,10 +1891,27 @@
                                     <span>Maximum ${item.max_words} words</span>
                                 </div>` : ''}`;
                                 break;
+                            case 'select': {
+                                const opts = (item.options || '').split(',').map(o => o.trim());
+                                html += `<div class="evidence-label" style="margin-top:1rem">${item.label}</div>
+                                <select class="txt-input" id="${itemId}" ${dis} style="${ls};cursor:pointer">
+                                    <option value="">— Select —</option>
+                                    ${opts.map(o => `<option value="${o}" ${savedVal === o ? 'selected' : ''}>${o}</option>`).join('')}
+                                </select>`;
+                                break;
+                            }
+                            case 'calculated': {
+                                const idx = i;
+                                // Calculate based on ES1 items: Employed/Total respondents * 100
+                                html += `<div class="evidence-label" style="margin-top:1rem">${item.label}</div>
+                                <input class="txt-input" type="number" id="${itemId}" placeholder="Auto-calculated" 
+                                    readonly style="background:#f0f2f7;color:var(--subtext)"/>`;
+                                break;
+                            }
                             default:
                                 html += `<input class="txt-input admin-input" type="text" data-itemidx="${i}"
-                            placeholder="—" value="${savedVal}" style="${ls}" ${ro}
-                            oninput="markDirty(${q.task_id || q.id})"/>`;
+                                placeholder="—" value="${savedVal}" style="${ls}" ${ro}
+                                oninput="markDirty(${q.task_id || q.id})"/>`;
                         }
                         i++;
                     }
@@ -1552,8 +1923,8 @@
                     case 'yesno': {
                         const saved = q.answer_text || '';
                         return `<div style="font-size:.8rem;font-weight:600;color:var(--teal);margin-bottom:.3rem">Please select one option:</div>
-                    <label class="check-item"><input type="radio" name="admin_q${taskId}" class="admin-input" ${saved === 'yes' ? 'checked' : ''} ${dis}> Yes</label>
-                    <label class="check-item"><input type="radio" name="admin_q${taskId}" class="admin-input" ${saved === 'no' ? 'checked' : ''} ${dis}> No</label>`;
+                        <label class="check-item"><input type="radio" name="admin_q${taskId}" value="yes" class="admin-input" ${saved === 'yes' ? 'checked' : ''} ${dis} onchange="markDirty(${taskId})"> Yes</label>
+                        <label class="check-item"><input type="radio" name="admin_q${taskId}" value="no" class="admin-input" ${saved === 'no' ? 'checked' : ''} ${dis} onchange="markDirty(${taskId})"> No</label>`;
                     }
                     case 'url':
                         return `<div class="evidence-label">Link or URL:</div>
@@ -1563,10 +1934,10 @@
                     <input class="txt-input admin-input" type="number" placeholder="—" value="${q.answer_number ?? ''}" style="width:200px;${ls}" ${ro}/>`;
                     case 'checkbox': {
                         const checked = q.answer_text === 'yes' ? 'checked' : '';
-                        return `<label class="check-item"><input type="checkbox" class="admin-input" ${checked} ${dis}> Tick if applicable</label>`;
+                        return `<label class="check-item"><input type="checkbox" class="admin-input" ${checked} ${dis} onchange="markDirty(${taskId})"> Tick if applicable</label>`;
                     }
                     default:
-                        return `<input class="txt-input admin-input" type="text" placeholder="—" value="${q.answer_text || ''}" style="${ls}" ${ro}/>`;
+                        return `<input class="txt-input admin-input" type="text" placeholder="—" value="${q.answer_text || ''}" style="${ls}" ${ro} oninput="markDirty(${taskId})"/>`;
                 }
             }
 
@@ -1594,14 +1965,28 @@
             async function saveAssignment() {
                 const deptId = document.getElementById('assignDept').value;
                 const deadline = document.getElementById('assignDeadline').value;
-                if (!deptId) { alert('Please select a department.'); return; }
-                if (!deadline) { alert('Please select a due date.'); return; }
+                if (!deptId) { showAlert('Missing Field', 'Please select a department.'); return; }
+                if (!deadline) { showAlert('Missing Field', 'Please select a due date.'); return; }
+
+                const btn = document.querySelector('#assignModal .btn-yes-submit');
+                btn.textContent = '...';
+                btn.disabled = true;
+
                 try {
-                    const res = await fetch('http://localhost:3002/api/admin/assign', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ question_id: currentAssignQuestionId, department_id: parseInt(deptId), deadline }) });
+                    const res = await fetch('http://localhost:3002/api/admin/assign', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ question_id: currentAssignQuestionId, department_id: parseInt(deptId), deadline })
+                    });
                     const data = await res.json();
                     if (data.success) { closeAssignModal(); loadQuestions(); }
-                    else alert(data.error || 'Failed to assign');
-                } catch (e) { alert('Server error'); }
+                    else showAlert('Save Failed', data.error || 'Failed to save');
+                } catch (e) {
+                    showAlert('Server Error', 'Something went wrong. Make sure the server is running.');
+                } finally {
+                    btn.textContent = 'Save Assignment';
+                    btn.disabled = false;
+                }
             }
 
             // ── Sub-section map ────────────────────────────────────────
@@ -1615,89 +2000,255 @@
                 return order.map(k => [k, groups[k]]);
             }
 
+            function updateLegendCounts() {
+                let accepted = 0, submitted = 0, pending = 0, nostatus = 0, rejected = 0;
+                allQuestions.forEach(q => {
+                    const s = q.task_status;
+                    if (s === 'accepted') accepted++;
+                    else if (s === 'submitted') submitted++;
+                    else if (s === 'pending') pending++;
+                    else if (s === 'rejected') rejected++;
+                    else nostatus++;
+                });
+                document.getElementById('count-accepted').textContent = `(${accepted})`;
+                document.getElementById('count-submitted').textContent = `(${submitted})`;
+                document.getElementById('count-pending').textContent = `(${pending})`;
+                document.getElementById('count-nostatus').textContent = `(${nostatus})`;
+                document.getElementById('count-rejected').textContent = `(${rejected})`;
+            }
+
             // ── Row renderers ──────────────────────────────────────────
             function renderRow(q) {
                 const updatedAt = formatDate(q.answer_updated_at);
                 const inputHtml = buildInput(q);
-                const st = q.title.replace(/'/g, "\'");
-                const sd = (q.description || '').replace(/'/g, "\'");
                 const deptCell = q.department_name
-                    ? `<span class="dept-tag">&#127963; ${q.department_name}</span>`
+                    ? `<span class="dept-tag">${q.department_name}</span>`
                     : `<span class="unassigned">Unassigned</span>`;
                 const actionBtn = q.department_id
-                    ? `<button class="btn-reassign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)">&#8634; Reassign</button>`
-                    : `<button class="btn-assign"   data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)">+ Assign</button>`;
+                    ? `<button class="btn-reassign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Reassign">&#8634;</button>`
+                    : `<button class="btn-assign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Assign">+</button>`;
                 const saveBtn = `<button class="btn-save-row" data-saveid="${q.task_id || q.id}"
-            onclick="event.stopPropagation();saveRowAnswer(${q.task_id || q.id},this)"
-            style="margin-top:.6rem">💾 Save Changes</button>`;
-                return `<tr data-qid="${q.id}" onclick="selectRow(this,'${st}','${sd}',${q.task_id || 'null'})">
-            <td><div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div></td>
-            <td>${inputHtml}${saveBtn}</td>
-            <td class="status-cell">${getStatusDot(q.task_status)}</td>
-            <td class="date-cell">${updatedAt}</td>
-            <td>${deptCell}</td>
-            <td class="action-col">${actionBtn}</td>
-        </tr>`;
+                    onclick="event.stopPropagation();saveRowAnswer(${q.task_id || q.id},this)"
+                    title="Save Changes">💾 Save</button>`;
+                const reviewBtn = (q.task_status === 'submitted' || q.task_status === 'accepted' || q.task_status === 'rejected')
+                    ? `<button onclick="event.stopPropagation();openReviewById(${q.id})" title="Evaluate Submission"
+                        style="background:#eef2ff;color:#3730a3;border:1.5px solid #c7d2fe;padding:.25rem .4rem;border-radius:6px;font-size:.72rem;font-weight: 700;cursor:pointer;line-height:1;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center">
+                        Evaluate</button>`
+                    : '';
+                // Extract evidence URL from items if GreenMetric
+                const needsEvidence = isGreenMetric && q.has_evidence === 1;
+                const evidenceItem = needsEvidence ? (q.items || []).find(item => item.answer_type === 'url') : null;
+                let evidenceVal = '';
+                if (evidenceItem) {
+                    const idx = (q.items || []).indexOf(evidenceItem);
+                    try {
+                        const parsed = JSON.parse(q.answer_text || '{}');
+                        evidenceVal = parsed[idx] ?? parsed[String(idx)] ?? '';
+                    } catch (e) { evidenceVal = ''; }
+                }
+
+                const evidenceCell = isGreenMetric
+                    ? (needsEvidence
+                        ? `<td><input class="url-input admin-input" type="url" placeholder="https://..." 
+                        value="${evidenceVal}" style="background:#f5f7fc"
+                        oninput="markDirty(${q.task_id || q.id})"/></td>`
+                        : `<td style="color:var(--subtext);text-align:center">—</td>`)
+                    : '';
+
+                return `<tr data-qid="${q.id}"
+                    data-title="${q.title.replace(/"/g, '&quot;')}"
+                    data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
+                    data-taskid="${q.task_id || ''}"
+                    onclick="selectRow(this)">
+                    <td><div class="q-text">${isGreenMetric ? `<span class="kpi-num">${formatGMCode(q.code)}</span>` : ''}${isGreenMetric ? formatGMTitle(q.title) : q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div></td>
+                    <td>${inputHtml}</td>
+                    ${evidenceCell}
+                    <td class="status-cell">
+                        ${getStatusDot(q.task_status)}
+                        <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
+                            ${saveBtn}${reviewBtn}
+                        </div>
+                    </td>
+                    <td class="date-cell">${updatedAt}</td>
+                    <td style="text-align:center">${deptCell}</td>
+                    <td class="action-col">${actionBtn}</td>
+                </tr>`;
             }
 
             function renderEqualityRow(q) {
                 const updatedAt = formatDate(q.answer_updated_at);
                 let ft = '', pt = '', hc = '', fte = '';
                 if (q.answer_text) { try { const p = JSON.parse(q.answer_text); ft = p.ft ?? ''; pt = p.pt ?? ''; hc = p.hc ?? ''; fte = p.fte ?? ''; } catch (e) { } }
-                const st = q.title.replace(/'/g, "\'");
-                const sd = (q.description || '').replace(/'/g, "\'");
                 const deptCell = q.department_name
-                    ? `<span class="dept-tag">&#127963; ${q.department_name}</span>`
+                    ? `<span class="dept-tag">${q.department_name}</span>`
                     : `<span class="unassigned">Unassigned</span>`;
                 const actionBtn = q.department_id
-                    ? `<button class="btn-reassign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)">&#8634; Reassign</button>`
-                    : `<button class="btn-assign"   data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)">+ Assign</button>`;
-                const calcStyle = 'background:#f0f2f7;color:var(--subtext);cursor:not-allowed';
+                    ? `<button class="btn-reassign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Reassign">&#8634;</button>`
+                    : `<button class="btn-assign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Assign">+</button>`; const calcStyle = 'background:#f0f2f7;color:var(--subtext);cursor:not-allowed';
                 const saveBtn = `<button class="btn-save-row" data-saveid="${q.task_id || q.id}"
-            onclick="event.stopPropagation();saveRowAnswer(${q.task_id || q.id},this)"
-            style="margin-top:.6rem">💾 Save Changes</button>`;
-                return `<tr data-qid="${q.id}" onclick="selectRow(this,'${st}','${sd}',${q.task_id || 'null'})">
-            <td><div class="q-text">${q.title}</div></td>
-            <td>
-                <div class="eq-row-grid">
-                    <div class="eq-cell"><span>FT</span><input type="number" value="${ft}" class="admin-input" oninput="markDirty(${q.task_id || q.id})"/></div>
-                    <div class="eq-cell"><span>PT</span><input type="number" value="${pt}" class="admin-input" oninput="markDirty(${q.task_id || q.id})"/></div>
-                    <div class="eq-cell"><span title="Auto-calculated: FT + PT">HC</span><input type="number" value="${hc}" readonly style="${calcStyle}" title="Auto-calculated: FT + PT"/></div>
-                    <div class="eq-cell"><span title="Auto-calculated: FT + (PT÷3)">FTE</span><input type="number" value="${fte}" readonly style="${calcStyle}" title="Auto-calculated: FT + (PT ÷ 3)"/></div>
-                </div>
-                ${saveBtn}
-            </td>
-            <td class="status-cell">${getStatusDot(q.task_status)}</td>
-            <td class="date-cell">${updatedAt}</td>
-            <td>${deptCell}</td>
-            <td class="action-col">${actionBtn}</td>
-        </tr>`;
+                    onclick="event.stopPropagation();saveRowAnswer(${q.task_id || q.id},this)"
+                    title="Save Changes">💾 Save</button>`;
+                const reviewBtn = (q.task_status === 'submitted' || q.task_status === 'accepted' || q.task_status === 'rejected')
+                    ? `<button onclick="event.stopPropagation();openReviewById(${q.id})" title="Evaluate Submission"
+                        style="background:#eef2ff;color:#3730a3;border:1.5px solid #c7d2fe;padding:.25rem .4rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;line-height:1;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center">
+                        Evaluate</button>`
+                    : '';
+                return `<tr data-qid="${q.id}"
+                    data-title="${q.title.replace(/"/g, '&quot;')}"
+                    data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
+                    data-taskid="${q.task_id || ''}"
+                    onclick="selectRow(this)">
+                    <td><div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div></td>
+                    <td>
+                        <div class="eq-row-grid">
+                            <div class="eq-cell"><span>FT</span><input type="number" value="${ft}" class="admin-input" oninput="markDirty(${q.task_id || q.id})"/></div>
+                            <div class="eq-cell"><span>PT</span><input type="number" value="${pt}" class="admin-input" oninput="markDirty(${q.task_id || q.id})"/></div>
+                            <div class="eq-cell"><span title="Auto-calculated: FT + PT">HC</span><input type="number" value="${hc}" readonly style="${calcStyle}" title="Auto-calculated: FT + PT"/></div>
+                            <div class="eq-cell"><span title="Auto-calculated: FT + (PT÷3)">FTE</span><input type="number" value="${fte}" readonly style="${calcStyle}" title="Auto-calculated: FT + (PT ÷ 3)"/></div>
+                        </div>
+                    </td>
+                    <td class="status-cell">
+                        ${getStatusDot(q.task_status)}
+                        <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
+                            ${saveBtn}${reviewBtn}
+                        </div>
+                    </td>
+                    <td class="date-cell">${updatedAt}</td>
+                    <td style="text-align:center">${deptCell}</td>
+                    <td class="action-col">${actionBtn}</td>
+                </tr>`;
+            }
+
+            function renderEqualityRowFlat(q) {
+                const updatedAt = formatDate(q.answer_updated_at);
+                let ft = '', pt = '', hc = '', fte = '';
+                if (q.answer_text) {
+                    try {
+                        const p = JSON.parse(q.answer_text);
+                        ft = p.ft ?? '';
+                        pt = p.pt ?? '';
+                        hc = p.hc ?? '';
+                        fte = p.fte ?? '';
+                    } catch (e) { }
+                }
+                const deptCell = q.department_name
+                    ? `<span class="dept-tag">${q.department_name}</span>`
+                    : `<span class="unassigned">Unassigned</span>`;
+                const actionBtn = q.department_id
+                    ? `<button class="btn-reassign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Reassign">&#8634;</button>`
+                    : `<button class="btn-assign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Assign">+</button>`;
+                const editableStyle = 'width:100%;border:1px solid #e2e8f4;border-radius:5px;padding:.2rem .2rem;font-size:.74rem;background:#fff;color:var(--text);font-family:DM Sans,sans-serif;outline:none;text-align:center';
+                const calcStyle = 'width:100%;border:1px solid #e2e8f4;border-radius:5px;padding:.2rem .2rem;font-size:.74rem;background:#f0f2f7;color:var(--subtext);font-family:DM Sans,sans-serif;outline:none;text-align:center;cursor:not-allowed';
+                const reviewBtn = (q.task_status === 'submitted' || q.task_status === 'accepted' || q.task_status === 'rejected')
+                    ? `<button onclick="event.stopPropagation();openReviewById(${q.id})" title="Evaluate Submission"
+                        style="background:#eef2ff;color:#3730a3;border:1.5px solid #c7d2fe;padding:.25rem .4rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;line-height:1;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center">
+                        Evaluate</button>`
+                    : '';
+                const saveBtn = `<button class="btn-save-row" data-saveid="${q.task_id || q.id}"
+                    onclick="event.stopPropagation();saveRowAnswer(${q.task_id || q.id},this)"
+                    title="Save Changes">💾 Save</button>`;
+                return `<tr data-qid="${q.id}"
+                    data-title="${q.title.replace(/"/g, '&quot;')}"
+                    data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
+                    data-taskid="${q.task_id || ''}"
+                    onclick="selectRow(this)">
+                    <td><div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div></td>
+                    <td><input type="number" value="${ft}" style="${editableStyle}" onclick="event.stopPropagation()" oninput="calcFlatEq(${q.id},${q.task_id || q.id});markDirty(${q.task_id || q.id})"/></td>
+                    <td><input type="number" value="${pt}" style="${editableStyle}" onclick="event.stopPropagation()" oninput="calcFlatEq(${q.id},${q.task_id || q.id});markDirty(${q.task_id || q.id})"/></td>
+                    <td><input type="number" value="${hc}" readonly style="${calcStyle}"/></td>
+                    <td><input type="number" value="${fte}" readonly style="${calcStyle}"/></td>
+                    <td class="status-cell">
+                        ${getStatusDot(q.task_status)}
+                        <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
+                            ${saveBtn}${reviewBtn}
+                        </div>
+                    </td>
+                    <td class="date-cell">${updatedAt}</td>
+                    <td style="vertical-align:middle;white-space:normal;text-align:center">${deptCell}</td>
+                    <td class="action-col">${actionBtn}</td>
+                </tr>`;
             }
 
             function makeTable(thFirst, rows) {
+                const hdr = getTableHeaderColor();
+                const thStyle = `background:${hdr.bg};color:${hdr.text};border-bottom:2px solid ${hdr.border};padding:.75rem 1rem;`;
+
+                if (isGreenMetric) {
+                    return `<div class="table-wrap"><table class="q-table">
+                        <colgroup>
+                            <col style="width:22%"/><col style="width:28%"/>
+                            <col style="width:18%"/>
+                            <col style="width:7%"/><col style="width:10%"/>
+                            <col style="width:15%"/><col class="col-act"/>
+                        </colgroup>
+                        <thead><tr>
+                            <th style="${thStyle};text-align:left">${thFirst}</th>
+                            <th style="${thStyle};text-align:left">Answer</th>
+                            <th style="${thStyle};text-align:center">Evidence (URL)</th>
+                            <th style="${thStyle};text-align:center">Status</th>
+                            <th style="${thStyle};text-align:center">Updated At</th>
+                            <th style="${thStyle};text-align:center">Assigned To</th>
+                            <th style="${thStyle};text-align:center" class="action-col">Assign</th>
+                        </tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table></div>`;
+                }
                 return `<div class="table-wrap"><table class="q-table">
-            <colgroup>
-                <col class="col-q"/><col class="col-resp"/><col class="col-st"/>
-                <col class="col-date"/><col class="col-dept"/><col class="col-act"/>
-            </colgroup>
-            <thead><tr>
-                <th>${thFirst}</th><th>URL / Response</th><th>Status</th>
-                <th>Updated At</th><th>Assigned To</th><th class="action-col">Action</th>
-            </tr></thead>
-            <tbody>${rows}</tbody>
-        </table></div>`;
+                    <colgroup>
+                        <col class="col-q"/><col class="col-resp"/>
+                        <col style="width:9%"/><col style="width:11%"/>
+                        <col style="width:16%"/><col class="col-act"/>
+                    </colgroup>
+                    <thead><tr>
+                        <th style="${thStyle};text-align:left">${thFirst}</th>
+                        <th style="${thStyle};text-align:left">URL / Response</th>
+                        <th style="${thStyle};text-align:center">Status</th>
+                        <th style="${thStyle};text-align:center">Updated At</th>
+                        <th style="${thStyle};text-align:center">Assigned To</th>
+                        <th style="${thStyle};text-align:center" class="action-col">Assign</th>
+                    </tr></thead>
+                    <tbody>${rows}</tbody>
+                </table></div>`;
+            }
+
+            function makeEqTable(thFirst, rows) {
+                const hdr = getTableHeaderColor();
+                const thStyle = `background:${hdr.bg};color:${hdr.text};border-bottom:2px solid ${hdr.border};padding:.75rem 1rem;`;
+
+                return `<div class="table-wrap"><table class="q-table" style="table-layout:fixed">
+                    <thead><tr>
+                        <th style="${thStyle};width:18%">${thFirst}</th>
+                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">Full Time</th>
+                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">Part Time</th>
+                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">HC</th>
+                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">FTE</th>
+                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">Status</th>
+                        <th style="${thStyle};width:11%;text-align:center;white-space:normal;padding:.4rem .2rem">Updated At</th>
+                        <th style="${thStyle};width:12%;text-align:center;white-space:normal;padding:.4rem .2rem">Assigned To</th>
+                        <th style="${thStyle};width:10%;text-align:center;white-space:normal;padding:.4rem .2rem" class="action-col">Assign</th>
+                    </tr></thead>
+                    <tbody>${rows}</tbody>
+                </table></div>`;
+            }
+
+            function isGridQuestion(q) {
+                const items = q.items || [];
+                return items.length === 4 &&
+                    items[0]?.label === 'Full Time' &&
+                    items[1]?.label === 'Part Time';
             }
 
             // ── Main render ────────────────────────────────────────────
-            function renderSections() {
-                const groups = groupByTheme(allQuestions);
+            function renderSections(questionsToRender) {
+                const qs = questionsToRender || allQuestions;
+                const groups = groupByTheme(qs);
                 const container = document.getElementById('sectionsContainer');
-                if (!allQuestions.length) { container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)">No questions found.</div>`; return; }
+                if (!qs.length) { container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)">No questions found.</div>`; return; }
 
                 let secIdx = 0;
                 container.innerHTML = groups.map(([theme, qs]) => {
                     const sid = 'sec_' + (secIdx++);
-                    const assigned = qs.filter(q => q.department_id).length;
+                    const assigned = qs.filter(q => q.task_status && q.task_status !== 'pending').length;
                     const useSubSections = THEMES_WITH_SUBSECTIONS.includes(theme);
                     let bodyHtml = '';
 
@@ -1710,31 +2261,44 @@
                             const gridQs = isEq ? subQs.filter(q => /^EQ[1-9]$/.test(q.code) && (q.items || []).length === 4) : [];
                             const normalQs = isEq ? subQs.filter(q => !(/^EQ[1-9]$/.test(q.code) && (q.items || []).length === 4)) : subQs;
                             if (isEq && gridQs.length) {
-                                const rows = gridQs.map(q => renderEqualityRow(q)).join('');
-                                bodyHtml += makeTable('Equality', rows);
+                                const rows = gridQs.map(q => renderEqualityRowFlat(q)).join('');
+                                bodyHtml += makeEqTable('Equality', rows);
                             }
                             if (normalQs.length) {
-                                const rows = normalQs.map(q => renderRow(q)).join('');
+                                const rows = normalQs.map(q => isGridQuestion(q) ? renderEqualityRowFlat(q) : renderRow(q)).join('');
                                 bodyHtml += makeTable(isEq ? 'Equality' : sub, rows);
                             }
                         });
                     } else {
-                        const rows = qs.map(q => renderRow(q)).join('');
-                        bodyHtml = makeTable(theme, rows);
+                        const gridQs = qs.filter(q => isGridQuestion(q));
+                        const normalQs = qs.filter(q => !isGridQuestion(q));
+
+                        if (gridQs.length) {
+                            const gridRows = gridQs.map(q => renderEqualityRowFlat(q)).join('');
+                            bodyHtml += makeEqTable(theme, gridRows);
+                        }
+                        if (normalQs.length) {
+                            const normalRows = normalQs.map(q => renderRow(q)).join('');
+                            bodyHtml += makeTable(theme, normalRows);
+                        }
                     }
 
+                    if (isGreenMetric) {
+                        return `<div style="background:#fff;border-radius:14px;border:1px solid var(--border);box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:1.1rem">${bodyHtml}</div>`;
+                    }
                     return `<div class="sec-block">
-                <div class="sec-hdr" onclick="toggleSec('${sid}')">
-                    <span class="sec-hdr-title">${theme} (${qs.length}Q)</span>
-                    <div class="sec-hdr-right">
-                        <span class="sec-count">${assigned}/${qs.length} assigned</span>
-                        <span class="sec-arrow" id="tog_${sid}">&#9650;</span>
-                    </div>
-                </div>
-                <div id="body_${sid}">${bodyHtml}</div>
-            </div>`;
+                        <div class="sec-hdr" onclick="toggleSec('${sid}')">
+                            <span class="sec-hdr-title">${theme} (${qs.length}Q)</span>
+                            <div class="sec-hdr-right">
+                                <span class="sec-count">${assigned}/${qs.length} answered</span>
+                                <span class="sec-arrow" id="tog_${sid}">&#9650;</span>
+                            </div>
+                        </div>
+                        <div id="body_${sid}">${bodyHtml}</div>
+                    </div>`;
                 }).join('');
                 setTimeout(initQuillEditors, 0);
+                updateLegendCounts();
             }
 
             let dirtyRows = new Set();
@@ -1756,9 +2320,93 @@
                 if (row) row.classList.add('dirty');
             }
 
+            const CROSS_VALIDATIONS = [
+                {
+                    sumCodes: ['FS2', 'FS3'],
+                    totalCode: 'FS1',
+                    label: 'Faculty Staff Male + Faculty Staff Female must equal Faculty Staff Total'
+                },
+                {
+                    sumCodes: ['SD1', 'SD2'],
+                    totalCode: 'SO1',
+                    label: 'Students Male + Students Female must equal Students - Overall'
+                }
+            ];
+
+            function validateCrossQuestions() {
+                const errors = [];
+                for (const rule of CROSS_VALIDATIONS) {
+                    const sumQs = rule.sumCodes.map(code => allQuestions.find(q => q.code === code)).filter(Boolean);
+                    const totalQ = allQuestions.find(q => q.code === rule.totalCode);
+                    if (!totalQ || sumQs.length !== rule.sumCodes.length) continue;
+
+                    const getVal = (q, idx) => {
+                        const row = document.querySelector(`tr[data-qid="${q.id}"]`);
+                        if (!row) return 0;
+                        const tds = row.querySelectorAll('td');
+                        // flat layout: td[1]=FT, td[2]=PT
+                        if (tds.length >= 3 && tds[1].querySelector('input')) {
+                            return idx === 0
+                                ? parseFloat(tds[1].querySelector('input')?.value) || 0
+                                : parseFloat(tds[2].querySelector('input')?.value) || 0;
+                        }
+                        // eq-cell layout
+                        const el = document.getElementById(`item_${q.task_id || q.id}_${idx}`);
+                        return parseFloat(el?.value) || 0;
+                    };
+
+                    const ftVals = sumQs.map(q => getVal(q, 0));
+                    const ptVals = sumQs.map(q => getVal(q, 1));
+                    const ftTotal = getVal(totalQ, 0);
+                    const ptTotal = getVal(totalQ, 1);
+                    const ftSum = ftVals.reduce((a, b) => a + b, 0);
+                    const ptSum = ptVals.reduce((a, b) => a + b, 0);
+
+                    if (ftTotal === 0 && ptTotal === 0) continue;
+
+                    if (ftSum !== ftTotal) {
+                        errors.push(`⚠️ ${rule.label}\n   Full Time: ${ftVals.join(' + ')} = ${ftSum}, but overall total is ${ftTotal}`);
+                    }
+                    if (ptSum !== ptTotal) {
+                        errors.push(`⚠️ ${rule.label}\n   Part Time: ${ptVals.join(' + ')} = ${ptSum}, but overall total is ${ptTotal}`);
+                    }
+                }
+                return errors;
+            }
+
+            function showFormAlert(msg, type = 'error') {
+                const existing = document.getElementById('_formAlert');
+                if (existing) existing.remove();
+                const div = document.createElement('div');
+                div.id = '_formAlert';
+                const isSuccess = type === 'success';
+                div.style.cssText = `position:fixed;top:80px;left:50%;transform:translateX(-50%);
+                    background:${isSuccess ? '#f0fdf4' : '#fef2f2'};
+                    border:1px solid ${isSuccess ? '#bbf7d0' : '#fecaca'};
+                    color:${isSuccess ? '#065f46' : '#991b1b'};
+                    padding:.75rem 1.4rem;border-radius:10px;font-size:.84rem;z-index:2000;
+                    max-width:520px;box-shadow:0 4px 20px rgba(0,0,0,.15);line-height:1.6;
+                    white-space:pre-line;font-weight:500`;
+                div.textContent = msg;
+                document.body.appendChild(div);
+                setTimeout(() => div.remove(), isSuccess ? 4000 : 7000);
+            }
+
             async function saveRowAnswer(questionId, btn) {
                 const q = allQuestions.find(q => (q.task_id || q.id) === questionId);
-                if (!q) return;
+                if (!q.task_id) {
+                    showAlert('Not Assigned', 'This question has not been assigned to a department yet. Please assign it first before saving.');
+                    btn.textContent = '💾';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Cross-validation check
+                const errors = validateCrossQuestions();
+                if (errors.length) {
+                    showFormAlert('Please fix the following before saving:\n\n' + errors.join('\n\n'));
+                    return;
+                }
 
                 // Collect current value from the DOM
                 const answerData = collectAdminAnswer(q);
@@ -1787,7 +2435,19 @@
                         const row = btn.closest('tr');
                         if (row) {
                             const statusCell = row.querySelector('.status-cell');
-                            if (statusCell) statusCell.innerHTML = getStatusDot('submitted');
+                            if (statusCell) {
+                                const qObj = allQuestions.find(q => (q.task_id || q.id) === questionId);
+                                const reviewBtn = `<button onclick="event.stopPropagation();openReviewById(${qObj?.id})" title="Evaluate Submission"
+                                    style="background:#eef2ff;color:#3730a3;border:1.5px solid #c7d2fe;padding:.25rem .4rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;line-height:1;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center">
+                                    Evaluate</button>`;
+                                statusCell.innerHTML = `${getStatusDot('submitted')}
+                                <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
+                                    <button class="btn-save-row" data-saveid="${questionId}"
+                                        onclick="event.stopPropagation();saveRowAnswer(${questionId},this)"
+                                        title="Save Changes">💾 Save</button>
+                                    ${reviewBtn}
+                                </div>`;
+                            }
                             const dateCell = row.querySelector('.date-cell');
                             if (dateCell) dateCell.textContent = formatDate(q.answer_updated_at);
                             row.classList.remove('dirty');
@@ -1818,10 +2478,19 @@
                 const taskId = q.task_id || q.id;
                 const items = q.items || [];
 
-                // Equality grid
-                if (items.length === 4 && /^EQ[1-9]$/.test(q.code)) {
-                    const ft = parseFloat(document.querySelector(`tr[data-qid="${q.id}"] .eq-cell:nth-child(1) input`)?.value) || 0;
-                    const pt = parseFloat(document.querySelector(`tr[data-qid="${q.id}"] .eq-cell:nth-child(2) input`)?.value) || 0;
+                // Equality grid — handles both flat table layout and eq-cell grid layout
+                if (isGridQuestion(q)) {
+                    // Try flat layout first (renderEqualityRowFlat — separate <td> inputs)
+                    const tds = document.querySelectorAll(`tr[data-qid="${q.id}"] td`);
+                    let ft = 0, pt = 0;
+                    if (tds.length >= 3) {
+                        ft = parseFloat(tds[1].querySelector('input')?.value) || 0;
+                        pt = parseFloat(tds[2].querySelector('input')?.value) || 0;
+                    } else {
+                        // Fallback: eq-cell grid layout (renderEqualityRow)
+                        ft = parseFloat(document.querySelector(`tr[data-qid="${q.id}"] .eq-cell:nth-child(1) input`)?.value) || 0;
+                        pt = parseFloat(document.querySelector(`tr[data-qid="${q.id}"] .eq-cell:nth-child(2) input`)?.value) || 0;
+                    }
                     const hc = ft + pt;
                     const fte = Math.round(ft + (pt / 3));
                     return { answer_text: JSON.stringify({ ft, pt, hc, fte }), answer_number: null };
@@ -1869,6 +2538,18 @@
                 }
             }
 
+            function calcFlatEq(qid, taskId) {
+                const row = document.querySelector(`tr[data-qid="${qid}"]`);
+                if (!row) return;
+                const tds = row.querySelectorAll('td');
+                const ft = parseFloat(tds[1].querySelector('input')?.value) || 0;
+                const pt = parseFloat(tds[2].querySelector('input')?.value) || 0;
+                const hcInput = tds[3].querySelector('input');
+                const fteInput = tds[4].querySelector('input');
+                if (hcInput) hcInput.value = ft + pt;
+                if (fteInput) fteInput.value = Math.round(ft + (pt / 3));
+            }
+
             // ── Load functions ─────────────────────────────────────────
             async function loadCycleInfo() {
                 try {
@@ -1882,27 +2563,48 @@
                         const end = cycle.deadline ? new Date(cycle.deadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
                         document.getElementById('pageSub').textContent = `${cycle.year || ''} · ${start} – ${end}`;
                         document.getElementById('deadlineBanner').innerHTML = `🏆 <strong>${cycle.name}</strong> — Submission Deadline: <strong>${end}</strong>`;
+
+                        if (cycle.status === 'closed') {
+                            document.getElementById('closeFormBtn').textContent = '🔒 Form Closed';
+                            document.getElementById('closeFormBtn').disabled = true;
+                            document.getElementById('editModeBtn').disabled = true;
+                            const banner = document.createElement('div');
+                            banner.className = 'banner';
+                            banner.style.cssText = 'background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-bottom:.55rem';
+                            banner.innerHTML = '🔒 <strong>Form Closed</strong> — This ranking form is now closed. Departments can no longer submit or edit answers.';
+                            document.getElementById('deadlineBanner').insertAdjacentElement('afterend', banner);
+                        }
+
+                        const name = (cycle.name || '').toLowerCase();
+                        isGreenMetric = name.includes('greenmetric');
+                        currentCycleName = cycle.name || '';
+                        const syncBanner = document.querySelector('.banner-yellow');
+                        if (syncBanner) {
+                            const name = (cycle.name || '').toLowerCase();
+                            if (name.includes('qs')) {
+                                syncBanner.style.display = 'flex';
+                            } else {
+                                syncBanner.style.display = 'none';
+                            }
+                        }
+                        if (isGreenMetric) {
+                            document.getElementById('gmTabsWrap').style.display = 'block';
+                            document.querySelector('.def-panel').style.display = 'none';
+                        }
+                        else {
+                            document.querySelector('.def-panel').style.display = '';
+                        }
                     }
                 } catch (e) { console.error(e); }
-
-                if (cycle.status === 'closed') {
-                    document.getElementById('closeFormBtn').textContent = '🔒 Form Closed';
-                    document.getElementById('closeFormBtn').disabled = true;
-                    document.getElementById('editModeBtn').disabled = true;
-                    const banner = document.createElement('div');
-                    banner.className = 'banner';
-                    banner.style.cssText = 'background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-bottom:.55rem';
-                    banner.innerHTML = '🔒 <strong>Form Closed</strong> — This ranking form is now closed. Departments can no longer submit or edit answers.';
-                    document.getElementById('deadlineBanner').insertAdjacentElement('afterend', banner);
-                }
             }
 
             async function loadQuestions() {
                 try {
                     const res = await fetch(`http://localhost:3002/api/admin/cycles/${cycleId}/questions`, { headers: { 'Authorization': `Bearer ${token}` } });
                     allQuestions = await res.json();
-                    renderSections();
-                } catch (e) { document.getElementById('sectionsContainer').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions.</div>'; }
+                } catch (e) {
+                    document.getElementById('sectionsContainer').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions.</div>';
+                }
             }
 
             async function loadDepartments() {
@@ -1961,7 +2663,118 @@
                 localStorage.clear(); window.location.href = 'login.html';
             }
 
-            Promise.all([loadCycleInfo(), loadDepartments(), loadQuestions()]);
+            function toggleCycles() {
+                const el = document.getElementById('navCycles');
+                const ar = document.getElementById('cyclesArrow');
+                el.classList.toggle('open');
+                ar.textContent = el.classList.contains('open') ? '▴' : '▾';
+            }
+
+            function switchGMTab(el, cat) {
+                document.querySelectorAll('.gm-tab').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+                activeGMTab = cat;
+                const filtered = allQuestions.filter(q => q.gm_category === cat);
+                renderSections(filtered);
+                document.querySelector('.def-panel').style.display = 'none'; // ← hide def panel
+            }
+
+            function formatGMCode(code) {
+                if (!code) return '';
+                // SI_1_1 → 1.1, EC_2_3 → 2.3
+                const parts = code.split('_');
+                if (parts.length >= 3) return `${parts[1]}.${parts[2]}`;
+                return '';
+            }
+
+            function formatGMTitle(title) {
+                if (!title.includes(' — ')) return title;
+                const [main, rest] = title.split(' — ');
+                return `${main}<br><span style="font-size:.72rem;color:var(--subtext);font-style:italic">${rest}</span>`;
+            }
+
+            // Highlight sidebar nav child based on current cycle type
+            function highlightNavType() {
+                const name = (currentCycleName || '').toLowerCase();
+                let typeKey = '';
+                if (name.includes('sustainability')) typeKey = 'qs-sustainability';
+                else if (name.includes('qs') && name.includes('world')) typeKey = 'qs-wur';
+                else if (name.includes('world')) typeKey = 'the-wur';
+                else if (name.includes('impact')) typeKey = 'the-impact';
+                else if (name.includes('greenmetric')) typeKey = 'greenmetric';
+
+                document.querySelectorAll('.nav-child').forEach(a => {
+                    const url = new URL(a.href, location.href);
+                    if (url.searchParams.get('type') === typeKey) a.classList.add('active');
+                });
+            }
+
+            function showAlert(title, msg) {
+                document.getElementById('alertTitle').textContent = title;
+                document.getElementById('alertMsg').textContent = msg;
+                document.getElementById('alertConfirmBtn').onclick = () => closeModal('alertModal');
+                document.getElementById('alertModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal(id) {
+                document.getElementById(id).classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            let _reviewTaskId = null;
+
+            function openReviewModal(q) {
+                _reviewTaskId = q.task_id;
+                document.getElementById('reviewComment').value = '';
+                document.getElementById('reviewModalTitle').textContent = 'Evaluate Submission';
+                document.getElementById('reviewModalSub').textContent = `"${q.title.slice(0, 80)}${q.title.length > 80 ? '…' : ''}"`;
+                document.getElementById('reviewModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            async function submitReview(status) {
+                const comment = document.getElementById('reviewComment').value.trim();
+                try {
+                    const res = await fetch(`http://localhost:3002/api/admin/answers/${_reviewTaskId}/status`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify({ status, comment })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        closeModal('reviewModal');
+                        const q = allQuestions.find(q => q.task_id === _reviewTaskId);
+                        if (q) q.task_status = status;
+                        // change:
+                        if (isGreenMetric) {
+                            renderSections(allQuestions.filter(q => q.gm_category === activeGMTab));
+                        } else {
+                            renderSections();
+                        }
+                    } else {
+                        showAlert('Error', data.error || 'Failed to update status');
+                    }
+                } catch (e) {
+                    showAlert('Server Error', 'Something went wrong.');
+                }
+            }
+
+            function openReviewById(questionId) {
+                const q = allQuestions.find(x => x.id === questionId);
+                if (q) openReviewModal(q);
+            }
+
+            Promise.all([loadCycleInfo(), loadDepartments(), loadQuestions()]).then(() => {
+                if (isGreenMetric) {
+                    document.querySelector('.def-panel').style.display = 'none';
+                    renderSections(allQuestions.filter(q => q.gm_category === activeGMTab));
+                } else {
+                    renderSections();
+                }
+                if (editMode) setTimeout(toggleEditMode, 300);
+                highlightNavType();
+            });
         </script>
 </body>
 

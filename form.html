@@ -48,7 +48,6 @@
             overflow: hidden
         }
 
-        /* HEADER */
         .header {
             position: fixed;
             top: 0;
@@ -171,7 +170,6 @@
             color: rgba(255, 255, 255, .6)
         }
 
-        /* SIDEBAR */
         .layout {
             display: flex;
             margin-top: var(--header-h);
@@ -260,29 +258,62 @@
             border-radius: 4px
         }
 
-        /* MAIN */
+        .nav-children {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height .25s ease
+        }
+
+        .nav-children.open {
+            max-height: 300px
+        }
+
+        .nav-child {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .72rem 1.4rem .72rem 2.6rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: .82rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            transition: background .16s, color .16s
+        }
+
+        .nav-child:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, .75)
+        }
+
+        .nav-child.active {
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--gold);
+            background: rgba(255, 255, 255, .06)
+        }
+
         .main-wrap {
             flex: 1;
             display: flex;
-            overflow: hidden;
+            overflow: hidden
         }
 
         .center {
             flex: 1;
             overflow-y: auto;
-            padding: 1.4rem 1.5rem 2rem;
+            padding: 1.4rem 1.5rem 2rem
         }
 
         .questions-panel-wrap {
             display: flex;
             gap: 1rem;
-            align-items: flex-start;
-            /* key: lets sticky work */
+            align-items: flex-start
         }
 
         .sections-area {
             flex: 1;
-            min-width: 0;
+            min-width: 0
         }
 
         .center::-webkit-scrollbar {
@@ -294,15 +325,6 @@
             border-radius: 4px
         }
 
-        .content-panel-wrap {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-            flex: 1;
-            min-height: 0;
-        }
-
-        /* PAGE TOP */
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -366,40 +388,10 @@
             font-weight: 700
         }
 
-        /* THE WUR SUBJECT TABS */
         .subject-tabs {
-            display: flex;
-            gap: .4rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
             display: none
         }
 
-        .subject-tab {
-            padding: .38rem .85rem;
-            border-radius: 7px;
-            font-size: .78rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1.5px solid var(--border);
-            background: #fff;
-            color: var(--subtext);
-            transition: all .15s;
-            white-space: nowrap
-        }
-
-        .subject-tab:hover {
-            background: #f0f2f7;
-            color: var(--text)
-        }
-
-        .subject-tab.active {
-            background: #8b5cf6;
-            color: #fff;
-            border-color: #8b5cf6
-        }
-
-        /* SECTION BLOCK */
         .sec-block {
             background: #fff;
             border-radius: 14px;
@@ -435,7 +427,6 @@
             color: var(--subtext)
         }
 
-        /* TABLE */
         .subsec-hdr {
             display: grid;
             gap: 1.2rem;
@@ -448,6 +439,10 @@
             color: var(--orange-text)
         }
 
+        .subsec-hdr div:not(:first-child) {
+            text-align: center;
+        }
+
         .g-main {
             grid-template-columns: 2fr 1.8fr .5fr .9fr .8fr
         }
@@ -457,10 +452,6 @@
         }
 
         .g-eq {
-            grid-template-columns: 2fr .7fr .7fr .7fr .7fr .5fr .9fr .8fr
-        }
-
-        .q-row.g-eq {
             grid-template-columns: 2fr .7fr .7fr .7fr .7fr .5fr .9fr .8fr
         }
 
@@ -515,6 +506,17 @@
             grid-template-columns: 2.5fr 1.4fr .5fr .9fr .8fr
         }
 
+        .q-row.g-eq {
+            grid-template-columns: 2fr .7fr .7fr .7fr .7fr .5fr .9fr .8fr
+        }
+
+        .q-row.g-eq div:not(:first-child) {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
         .q-text {
             font-size: .83rem;
             color: var(--text);
@@ -547,7 +549,6 @@
             padding-top: .1rem
         }
 
-        /* INPUTS */
         .txt-input {
             width: 100%;
             background: #f5f7fc;
@@ -627,30 +628,12 @@
             cursor: pointer
         }
 
-        .rich-editor {
-            background: #f5f7fc;
-            border: 1px solid var(--border);
-            border-radius: 7px;
-            min-height: 70px;
-            padding: .5rem;
-            font-size: .78rem;
-            color: var(--text);
-            margin-top: .3rem;
-            outline: none
-        }
-
-        .rich-editor:focus {
-            border-color: var(--teal);
-            background: #fff
-        }
-
         .evidence-label {
             font-size: .75rem;
             color: var(--subtext);
             margin: .4rem 0 .2rem
         }
 
-        /* STATUS LEGEND */
         .legend {
             display: flex;
             align-items: center;
@@ -689,6 +672,11 @@
             flex-shrink: 0
         }
 
+        .status-dot.submitted {
+            background: var(--blue);
+            border-color: var(--blue)
+        }
+
         .status-dot.accepted {
             background: var(--green);
             border-color: var(--green)
@@ -709,7 +697,6 @@
             border-color: var(--blue)
         }
 
-        /* ACTION BUTTONS */
         .btn-edit {
             display: inline-flex;
             align-items: center;
@@ -756,7 +743,6 @@
             padding-top: .05rem
         }
 
-        /* DEF PANEL */
         .def-panel {
             width: 268px;
             flex-shrink: 0;
@@ -769,9 +755,8 @@
             overflow: hidden;
             position: sticky;
             top: 0;
-            /* sticks to top of .center scroll container */
             max-height: calc(100vh - var(--header-h) - 2rem);
-            align-self: flex-start;
+            align-self: flex-start
         }
 
         .def-panel-hdr {
@@ -852,7 +837,6 @@
             border-radius: 4px
         }
 
-        /* BOTTOM BAR */
         .bottom-bar {
             position: fixed;
             bottom: 0;
@@ -888,7 +872,6 @@
             background: #15803d
         }
 
-        /* MODAL */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -1029,6 +1012,69 @@
         .btn-yes-submit:hover {
             background: #0f7a72
         }
+
+        .num-inline-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem 1rem;
+            margin-top: .5rem
+        }
+
+        .num-inline-cell {
+            display: flex;
+            flex-direction: column;
+            min-width: 100px;
+            flex: 1
+        }
+
+        .num-inline-cell .evidence-label {
+            margin: 0 0 .2rem
+        }
+
+        .num-inline-cell .txt-input {
+            width: 100%
+        }
+
+        .gm-tab {
+            padding: .7rem .5rem;
+            text-align: center;
+            font-size: .78rem;
+            font-weight: 500;
+            color: var(--subtext);
+            background: #e8eaf0;
+            cursor: pointer;
+            border-right: 1px solid var(--border);
+            transition: background .14s, color .14s;
+            line-height: 1.4;
+        }
+
+        .gm-tab:last-child {
+            border-right: none;
+        }
+
+        .gm-tab span {
+            display: block;
+            font-size: .72rem;
+            font-weight: 600;
+            color: #9aa3b8;
+            margin-top: .15rem;
+        }
+
+        .gm-tab:hover {
+            background: #f0f2f7;
+            color: var(--text);
+        }
+
+        .gm-tab.active {
+            background: #fff;
+            color: var(--navy);
+            font-weight: 700;
+            box-shadow: inset 0 -3px 0 var(--teal);
+        }
+
+        .gm-tab.active span {
+            color: var(--teal);
+        }
     </style>
 </head>
 
@@ -1063,7 +1109,26 @@
         <aside class="sidebar">
             <div class="nav-section-label">Navigation</div>
             <a class="nav-item" href="dashboard-dept.html"><span class="nav-icon">🏠</span> Home</a>
-            <a class="nav-item active" href="ranking-forms.html"><span class="nav-icon">📋</span> My Ranking Forms</a>
+            <div class="nav-item" style="padding-right:.8rem">
+                <a href="ranking-forms.html"
+                    style="display:flex;align-items:center;gap:.85rem;flex:1;color:inherit;text-decoration:none">
+                    <span class="nav-icon">📋</span> My Ranking Forms
+                </a>
+                <span onclick="toggleForms()" style="cursor:pointer;font-size:.7rem;padding:.2rem .3rem"
+                    id="formsArrow">▴</span>
+            </div>
+            <div class="nav-children open" id="navForms">
+                <a class="nav-child" id="nav-qs-sus" href="ranking-forms.html"><span class="nav-icon">🌿</span> QS
+                    Sustainability</a>
+                <a class="nav-child" id="nav-qs-wur" href="ranking-forms.html"><span class="nav-icon">🏆</span> QS
+                    WUR</a>
+                <a class="nav-child" id="nav-the-wur" href="ranking-forms.html"><span class="nav-icon">📊</span> THE
+                    WUR</a>
+                <a class="nav-child" id="nav-the-impact" href="ranking-forms.html"><span class="nav-icon">🎯</span> THE
+                    Impact</a>
+                <a class="nav-child" id="nav-greenmetric" href="ranking-forms.html"><span class="nav-icon">🌱</span>
+                    GreenMetric</a>
+            </div>
             <a class="nav-item" href="progress.html"><span class="nav-icon">📈</span> Progress</a>
             <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
             <div class="nav-spacer"></div>
@@ -1079,23 +1144,58 @@
                 <div class="banner banner-yellow">✦ All submissions are taken to be a true confirmation of that data
                     point by the university. Indicators marked ↔ will automatically update if they also appear in other
                     ranking forms.</div>
-                <div class="subject-tabs" id="subjectTabs"></div>
                 <div class="legend">
                     <div class="legend-item"><span class="legend-dot"
-                            style="background:var(--green);border-color:var(--green)"></span> Accepted</div>
+                            style="background:var(--blue);border-color:var(--blue)"></span> Submitted <span
+                            id="count-submitted" style="font-weight:700;color:var(--blue)"></span></div>
                     <div class="legend-item"><span class="legend-dot"
-                            style="background:var(--amber);border-color:var(--amber)"></span> Pending</div>
-                    <div class="legend-item"><span class="legend-dot"></span> No Status</div>
+                            style="background:var(--green);border-color:var(--green)"></span> Accepted <span
+                            id="count-accepted" style="font-weight:700;color:var(--green)"></span></div>
+                    <div class="legend-item"><span class="legend-dot"
+                            style="background:var(--amber);border-color:var(--amber)"></span> Pending <span
+                            id="count-pending" style="font-weight:700;color:var(--amber)"></span></div>
+                    <div class="legend-item"><span class="legend-dot"
+                            style="background:var(--red);border-color:var(--red)"></span> Rejected <span
+                            id="count-rejected" style="font-weight:700;color:var(--red)"></span></div>
+                    <div class="legend-item"><span class="legend-dot"></span> No Status <span id="count-nostatus"
+                            style="font-weight:700;color:var(--subtext)"></span></div>
                 </div>
 
-                <!-- FLEX WRAPPER STARTS HERE — at questions level -->
+                <!-- GreenMetric Category Tabs -->
+                <div id="gmTabsWrap" style="display:none;margin-bottom:1.1rem">
+                    <div
+                        style="display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#e8eaf0">
+                        <div class="gm-tab active" onclick="switchGMTab(this,'SI')" data-cat="SI">
+                            Setting &amp; Infrastructure <span>(SI)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'EC')" data-cat="EC">
+                            Energy &amp; Climate Change <span>(EC)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'WS')" data-cat="WS">
+                            Waste <span>(WS)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'WR')" data-cat="WR">
+                            Water <span>(WR)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'TR')" data-cat="TR">
+                            Transportation <span>(TR)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'ED')" data-cat="ED">
+                            Education &amp; Research <span>(ED)</span>
+                        </div>
+                        <div class="gm-tab" onclick="switchGMTab(this,'GD')" data-cat="GD">
+                            Governance &amp; Digitalization <span>(GD)</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="questions-panel-wrap">
                     <div id="sectionsContainer" class="sections-area">
                         <div style="text-align:center;padding:3rem;color:var(--subtext)">Loading your assigned
                             questions...</div>
                     </div>
 
-                    <div class="def-panel">
+                    <div class="def-panel" style="display:none">
                         <div class="def-panel-hdr">
                             <div class="def-panel-title" id="defTitle">Click any question to see its definition</div>
                             <button class="def-close"
@@ -1114,31 +1214,39 @@
 
         <!-- SUBMIT MODAL -->
         <div class="modal-overlay" id="submitModal" onclick="closeModalOnOverlay(event)">
-            <div class="modal">
-                <div class="modal-hdr"><span style="font-size:1.3rem">📋</span><span class="modal-hdr-title">Confirm
-                        Submission</span></div>
-                <div class="modal-body">
-                    <p class="modal-desc">You are about to submit all your answers. Please confirm that all data is
-                        accurate
-                        and complete.</p>
-                    <div class="modal-checks">
-                        <div class="modal-check-item"><span class="modal-check-tick">✓</span>All data entered has
-                            been
-                            verified against official institutional records.</div>
-                        <div class="modal-check-item"><span class="modal-check-tick">✓</span>Any URLs provided lead
-                            to
-                            publicly accessible, permanent pages.</div>
-                        <div class="modal-check-item"><span class="modal-check-tick">✓</span>Supporting evidence
-                            accurately
-                            reflects your institution's current practices.</div>
+            <div class="modal confirm-modal" style="max-width:520px">
+                <div style="padding:2rem 1.8rem 1.2rem;text-align:center">
+                    <div style="font-size:3rem;margin-bottom:1rem">📋</div>
+                    <div
+                        style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:.6rem">
+                        Confirm Submission</div>
+                    <div style="font-size:.84rem;color:var(--subtext);line-height:1.6;margin-bottom:1.2rem">You are
+                        about to submit all your answers. Please confirm that all data is accurate and complete.</div>
+                    <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem;text-align:left">
+                        <div
+                            style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
+                            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>All data
+                            entered has been verified against official institutional records.
+                        </div>
+                        <div
+                            style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
+                            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>Any URLs
+                            provided lead to publicly accessible, permanent pages.
+                        </div>
+                        <div
+                            style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
+                            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>Supporting
+                            evidence accurately reflects your institution's current practices.
+                        </div>
                     </div>
-                    <div class="modal-warning"><span>⚠️</span>Submissions are taken as a true confirmation of the
-                        data by
-                        the university.</div>
-                    <div class="modal-actions">
-                        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-                        <button class="btn-yes-submit" onclick="submitAll()">Yes, Submit All</button>
+                    <div
+                        style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.65rem;font-size:.82rem;color:#713f12;line-height:1.55;margin-bottom:.4rem">
+                        <span>⚠️</span>Submissions are taken as a true confirmation of the data by the university.
                     </div>
+                </div>
+                <div style="display:flex;justify-content:center;gap:.75rem;padding:0 1.8rem 1.8rem">
+                    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button class="btn-yes-submit" onclick="submitAll()">Yes, Submit All</button>
                 </div>
             </div>
         </div>
@@ -1167,102 +1275,105 @@
 
             let isTheWur = false;
             let allQuestions = [];
-            let currentSubject = null;
+            let isGreenMetric = false;
+            let activeGMTab = 'SI';
+
+            function isGridQuestion(q) {
+                const items = q.items || [];
+                return items.length === 4 &&
+                    items[0]?.label === 'Full Time' &&
+                    items[1]?.label === 'Part Time';
+            }
 
             function switchTab(tab, type) {
                 document.querySelectorAll('.def-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 if (type === 'hist') {
                     const taskId = window._selectedTaskId;
-                    if (!taskId) {
-                        document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>';
-                        return;
-                    }
+                    if (!taskId) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>'; return; }
                     document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Loading history...</p>';
-                    fetch(`http://localhost:3002/api/submissions/history/${taskId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }).then(r => r.json()).then(rows => {
-                        if (!rows.length) {
-                            document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions recorded.</p>';
-                            return;
-                        }
-                        document.getElementById('defBody').innerHTML = rows.map(h => {
-                            const date = h.changed_at ? new Date(h.changed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
-                            let val = h.answer_text || (h.answer_number !== null ? String(h.answer_number) : '—');
-                            try {
-                                const parsed = JSON.parse(val);
-                                if (parsed && typeof parsed === 'object') {
-                                    if ('ft' in parsed) {
-                                        // Equality grid
-                                        val = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-top:.2rem">
-                                        <div><span style="font-size:.7rem;color:var(--subtext)">Full Time</span><div style="font-weight:600">${parsed.ft}</div></div>
-                                        <div><span style="font-size:.7rem;color:var(--subtext)">Part Time</span><div style="font-weight:600">${parsed.pt}</div></div>
-                                        <div><span style="font-size:.7rem;color:var(--subtext)">HC</span><div style="font-weight:600">${parsed.hc}</div></div>
-                                        <div><span style="font-size:.7rem;color:var(--subtext)">FTE</span><div style="font-weight:600">${parsed.fte}</div></div>
-                                    </div>`;
-                                    } else {
-                                        // Multi-item — look up labels from allQuestions
-                                        const q = (window.questions || []).find(q =>
-                                            String(q.task_id) === String(h.task_assignment_id)
-                                        );
-                                        const items = q?.items || [];
-                                        const lines = Object.entries(parsed).map(([idx, v]) => {
-                                            const item = items[parseInt(idx)];
-                                            const label = item
-                                                ? item.label.split(' — ').pop()
-                                                : `Field ${parseInt(idx) + 1}`;
-                                            if (item?.answer_type === 'checkbox') {
-                                                const ticked = v === 'yes';
-                                                return `<div style="display:flex;align-items:center;gap:.4rem;margin:.2rem 0">
-                                                <span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:3px;border:1.5px solid ${ticked ? 'var(--teal)' : '#d1d5db'};background:${ticked ? 'var(--teal)' : '#fff'};flex-shrink:0;font-size:.65rem;color:#fff">${ticked ? '✓' : ''}</span>
-                                                <span style="font-size:.8rem;color:${ticked ? 'var(--text)' : 'var(--subtext)'}">${label}</span>
+                    fetch(`http://localhost:3002/api/submissions/history-all/${taskId}`, { headers: { 'Authorization': `Bearer ${token}` } })
+                        .then(r => r.json()).then(rows => {
+                            if (!rows.length) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions recorded.</p>'; return; }
+                            document.getElementById('defBody').innerHTML = rows.map(h => {
+                                const date = h.changed_at ? new Date(h.changed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                                let val = h.answer_text || (h.answer_number !== null ? String(h.answer_number) : '—');
+                                try {
+                                    const parsed = JSON.parse(val);
+                                    if (parsed && typeof parsed === 'object') {
+                                        if ('ft' in parsed) {
+                                            val = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;margin-top:.2rem">
+                                                <div><span style="font-size:.7rem;color:var(--subtext)">Full Time</span><div style="font-weight:600">${parsed.ft}</div></div>
+                                                <div><span style="font-size:.7rem;color:var(--subtext)">Part Time</span><div style="font-weight:600">${parsed.pt}</div></div>
+                                                <div><span style="font-size:.7rem;color:var(--subtext)">HC</span><div style="font-weight:600">${parsed.hc}</div></div>
+                                                <div><span style="font-size:.7rem;color:var(--subtext)">FTE</span><div style="font-weight:600">${parsed.fte}</div></div>
                                             </div>`;
-                                            }
-                                            if (!v) return '';
-                                            return `<div style="margin:.25rem 0">
-                                            <div style="font-size:.7rem;color:var(--subtext);margin-bottom:.1rem">${label}</div>
-                                            <div style="font-size:.8rem;color:var(--text);word-break:break-word">${v}</div>
-                                        </div>`;
-                                        }).filter(Boolean).join('');
-                                        val = lines || '—';
+                                        } else {
+                                            const q = (window.questions || []).find(q =>
+                                                q.title === document.getElementById('defTitle').textContent
+                                            );
+                                            const items = q?.items || [];
+                                            const lines = Object.entries(parsed).map(([idx, v]) => {
+                                                const item = items[parseInt(idx)];
+                                                const label = item ? item.label.split(' — ').pop() : `Field ${parseInt(idx) + 1}`;
+                                                if (item?.answer_type === 'checkbox') {
+                                                    const ticked = v === 'yes';
+                                                    return `<div style="display:flex;align-items:center;gap:.4rem;margin:.2rem 0">
+                                                        <span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:3px;border:1.5px solid ${ticked ? 'var(--teal)' : '#d1d5db'};background:${ticked ? 'var(--teal)' : '#fff'};flex-shrink:0;font-size:.65rem;color:#fff">${ticked ? '✓' : ''}</span>
+                                                        <span style="font-size:.8rem;color:${ticked ? 'var(--text)' : 'var(--subtext)'}">${label}</span>
+                                                    </div>`;
+                                                }
+                                                const isEmpty = !v || v === '' || v === '<p><br></p>' || v === '<p></p>';
+                                                if (isEmpty && item?.answer_type !== 'url' && item?.answer_type !== 'richtext' && item?.answer_type !== 'text') return '';
+                                                return `<div style="margin:.25rem 0">
+                                                    <div style="font-size:.7rem;color:var(--subtext);margin-bottom:.1rem">${label}</div>
+                                                    <div style="font-size:.8rem;color:var(--text);word-break:break-word">
+                                                        ${isEmpty ? '<span style="color:var(--subtext);font-style:italic">Not provided</span>' : v}
+                                                    </div>
+                                                </div>`;
+                                            }).filter(Boolean).join('');
+                                            val = lines || '—';
+                                        }
                                     }
-                                }
-                            } catch (e) { }
-                            return `<div style="border-bottom:1px solid #f0f2f8;padding:.65rem 0">
-                            <div style="font-size:.72rem;color:var(--subtext);font-weight:500">${date} · ${h.changed_by_name || 'Unknown'}</div>
-                            <div style="font-size:.8rem;color:var(--text);margin-top:.35rem;line-height:1.55">${val}</div>
-                        </div>`;
-                        }).join('');
-                    }).catch(() => {
-                        document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Failed to load history.</p>';
-                    });
+                                } catch (e) { }
+                                return `<div style="border-bottom:1px solid #f0f2f8;padding:.65rem 0">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.25rem">
+                                        <span style="font-size:.7rem;font-weight:700;background:#eef2ff;color:#3730a3;padding:.15rem .45rem;border-radius:4px">${h.year || ''}</span>
+                                        <span style="font-size:.7rem;color:var(--subtext)">${date}</span>
+                                    </div>
+                                    <div style="font-size:.72rem;color:var(--subtext);margin-bottom:.2rem">${h.changed_by_name || 'Unknown'}</div>
+                                    <div style="font-size:.8rem;color:var(--text);line-height:1.55">${val}</div>
+                                </div>`;
+                            }).join('');
+                        }).catch(() => { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Failed to load history.</p>'; });
                 }
             }
 
-            function selectRow(row, title, desc, taskId) {
+            function selectRow(row) {
                 document.querySelectorAll('.q-row').forEach(r => r.classList.remove('selected'));
                 row.classList.add('selected');
+                const taskId = row.dataset.taskid ? parseInt(row.dataset.taskid) : null;
+                const title = row.dataset.title || '';
+                const desc = row.dataset.desc || '';
                 window._selectedTaskId = taskId || null;
+                window._selectedQuestion = (window.questions || allQuestions || []).find(q => q.task_id === taskId);
                 document.getElementById('defTitle').textContent = title;
                 document.getElementById('defBody').innerHTML = `<p>${desc || 'No definition available.'}</p>`;
                 document.querySelectorAll('.def-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
             }
 
             function getStatusDot(status) {
-                if (status === 'submitted' || status === 'accepted') return '<span class="status-dot accepted"></span>';
-                if (status === 'rejected') return '<span class="status-dot rejected"></span>';
-                if (status === 'queried') return '<span class="status-dot queried"></span>';
-                if (status === 'pending') return '<span class="status-dot pending"></span>';
-                return '<span class="status-dot"></span>';
+                if (status === 'submitted') return '<span class="status-dot submitted" title="Submitted"></span>';
+                if (status === 'accepted') return '<span class="status-dot accepted" title="Accepted"></span>';
+                if (status === 'rejected') return '<span class="status-dot rejected" title="Rejected"></span>';
+                if (status === 'queried') return '<span class="status-dot queried" title="Queried"></span>';
+                if (status === 'pending') return '<span class="status-dot pending" title="Pending"></span>';
+                return '<span class="status-dot" title="No Status"></span>';
             }
 
             function formatDate(d) {
                 if (!d) return '—';
-                try {
-                    const date = new Date(d);
-                    if (isNaN(date)) return '—';
-                    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-                } catch (e) { return '—'; }
+                try { const dt = new Date(d); if (isNaN(dt)) return '—'; return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return '—'; }
             }
 
             function toggleSec(id) {
@@ -1282,12 +1393,20 @@
                 if (fteEl) fteEl.value = Math.round(ft + (pt / 3));
             }
 
-            function updateWordCount(editorId, counterId) {
-                const el = document.getElementById(editorId);
-                const counter = document.getElementById(counterId);
-                if (!el || !counter) return;
-                const words = el.innerText.trim().split(/\s+/).filter(w => w.length > 0).length;
-                counter.textContent = `${words} words inserted`;
+            function calcEmployment(taskId) {
+                const totalRespondents = parseFloat(document.getElementById(`item_${taskId}_1`)?.value) || 0;
+                const employed = parseFloat(document.getElementById(`item_${taskId}_2`)?.value) || 0;
+                const unemployed = parseFloat(document.getElementById(`item_${taskId}_3`)?.value) || 0;
+                const ftStudy = parseFloat(document.getElementById(`item_${taskId}_4`)?.value) || 0;
+                const unavail = parseFloat(document.getElementById(`item_${taskId}_5`)?.value) || 0;
+                const pctEl = document.getElementById(`item_${taskId}_6`);
+                const qsRateEl = document.getElementById(`item_${taskId}_7`);
+                if (totalRespondents > 0) {
+                    const pct = ((employed + unemployed + ftStudy + unavail) / totalRespondents * 100).toFixed(1);
+                    const qsRate = (employed / (employed + unemployed) * 100).toFixed(1);
+                    if (pctEl) pctEl.value = pct;
+                    if (qsRateEl) qsRateEl.value = qsRate;
+                }
             }
 
             function initQuillEditors() {
@@ -1296,154 +1415,122 @@
                     const toolbarId = 'quill_toolbar_' + itemId;
                     const editorEl = document.getElementById(itemId);
                     if (!editorEl || editorEl._quill) return;
-
-                    const q = window.questions?.find(q =>
-                        (q.items || []).some((_, i) => `item_${q.task_id}_${i}` === itemId)
-                    );
+                    const q = window.questions?.find(q => (q.items || []).some((_, i) => `item_${q.task_id}_${i}` === itemId));
                     const locked = q ? (q.task_status && q.task_status !== 'pending') : false;
-
-                    const quill = new Quill(editorEl, {
-                        modules: { toolbar: '#' + toolbarId },
-                        theme: 'snow',
-                        readOnly: locked
-                    });
-
-                    // Set existing value from the q object directly
+                    const quill = new Quill(editorEl, { modules: { toolbar: '#' + toolbarId }, theme: 'snow', readOnly: locked });
                     if (q) {
                         const itemIndex = parseInt(itemId.split('_').pop());
                         let savedVal = '';
                         if (q.answer_text) {
                             try {
                                 const parsed = JSON.parse(q.answer_text);
-                                if (parsed && typeof parsed === 'object') {
-                                    savedVal = parsed[itemIndex] ?? parsed[String(itemIndex)] ?? '';
-                                }
-                            } catch (e) {
-                                savedVal = q.answer_text;
-                            }
+                                if (parsed && typeof parsed === 'object') savedVal = parsed[itemIndex] ?? parsed[String(itemIndex)] ?? '';
+                            } catch (e) { savedVal = q.answer_text; }
                         }
                         if (savedVal) quill.root.innerHTML = savedVal;
                     }
-
                     quill.on('text-change', () => {
                         const wcEl = document.getElementById('wc_' + itemId);
-                        if (wcEl) {
-                            const words = quill.getText().trim().split(/\s+/).filter(w => w.length > 0).length;
-                            wcEl.textContent = `${words} words inserted`;
-                        }
+                        if (wcEl) wcEl.textContent = `${quill.getText().trim().split(/\s+/).filter(w => w.length > 0).length} words inserted`;
                     });
-
                     editorEl._quill = quill;
                 });
             }
 
             function buildInput(q, locked = false) {
-                const taskId = q.task_id;
+                const taskId = q.task_id || q.id;
                 const dis = locked ? 'disabled' : '';
                 const ro = locked ? 'readonly' : '';
                 const ls = locked ? 'background:#f0f2f7;color:var(--subtext)' : '';
                 const items = q.items || [];
 
                 if (items.length > 0) {
-                    // Parse saved multi-item answers from answer_text JSON
                     let savedItems = {};
                     if (q.answer_text) {
                         try {
                             const parsed = JSON.parse(q.answer_text);
-                            if (parsed && typeof parsed === 'object' && !('ft' in parsed)) {
-                                savedItems = parsed; // keyed by index string
-                            }
-                        } catch (e) {
-                            // answer_text is a plain string (e.g. a URL) — applies to single-item questions
-                            if (items.length === 1) savedItems = { 0: q.answer_text };
-                        }
+                            if (parsed && typeof parsed === 'object' && !('ft' in parsed)) savedItems = parsed;
+                        } catch (e) { if (items.length === 1) savedItems = { 0: q.answer_text }; }
                     }
-                    // Also fall back to answer_number for single numeric items
-                    if (items.length === 1 && items[0].answer_type === 'number' && q.answer_number != null && !savedItems[0]) {
+                    if (items.length === 1 && items[0].answer_type === 'number' && q.answer_number != null && !savedItems[0])
                         savedItems = { 0: String(q.answer_number) };
-                    }
+
                     let html = '';
                     let i = 0;
                     while (i < items.length) {
                         const item = items[i];
                         const itemId = `item_${taskId}_${i}`;
-                        const existingVal = savedItems[i] ?? q.item_answers?.[i] ?? '';
+                        const existingVal = savedItems[i] ?? savedItems[String(i)] ?? '';
 
-                        // Detect group: consecutive checkboxes sharing "X — Y" pattern
                         if (item.answer_type === 'checkbox' && item.label.includes(' — ')) {
                             const [groupLabel] = item.label.split(' — ');
                             const groupItems = [];
                             let j = i;
                             while (j < items.length && items[j].answer_type === 'checkbox' && items[j].label.startsWith(groupLabel + ' — ')) {
-                                groupItems.push({ item: items[j], idx: j });
-                                j++;
+                                groupItems.push({ item: items[j], idx: j }); j++;
                             }
                             if (groupItems.length > 1) {
                                 html += `<div class="evidence-label" style="margin-top:1.5rem;font-weight:600;color:var(--text)">${groupLabel}</div>`;
                                 groupItems.forEach(({ item: gi, idx }) => {
                                     const gId = `item_${taskId}_${idx}`;
-                                    const optLabel = gi.label.split(' — ')[1];
                                     const isChecked = (savedItems[idx] === 'yes' || savedItems[idx] === true) ? 'checked' : '';
-                                    html += `<label class="check-item" style="margin-top:.25rem">
-                                    <input type="checkbox" id="${gId}" ${isChecked} ${dis}> ${optLabel}
-                                </label>`;
+                                    html += `<label class="check-item" style="margin-top:.25rem"><input type="checkbox" id="${gId}" ${isChecked} ${dis}> ${gi.label.split(' — ')[1]}</label>`;
                                 });
-                                i = j;
-                                continue;
+                                i = j; continue;
                             }
                         }
 
                         switch (item.answer_type) {
                             case 'checkbox': {
-                                const isFirst = i === 0;
                                 const isChecked = (existingVal === 'yes' || existingVal === true) ? 'checked' : '';
-                                html += `<label class="check-item" style="margin-top:${isFirst ? '.35rem' : '.9rem'};${!isFirst ? 'padding-top:.7rem;border-top:1px solid #f0f2f8;' : ''}">
-                                <input type="checkbox" id="${itemId}" ${isChecked} ${dis}> ${item.label}
-                            </label>`;
-                                break;
+                                html += `<label class="check-item" style="margin-top:${i === 0 ? '.35rem' : '.9rem'};${i > 0 ? 'padding-top:.7rem;border-top:1px solid #f0f2f8;' : ''}">
+                                    <input type="checkbox" id="${itemId}" ${isChecked} ${dis}> ${item.label}
+                                </label>`; break;
+                            }
+                            case 'radio': {
+                                const checked = (savedVal === 'yes' || savedVal === true) ? 'checked' : '';
+                                html += `<label class="check-item" style="margin-top:${i === 0 ? '.35rem' : '.25rem'}">
+                                    <input type="radio" name="radio_${taskId}" class="admin-input" data-itemidx="${i}" 
+                                        value="${item.label}" ${savedVal === item.label ? 'checked' : ''} ${dis}
+                                        onchange="markDirty(${q.task_id || q.id})"> ${item.label.includes(' — ') ? item.label.split(' — ')[1] : item.label}
+                                </label>`; break;
                             }
                             case 'url':
                                 html += `<div class="evidence-label" style="margin-top:.8rem">${item.label}</div>
-                                <div class="url-wrap">
-                                    <input class="url-input" type="url" id="${itemId}" value="${existingVal}" placeholder="https://..." ${ro} style="${ls}"/>
-                                    <button class="btn-open-link" onclick="window.open(document.getElementById('${itemId}').value,'_blank')">↗ Open</button>
-                                </div>`;
-                                break;
+                                    <div class="url-wrap">
+                                        <input class="url-input" type="url" id="${itemId}" value="${existingVal}" placeholder="https://..." ${ro} style="${ls}"/>
+                                </div>`; break;
                             case 'number':
-                                html += `<div class="evidence-label" style="margin-top:1.5rem">${item.label}</div>
-                                <input class="txt-input" type="number" id="${itemId}" value="${existingVal}" placeholder="—" style="width:180px;${ls}" ${ro}/>`;
+                                html += `<div style="margin-bottom:1.5rem">
+                                    ${isGreenMetric ? '' : `<div class="evidence-label">${item.label}</div>`}
+                                    <input class="txt-input admin-input" type="number" id="${itemId}" data-itemidx="${i}" value="${savedVal}" 
+                                        placeholder="—" style="${ls}" ${ro}
+                                        oninput="markDirty(${q.task_id || q.id});calcEmployment(${taskId})"/>
+                                </div>`;
                                 break;
                             case 'richtext':
                             case 'text':
                                 html += `<div class="evidence-label" style="margin-top:1rem">${item.label}</div>
                                 <div id="quill_container_${itemId}" style="margin-top:.3rem">
                                     <div id="quill_toolbar_${itemId}">
-                                        <span class="ql-formats">
-                                            <button class="ql-bold"></button>
-                                            <button class="ql-italic"></button>
-                                            <button class="ql-underline"></button>
-                                            <button class="ql-strike"></button>
-                                            <button class="ql-script" value="super"></button>
-                                            <button class="ql-script" value="sub"></button>
-                                        </span>
-                                        <span class="ql-formats">
-                                            <button class="ql-list" value="ordered"></button>
-                                            <button class="ql-list" value="bullet"></button>
-                                        </span>
-                                        <span class="ql-formats">
-                                            <button class="ql-link"></button>
-                                            <button class="ql-clean"></button>
-                                            <button class="ql-undo">↩</button>
-                                            <button class="ql-redo">↪</button>
-                                        </span>
+                                        <span class="ql-formats"><button class="ql-bold"></button><button class="ql-italic"></button><button class="ql-underline"></button><button class="ql-strike"></button><button class="ql-script" value="super"></button><button class="ql-script" value="sub"></button></span>
+                                        <span class="ql-formats"><button class="ql-list" value="ordered"></button><button class="ql-list" value="bullet"></button></span>
+                                        <span class="ql-formats"><button class="ql-link"></button><button class="ql-clean"></button></span>
                                     </div>
                                     <div id="${itemId}" style="min-height:80px;font-size:.78rem;font-family:'DM Sans',sans-serif"></div>
                                 </div>
-                                ${item.max_words ? `<div style="display:flex;justify-content:space-between;font-size:.71rem;color:var(--subtext);margin-top:.2rem">
-                                    <span id="wc_${itemId}">0 words inserted</span>
-                                    <span>Maximum ${item.max_words} words</span>
-                                </div>` : ''}`;
-                                break;
+                                ${item.max_words ? `<div style="display:flex;justify-content:space-between;font-size:.71rem;color:var(--subtext);margin-top:.2rem"><span id="wc_${itemId}">0 words inserted</span><span>Maximum ${item.max_words} words</span></div>` : ''}`; break;
+                            case 'select': {
+                                const opts = (item.options || '').split(',').map(o => o.trim());
+                                html += `<div class="evidence-label" style="margin-top:1rem">${item.label}</div>
+                                <select class="txt-input" id="${itemId}" ${dis} style="${ls};cursor:pointer">
+                                    <option value="">— Select —</option>
+                                    ${opts.map(o => `<option value="${o}" ${existingVal === o ? 'selected' : ''}>${o}</option>`).join('')}
+                                </select>`; break;
+                            }
+                            case 'calculated':
+                                html += `<div class="evidence-label" style="margin-top:1rem">${item.label}</div>
+                                <input class="txt-input" type="number" id="${itemId}" placeholder="Auto-calculated" readonly style="background:#f0f2f7;color:var(--subtext)"/>`; break;
                             default:
                                 html += `<div class="evidence-label" style="margin-top:1.5rem">${item.label}</div>
                                 <input class="txt-input" type="text" id="${itemId}" value="${existingVal}" placeholder="Enter answer" ${ro} style="${ls}"/>`;
@@ -1459,21 +1546,20 @@
                 switch (q.question_type) {
                     case 'yesno':
                         return `<div style="font-size:.8rem;font-weight:600;color:var(--teal);margin-bottom:.3rem">Please select one option:</div>
-                        <label class="check-item"><input type="radio" name="q${taskId}" value="yes" ${existing === 'yes' ? 'checked' : ''} ${dis}> Yes</label>
-                        <label class="check-item"><input type="radio" name="q${taskId}" value="no"  ${existing === 'no' ? 'checked' : ''} ${dis}> No</label>`;
+                        <label class="check-item"><input type="radio" name="q${taskId}" value="yes" ${existing === 'yes' ? 'checked' : ''} ${locked ? 'disabled' : ''}> Yes</label>
+                        <label class="check-item"><input type="radio" name="q${taskId}" value="no"  ${existing === 'no' ? 'checked' : ''} ${locked ? 'disabled' : ''}> No</label>`;
                     case 'url':
                         return `<div class="evidence-label">Link or URL:</div>
                         <div class="url-wrap">
-                            <input class="url-input" type="url" id="input_${taskId}" value="${existing}" placeholder="https://..." ${ro} style="${ls}"/>
-                            <button class="btn-open-link" onclick="window.open(document.getElementById('input_${taskId}').value,'_blank')">↗ Open</button>
+                            <input class="url-input" type="url" id="input_${taskId}" value="${existing}" placeholder="https://..." ${locked ? 'readonly' : ''} style="${locked ? 'background:#f0f2f7;color:var(--subtext)' : ''}"/>
                         </div>`;
                     case 'number':
                         return `<div class="evidence-label">Value:</div>
-                        <input class="txt-input" type="number" id="input_${taskId}" value="${existingNum}" placeholder="Enter number" style="width:200px;${ls}" ${ro}/>`;
+                        <input class="txt-input" type="number" id="input_${taskId}" value="${existingNum}" placeholder="Enter number" style="width:200px;${locked ? 'background:#f0f2f7;color:var(--subtext)' : ''}" ${locked ? 'readonly' : ''}/>`;
                     case 'checkbox':
-                        return `<label class="check-item"><input type="checkbox" id="input_${taskId}" ${existing === 'yes' ? 'checked' : ''} ${dis}> Tick if applicable</label>`;
+                        return `<label class="check-item"><input type="checkbox" id="input_${taskId}" ${existing === 'yes' ? 'checked' : ''} ${locked ? 'disabled' : ''}> Tick if applicable</label>`;
                     default:
-                        return `<input class="txt-input" type="text" id="input_${taskId}" value="${existing}" placeholder="Enter answer" ${ro} style="${ls}"/>`;
+                        return `<input class="txt-input" type="text" id="input_${taskId}" value="${existing}" placeholder="Enter answer" ${locked ? 'readonly' : ''} style="${locked ? 'background:#f0f2f7;color:var(--subtext)' : ''}"/>`;
                 }
             }
 
@@ -1489,16 +1575,17 @@
                 const taskId = q.task_id;
                 const items = q.items || [];
 
-                // Equality grid rows (EQ pattern: exactly 4 items ft/pt/hc/fte)
-                if (items.length === 4 && document.getElementById(`item_${taskId}_0`)) {
+                // Standard 4-item FT/PT/HC/FTE equality grid
+                if (items.length === 4 &&
+                    items[0]?.label === 'Full Time' &&
+                    items[1]?.label === 'Part Time' &&
+                    document.getElementById(`item_${taskId}_0`)) {
                     const ftVal = parseFloat(document.getElementById(`item_${taskId}_0`)?.value) || 0;
                     const ptVal = parseFloat(document.getElementById(`item_${taskId}_1`)?.value) || 0;
-                    const hcVal = ftVal + ptVal;
-                    const fteVal = Math.round(ftVal + (ptVal / 3));
-                    return { answer_text: JSON.stringify({ ft: ftVal, pt: ptVal, hc: hcVal, fte: fteVal }), answer_number: null };
+                    return { answer_text: JSON.stringify({ ft: ftVal, pt: ptVal, hc: ftVal + ptVal, fte: Math.round(ftVal + (ptVal / 3)) }), answer_number: null };
                 }
 
-                // Multi-item questions: collect all item values into a JSON object keyed by index
+                // All other multi-item questions (including other grid questions)
                 if (items.length > 0) {
                     const collected = {};
                     items.forEach((item, i) => {
@@ -1507,15 +1594,13 @@
                         if (item.answer_type === 'checkbox') {
                             collected[i] = el.checked ? 'yes' : 'no';
                         } else if (item.answer_type === 'richtext' || item.answer_type === 'text') {
-                            const quill = document.getElementById(`item_${taskId}_${i}`)._quill;
+                            const quill = el._quill;
                             collected[i] = quill ? quill.root.innerHTML : (el.innerText || el.textContent || '');
                         } else {
                             collected[i] = el.value || '';
                         }
                     });
-                    // If only one item, save its value directly as answer_text
-                    const keys = Object.keys(collected);
-                    if (keys.length === 1) {
+                    if (Object.keys(collected).length === 1) {
                         const item = items[0];
                         const val = collected[0];
                         if (item.answer_type === 'number') return { answer_text: null, answer_number: val ? parseFloat(val) : null };
@@ -1524,45 +1609,76 @@
                     return { answer_text: JSON.stringify(collected), answer_number: null };
                 }
 
-                // WUR numeric
                 if (isTheWur) {
                     const val = document.getElementById(`input_${taskId}`)?.value || null;
                     return { answer_text: null, answer_number: val ? parseFloat(val) : null };
                 }
 
-                // Standard single-answer questions
                 switch (q.question_type) {
-                    case 'yesno': {
-                        const checked = document.querySelector(`input[name="q${taskId}"]:checked`);
-                        return { answer_text: checked ? checked.value : null, answer_number: null };
+                    case 'yesno': { const ch = document.querySelector(`input[name="q${taskId}"]:checked`); return { answer_text: ch ? ch.value : null, answer_number: null }; }
+                    case 'url': { const val = document.getElementById(`input_${taskId}`)?.value || null; return { answer_text: val, answer_number: null }; }
+                    case 'number': { const val = document.getElementById(`input_${taskId}`)?.value || null; return { answer_text: null, answer_number: val ? parseFloat(val) : null }; }
+                    case 'checkbox': { const ch = document.getElementById(`input_${taskId}`)?.checked; return { answer_text: ch ? 'yes' : 'no', answer_number: null }; }
+                    default: { const val = document.getElementById(`input_${taskId}`)?.value || null; return { answer_text: val, answer_number: null }; }
+                }
+            }
+
+            const CROSS_VALIDATIONS = [
+                {
+                    sumCodes: ['FS2', 'FS3'],
+                    totalCode: 'FS1',
+                    label: 'Faculty Staff Male + Faculty Staff Female (HC) must equal Faculty Staff Total (HC)'
+                },
+                {
+                    sumCodes: ['SD1', 'SD2'],
+                    totalCode: 'SO1',
+                    label: 'Students Male + Students Female must equal Students - Overall'
+                }
+            ];
+
+            function validateCrossQuestions() {
+                const errors = [];
+                const qs = window.questions || [];
+
+                for (const rule of CROSS_VALIDATIONS) {
+                    const sumQs = rule.sumCodes.map(code => qs.find(q => q.code === code)).filter(Boolean);
+                    const totalQ = qs.find(q => q.code === rule.totalCode);
+                    if (!totalQ || sumQs.length !== rule.sumCodes.length) continue;
+
+                    const getVal = (q, idx) => {
+                        const el = document.getElementById(`item_${q.task_id}_${idx}`);
+                        return parseFloat(el?.value) || 0;
+                    };
+
+                    // Check Full Time (index 0)
+                    const ftVals = sumQs.map(q => getVal(q, 0));
+                    const ftTotal = getVal(totalQ, 0);
+                    const ftSum = ftVals.reduce((a, b) => a + b, 0);
+
+                    // Check Part Time (index 1)
+                    const ptVals = sumQs.map(q => getVal(q, 1));
+                    const ptTotal = getVal(totalQ, 1);
+                    const ptSum = ptVals.reduce((a, b) => a + b, 0);
+
+                    if (ftTotal === 0 && ptTotal === 0) continue; // skip if total not filled
+
+                    if (ftSum !== ftTotal) {
+                        errors.push(`⚠️ ${rule.label}\n   Full Time: ${ftVals.join(' + ')} = ${ftSum}, but overall total is ${ftTotal}`);
                     }
-                    case 'url': {
-                        const val = document.getElementById(`input_${taskId}`)?.value || null;
-                        return { answer_text: val, answer_number: null };
-                    }
-                    case 'number': {
-                        const val = document.getElementById(`input_${taskId}`)?.value || null;
-                        return { answer_text: null, answer_number: val ? parseFloat(val) : null };
-                    }
-                    case 'checkbox': {
-                        const checked = document.getElementById(`input_${taskId}`)?.checked;
-                        return { answer_text: checked ? 'yes' : 'no', answer_number: null };
-                    }
-                    default: {
-                        const val = document.getElementById(`input_${taskId}`)?.value || null;
-                        return { answer_text: val, answer_number: null };
+
+                    if (ptSum !== ptTotal) {
+                        errors.push(`⚠️ ${rule.label}\n   Part Time: ${ptVals.join(' + ')} = ${ptSum}, but overall total is ${ptTotal}`);
                     }
                 }
+                return errors;
             }
 
             async function submitQuestion(taskId, btn) {
                 const q = window.questions?.find(x => x.task_id === taskId);
                 if (!q) return;
-
                 const row = btn.closest('.q-row');
                 const isEqRow = row && row.classList.contains('g-eq');
 
-                // Edit mode — unlock inputs
                 if (btn.classList.contains('btn-edit')) {
                     q.task_status = 'pending';
                     if (row) {
@@ -1579,10 +1695,14 @@
                     return;
                 }
 
+                const errors = validateCrossQuestions();
+                if (errors.length) {
+                    showFormAlert('Please fix the following before submitting:\n\n' + errors.join('\n'));
+                    return;
+                }
                 const answerData = getAnswerValue(q);
                 try {
-                    btn.textContent = '...';
-                    btn.disabled = true;
+                    btn.textContent = '...'; btn.disabled = true;
                     const res = await fetch('http://localhost:3002/api/submissions/submit', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -1590,25 +1710,21 @@
                     });
                     const data = await res.json();
                     if (data.success) {
-                        // Update answer on q object so re-render shows new value
                         q.answer_text = answerData.answer_text;
                         q.answer_number = answerData.answer_number;
                         q.task_status = 'submitted';
                         q.answer_updated_at = new Date().toISOString();
-
                         btn.textContent = '✓ Saved';
-                        btn.style.background = '#16a34a';
+                        btn.style.background = 'var(--teal)';
                         setTimeout(() => {
                             btn.textContent = '✎ Edit';
                             btn.classList.remove('btn-submit-row');
                             btn.classList.add('btn-edit');
                             btn.style.background = '';
                             btn.disabled = false;
-
                             const row = btn.closest('.q-row');
                             if (row) {
                                 if (row.classList.contains('g-eq')) {
-                                    // Lock FT and PT inputs
                                     [0, 1].forEach(i => {
                                         const inp = row.querySelector(`#item_${taskId}_${i}`);
                                         if (inp) { inp.setAttribute('readonly', ''); inp.style.background = '#f0f2f7'; inp.style.color = 'var(--subtext)'; }
@@ -1624,42 +1740,28 @@
                             }
                         }, 1500);
                     } else {
-                        btn.textContent = 'Submit';
-                        btn.disabled = false;
+                        btn.textContent = 'Submit'; btn.disabled = false;
                         alert(data.error || 'Failed to save');
                     }
                 } catch (e) {
-                    btn.textContent = 'Submit';
-                    btn.disabled = false;
+                    btn.textContent = 'Submit'; btn.disabled = false;
                     alert('Server error');
                 }
             }
 
             function groupByTheme(questions) {
-                const groups = {};
-                const order = [];
-                questions.forEach(q => {
-                    const key = q.theme || 'General';
-                    if (!groups[key]) { groups[key] = []; order.push(key); }
-                    groups[key].push(q);
-                });
+                const groups = {}, order = [];
+                questions.forEach(q => { const key = q.theme || 'General'; if (!groups[key]) { groups[key] = []; order.push(key); } groups[key].push(q); });
                 return order.map(k => [k, groups[k]]);
             }
 
             const SUB_SECTION_MAP = {
-                'AR': 'Annual Report',
-                'ES': 'Environmental Sustainability',
-                'EE': 'Environmental Education',
-                'ER': 'Environmental Research',
-                'EQ': 'Equality',
-                'DI': 'Equality',
-                'ST': 'Equality',
-                'KE': 'Knowledge Exchange',
-                'HW': 'Health and Wellbeing',
-                'GG': 'Good Governance',
-                'AI': 'Additional Information'
+                'AR': 'Annual Report', 'ES': 'Environmental Sustainability',
+                'EE': 'Environmental Education', 'ER': 'Environmental Research',
+                'EQ': 'Equality', 'DI': 'Equality', 'ST': 'Equality',
+                'KE': 'Knowledge Exchange', 'HW': 'Health and Wellbeing',
+                'GG': 'Good Governance', 'AI': 'Additional Information'
             };
-
             const THEMES_WITH_SUBSECTIONS = ['Environmental Impact', 'Social Impact', 'Governance'];
 
             function getSubSection(code) {
@@ -1672,68 +1774,96 @@
                 const container = document.getElementById('sectionsContainer');
 
                 if (!questions.length) {
-                    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)">
-                    <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
-                    <div style="font-weight:600">No questions assigned to your department for this ranking.</div>
-                </div>`;
-                    window.questions = [];
-                    return;
+                    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)"><div style="font-size:2rem;margin-bottom:.5rem">📋</div><div style="font-weight:600">No questions assigned to your department for this ranking.</div></div>`;
+                    window.questions = []; return;
                 }
 
                 function renderRow(q) {
-                    const locked = q.task_status && q.task_status !== 'pending';
+                    const locked = q.task_status && q.task_status !== 'pending' && q.task_status !== 'rejected';
                     const updatedAt = formatDate(q.answer_updated_at);
                     const inputHtml = buildInput(q, locked);
                     const actionBtn = locked
                         ? `<button class="btn-edit" onclick="submitQuestion(${q.task_id}, this)">✎ Edit</button>`
                         : `<button class="btn-submit-row" onclick="submitQuestion(${q.task_id}, this)">Submit</button>`;
-                    return `<div class="q-row g-main" onclick="selectRow(this,'${q.title.replace(/'/g, "\\'")}','${(q.description || '').replace(/'/g, "\\'")}',${q.task_id || 'null'})">
-                    <div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div>
-                    <div style="padding-top:.1rem">${inputHtml}</div>
-                    <div class="status-cell">${getStatusDot(q.task_status)}</div>
-                    <div class="date-cell">${updatedAt}</div>
-                    <div class="action-cell">${actionBtn}</div>
-                </div>`;
+                    const rejectionBanner = q.task_status === 'rejected'
+                        ? `<div style="margin-top:.5rem;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:.5rem .75rem;font-size:.76rem;color:#991b1b">
+            ✕ Rejected${q.admin_comment ? ` — <em>${q.admin_comment}</em>` : ''}
+           </div>`
+                        : '';
+                    return `<div class="q-row g-main"
+                        data-title="${q.title.replace(/"/g, '&quot;')}"
+                        data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
+                        data-taskid="${q.task_id || ''}"
+                        onclick="selectRow(this)">
+                        <div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div>
+                        <div style="padding-top:.1rem">${inputHtml}${rejectionBanner}</div>
+                        <div class="status-cell">${getStatusDot(q.task_status)}</div>
+                        <div class="date-cell">${updatedAt}</div>
+                        <div class="action-cell">${actionBtn}</div>
+                    </div>`;
                 }
 
                 function renderEqualityRow(q) {
-                    const locked = q.task_status && q.task_status !== 'pending';
+                    const locked = q.task_status && q.task_status !== 'pending' && q.task_status !== 'rejected';
                     const updatedAt = formatDate(q.answer_updated_at);
                     const tid = q.task_id;
                     const ls = locked ? 'background:#f0f2f7;color:var(--subtext)' : '';
                     const ro = locked ? 'readonly' : '';
+                    const items = q.items || [];
 
-                    // Parse saved values
-                    let savedFT = '', savedPT = '', savedHC = '', savedFTE = '';
+                    // Parse saved values — support both {ft,pt,hc,fte} and generic {0,1,2,...} formats
+                    let savedVals = items.map(() => '');
                     if (q.answer_text) {
                         try {
                             const p = JSON.parse(q.answer_text);
-                            savedFT = p.ft ?? '';
-                            savedPT = p.pt ?? '';
-                            savedHC = p.hc ?? '';
-                            savedFTE = p.fte ?? '';
+                            if ('ft' in p) {
+                                savedVals[0] = p.ft ?? '';
+                                savedVals[1] = p.pt ?? '';
+                                savedVals[2] = p.hc ?? '';
+                                savedVals[3] = p.fte ?? '';
+                            } else {
+                                items.forEach((_, i) => { savedVals[i] = p[i] ?? p[String(i)] ?? ''; });
+                            }
                         } catch (e) { }
                     }
 
-                    const ftInput = `<div><input class="eq-input" type="number" id="item_${tid}_0" placeholder="—" value="${savedFT}"  style="${ls}" ${ro} oninput="calcEq(${tid})"/></div>`;
-                    const ptInput = `<div><input class="eq-input" type="number" id="item_${tid}_1" placeholder="—" value="${savedPT}"  style="${ls}" ${ro} oninput="calcEq(${tid})"/></div>`;
-                    const hcInput = `<div><input class="eq-input" type="number" id="item_${tid}_2" placeholder="—" value="${savedHC}"  style="background:#f0f2f7;color:var(--subtext)" readonly/></div>`;
-                    const fteInput = `<div><input class="eq-input" type="number" id="item_${tid}_3" placeholder="—" value="${savedFTE}" style="background:#f0f2f7;color:var(--subtext)" readonly/></div>`;
+                    // Standard 4-item FT/PT/HC/FTE — HC and FTE are auto-calculated
+                    const isStandardEq = items.length === 4 && items[0]?.label === 'Full Time' && items[1]?.label === 'Part Time';
+                    const calcStyle = 'background:#f0f2f7;color:var(--subtext)';
+
+                    let inputs = '';
+                    if (isStandardEq) {
+                        inputs = `
+                            <div><input class="eq-input" type="number" id="item_${tid}_0" placeholder="—" value="${savedVals[0]}" style="${ls}" ${ro} oninput="calcEq(${tid})"/></div>
+                            <div><input class="eq-input" type="number" id="item_${tid}_1" placeholder="—" value="${savedVals[1]}" style="${ls}" ${ro} oninput="calcEq(${tid})"/></div>
+                            <div><input class="eq-input" type="number" id="item_${tid}_2" placeholder="—" value="${savedVals[2]}" style="${calcStyle}" readonly/></div>
+                            <div><input class="eq-input" type="number" id="item_${tid}_3" placeholder="—" value="${savedVals[3]}" style="${calcStyle}" readonly/></div>`;
+                    } else {
+                        // Generic multi-number grid — all editable
+                        inputs = items.map((item, i) =>
+                            `<div><input class="eq-input" type="number" id="item_${tid}_${i}" placeholder="—" value="${savedVals[i]}" style="${ls}" ${ro}/></div>`
+                        ).join('');
+                    }
 
                     const actionBtn = locked
                         ? `<button class="btn-edit"       onclick="submitQuestion(${tid}, this)">✎ Edit</button>`
                         : `<button class="btn-submit-row" onclick="submitQuestion(${tid}, this)">Submit</button>`;
 
-                    return `<div class="q-row g-eq" onclick="selectRow(this,'${q.title.replace(/'/g, "\\'")}','${(q.description || '').replace(/'/g, "\\'")}',${tid || 'null'})">
-                    <div class="q-text">${q.title}</div>
-                    ${ftInput}${ptInput}${hcInput}${fteInput}
-                    <div class="status-cell">${getStatusDot(q.task_status)}</div>
-                    <div class="date-cell">${updatedAt}</div>
-                    <div class="action-cell">${actionBtn}</div>
-                </div>`;
+                    return `<div class="q-row g-eq"
+                        data-title="${q.title.replace(/"/g, '&quot;')}"
+                        data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
+                        data-taskid="${q.task_id || ''}"
+                        onclick="selectRow(this)">
+                        <div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div>
+                        ${inputs}
+                        <div class="status-cell">${getStatusDot(q.task_status)}</div>
+                        <div class="date-cell">${updatedAt}</div>
+                        <div class="action-cell">${actionBtn}</div>
+                    </div>`;
                 }
-                // Expose globally so submitQuestion can call it
+
                 window._renderEqualityRow = renderEqualityRow;
+
                 let secIdx = 0;
                 container.innerHTML = groups.map(([theme, qs]) => {
                     const sid = 'sec_' + (secIdx++);
@@ -1742,13 +1872,8 @@
                     let rowsHtml = '';
 
                     if (useSubSections) {
-                        const subGroups = {};
-                        const subOrder = [];
-                        qs.forEach(q => {
-                            const sub = getSubSection(q.code) || theme;
-                            if (!subGroups[sub]) { subGroups[sub] = []; subOrder.push(sub); }
-                            subGroups[sub].push(q);
-                        });
+                        const subGroups = {}, subOrder = [];
+                        qs.forEach(q => { const sub = getSubSection(q.code) || theme; if (!subGroups[sub]) { subGroups[sub] = []; subOrder.push(sub); } subGroups[sub].push(q); });
 
                         subOrder.forEach(sub => {
                             const subQs = subGroups[sub];
@@ -1759,83 +1884,71 @@
                                 const normalQs = subQs.filter(q => !(/^EQ[1-9]$/.test(q.code) && (q.items || []).length === 4));
 
                                 if (gridQs.length) {
-                                    rowsHtml += `<div class="subsec-hdr g-eq">
-                                    <div>Equality</div>
-                                    <div>Full Time</div><div>Part Time</div>
-                                    <div>HC</div><div>FTE</div>
-                                    <div>Status</div><div>Updated At</div><div>Action</div>
-                                </div>`;
+                                    rowsHtml += `<div class="subsec-hdr g-eq"><div>Equality</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
                                     gridQs.forEach(q => { rowsHtml += renderEqualityRow(q); });
                                 }
-
                                 if (normalQs.length) {
-                                    rowsHtml += `<div class="subsec-hdr g-main">
-                                    <div>Equality</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div>
-                                </div>`;
-                                    normalQs.forEach(q => { rowsHtml += renderRow(q); });
+                                    rowsHtml += `<div class="subsec-hdr g-main"><div>Equality</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                                    normalQs.forEach(q => { rowsHtml += isGridQuestion(q) ? renderEqualityRow(q) : renderRow(q); });
                                 }
                             } else {
-                                rowsHtml += `<div class="subsec-hdr g-main">
-                                <div>${sub}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div>
-                            </div>`;
-                                subQs.forEach(q => { rowsHtml += renderRow(q); });
+                                rowsHtml += `<div class="subsec-hdr g-main"><div>${sub}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                                subQs.forEach(q => { rowsHtml += isGridQuestion(q) ? renderEqualityRow(q) : renderRow(q); });
                             }
                         });
                     } else {
-                        // No sub-sections: use theme name as column header
-                        rowsHtml = `<div class="subsec-hdr g-main">
-                        <div>${theme}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div>
-                    </div>`;
-                        qs.forEach(q => { rowsHtml += renderRow(q); });
+                        const hasGrid = qs.some(q => isGridQuestion(q));
+                        const hasNormal = qs.some(q => !isGridQuestion(q));
+
+                        if (hasGrid && hasNormal) {
+                            // Mix — split into two groups
+                            const gridQs = qs.filter(q => isGridQuestion(q));
+                            const normalQs = qs.filter(q => !isGridQuestion(q));
+                            rowsHtml += `<div class="subsec-hdr g-main"><div>${theme}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                            normalQs.forEach(q => { rowsHtml += renderRow(q); });
+                            rowsHtml += `<div class="subsec-hdr g-eq"><div>${theme}</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                            gridQs.forEach(q => { rowsHtml += renderEqualityRow(q); });
+                        } else if (hasGrid) {
+                            rowsHtml = `<div class="subsec-hdr g-eq"><div>${theme}</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                            qs.forEach(q => { rowsHtml += renderEqualityRow(q); });
+                        } else {
+                            rowsHtml = `<div class="subsec-hdr g-main"><div>${theme}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                            qs.forEach(q => { rowsHtml += renderRow(q); });
+                        }
                     }
 
                     return `<div class="sec-block">
-                    <div class="sec-hdr" onclick="toggleSec('${sid}')">
-                        <span class="sec-hdr-title">${theme}</span>
-                        <div style="display:flex;align-items:center;gap:.6rem">
-                            <span style="font-size:.75rem;color:var(--subtext)">${answered}/${qs.length} answered</span>
-                            <span class="sec-tog" id="tog_${sid}">▲</span>
+                        <div class="sec-hdr" onclick="toggleSec('${sid}')">
+                            <span class="sec-hdr-title">${theme}</span>
+                            <div style="display:flex;align-items:center;gap:.6rem">
+                                <span style="font-size:.75rem;color:var(--subtext)">${answered}/${qs.length} answered</span>
+                                <span class="sec-tog" id="tog_${sid}">▲</span>
+                            </div>
                         </div>
-                    </div>
-                    <div id="body_${sid}">${rowsHtml}</div>
-                </div>`;
+                        <div id="body_${sid}">${rowsHtml}</div>
+                    </div>`;
                 }).join('');
 
                 window.questions = questions;
                 setTimeout(initQuillEditors, 0);
+                updateLegendCounts();
             }
 
             function renderWurSections(questions) {
                 const container = document.getElementById('sectionsContainer');
-
                 if (!questions.length) {
-                    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)">
-                    <div style="font-size:2rem;margin-bottom:.5rem">📋</div>
-                    <div style="font-weight:600">No THE WUR questions assigned to your department yet.</div>
-                </div>`;
-                    window.questions = [];
-                    return;
+                    container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)"><div style="font-size:2rem;margin-bottom:.5rem">📋</div><div style="font-weight:600">No THE WUR questions assigned to your department yet.</div></div>`;
+                    window.questions = []; return;
                 }
-
                 const subjectMap = {};
-                questions.forEach(q => {
-                    const s = q.theme || 'General';
-                    if (!subjectMap[s]) subjectMap[s] = [];
-                    subjectMap[s].push(q);
-                });
-
-                Object.values(subjectMap).forEach(qs =>
-                    qs.sort((a, b) => (a.kpi_index || 0) - (b.kpi_index || 0))
-                );
-
+                questions.forEach(q => { const s = q.theme || 'General'; if (!subjectMap[s]) subjectMap[s] = []; subjectMap[s].push(q); });
+                Object.values(subjectMap).forEach(qs => qs.sort((a, b) => (a.kpi_index || 0) - (b.kpi_index || 0)));
                 const orderedSubjects = THE_WUR_SUBJECTS.filter(s => subjectMap[s]);
-
                 let secIdx = 0;
                 container.innerHTML = orderedSubjects.map(subject => {
                     const qs = subjectMap[subject];
                     const sid = 'wur_' + (secIdx++);
                     const answered = qs.filter(q => q.task_status && q.task_status !== 'pending').length;
-
                     const rows = qs.map((q, i) => {
                         const locked = q.task_status && q.task_status !== 'pending';
                         const updatedAt = formatDate(q.answer_updated_at);
@@ -1843,41 +1956,40 @@
                         const actionBtn = locked
                             ? `<button class="btn-edit" onclick="submitQuestion(${q.task_id}, this)">✎ Edit</button>`
                             : `<button class="btn-submit-row" onclick="submitQuestion(${q.task_id}, this)">Submit</button>`;
-                        return `<div class="q-row g-wur" onclick="selectRow(this,'${q.title.replace(/'/g, "\\'")}','${(q.description || '').replace(/'/g, "\\'")}',${q.task_id || 'null'})">
-                        <div class="q-text"><span class="kpi-num">${q.kpi_index || (i + 1)}</span>${q.title}</div>
-                        <div>${inputHtml}</div>
-                        <div class="status-cell">${getStatusDot(q.task_status)}</div>
-                        <div class="date-cell">${updatedAt}</div>
-                        <div class="action-cell">${actionBtn}</div>
-                    </div>`;
+                        return `<div class="q-row g-wur"
+                            data-title="${q.title.replace(/"/g, '&quot;')}"
+                            data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
+                            data-taskid="${q.task_id || ''}"
+                            onclick="selectRow(this)">
+                            <div class="q-text"><span class="kpi-num">${q.kpi_index || (i + 1)}</span>${q.title}</div>
+                            <div>${inputHtml}</div>
+                            <div class="status-cell">${getStatusDot(q.task_status)}</div>
+                            <div class="date-cell">${updatedAt}</div>
+                            <div class="action-cell">${actionBtn}</div>
+                        </div>`;
                     }).join('');
-
                     return `<div class="sec-block">
-                    <div class="sec-hdr" onclick="toggleSec('${sid}')">
-                        <span class="sec-hdr-title">${subject}</span>
-                        <div style="display:flex;align-items:center;gap:.6rem">
-                            <span style="font-size:.75rem;color:var(--subtext)">${answered}/${qs.length} answered</span>
-                            <span class="sec-tog" id="tog_${sid}">▲</span>
+                        <div class="sec-hdr" onclick="toggleSec('${sid}')">
+                            <span class="sec-hdr-title">${subject}</span>
+                            <div style="display:flex;align-items:center;gap:.6rem">
+                                <span style="font-size:.75rem;color:var(--subtext)">${answered}/${qs.length} answered</span>
+                                <span class="sec-tog" id="tog_${sid}">▲</span>
+                            </div>
                         </div>
-                    </div>
-                    <div id="body_${sid}">
-                        <div class="subsec-hdr g-wur">
-                            <div>KPI</div><div>Value</div><div>Status</div><div>Updated At</div><div>Action</div>
+                        <div id="body_${sid}">
+                            <div class="subsec-hdr g-wur"><div>KPI</div><div>Value</div><div>Status</div><div>Updated At</div><div>Action</div></div>
+                            ${rows}
                         </div>
-                        ${rows}
-                    </div>
-                </div>`;
+                    </div>`;
                 }).join('');
-
                 window.questions = questions;
                 setTimeout(initQuillEditors, 0);
+                updateLegendCounts();
             }
 
             async function loadCycleInfo() {
                 try {
-                    const res = await fetch(`http://localhost:3002/api/questions/my-rankings`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`http://localhost:3002/api/questions/my-rankings`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const data = await res.json();
                     const cycle = data.find(r => String(r.id) === String(cycleId));
                     if (cycle) {
@@ -1885,7 +1997,16 @@
                         document.title = cycle.name + ' – UoB Rankings Tracker';
                         document.getElementById('pageSub').textContent = `Complete your assigned questions with supporting evidence`;
                         document.getElementById('deadlineBanner').innerHTML = `🗓️ <strong>${cycle.name}</strong> — Deadline: <strong>${formatDate(cycle.deadline)}</strong>`;
+                        highlightNavType(cycle.name);
                         const name = (cycle.name || '').toLowerCase();
+                        isGreenMetric = name.includes('greenmetric');
+                        if (isGreenMetric) {
+                            document.getElementById('gmTabsWrap').style.display = 'block';
+                            document.querySelector('.def-panel').style.display = 'none';
+                        }
+                        else {
+                            document.querySelector('.def-panel').style.display = '';
+                        }
                         isTheWur = name.includes('the world') || name.includes('the wur') || name.includes('times higher');
                     }
                 } catch (e) { console.error(e); }
@@ -1893,21 +2014,39 @@
 
             async function loadQuestions() {
                 try {
-                    const res = await fetch(`http://localhost:3002/api/questions/my-questions/${cycleId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch(`http://localhost:3002/api/questions/my-questions/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     allQuestions = await res.json();
                 } catch (e) {
-                    document.getElementById('sectionsContainer').innerHTML =
-                        '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions. Make sure the server is running.</div>';
+                    document.getElementById('sectionsContainer').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions. Make sure the server is running.</div>';
                     return;
                 }
-
                 const hasKpiIndex = allQuestions.some(q => q.kpi_index != null);
                 if (hasKpiIndex) isTheWur = true;
 
+                // Hide GM tabs with no assigned questions
+                if (isGreenMetric) {
+                    const assignedCats = new Set(allQuestions.map(q => q.gm_category).filter(Boolean));
+                    document.querySelectorAll('.gm-tab').forEach(tab => {
+                        const cat = tab.dataset.cat;
+                        if (!assignedCats.has(cat)) {
+                            tab.style.display = 'none';
+                        }
+                    });
+                    // Set activeGMTab to the first category that has questions
+                    const firstAssigned = ['SI', 'EC', 'WS', 'WR', 'TR', 'ED', 'GD'].find(cat => assignedCats.has(cat));
+                    if (firstAssigned) {
+                        activeGMTab = firstAssigned;
+                        // Update active tab highlight
+                        document.querySelectorAll('.gm-tab').forEach(tab => {
+                            tab.classList.toggle('active', tab.dataset.cat === firstAssigned);
+                        });
+                    }
+                }
                 if (isTheWur) {
                     renderWurSections(allQuestions);
+                } else if (isGreenMetric) {
+                    const firstTabQuestions = allQuestions.filter(q => q.gm_category === activeGMTab);
+                    renderStandardQuestions(firstTabQuestions);
                 } else {
                     renderStandardQuestions(allQuestions);
                 }
@@ -1919,6 +2058,11 @@
 
             async function submitAll() {
                 closeModal();
+                const errors = validateCrossQuestions();
+                if (errors.length) {
+                    showFormAlert('Please fix the following before submitting:\n\n' + errors.join('\n'));
+                    return;
+                }
                 const qs = window.questions || [];
                 let success = 0;
                 for (const q of qs) {
@@ -1933,7 +2077,7 @@
                         if (data.success) success++;
                     } catch (e) { console.error(e); }
                 }
-                alert(`✓ ${success}/${qs.length} questions submitted successfully!`);
+                showFormAlert(`✓ ${success}/${qs.length} questions submitted successfully!`, 'success');
                 loadQuestions();
             }
 
@@ -1941,6 +2085,68 @@
                 fetch('http://localhost:3002/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
                 localStorage.clear();
                 window.location.href = 'login.html';
+            }
+
+            function toggleForms() {
+                const el = document.getElementById('navForms');
+                const ar = document.getElementById('formsArrow');
+                el.classList.toggle('open');
+                ar.textContent = el.classList.contains('open') ? '▴' : '▾';
+            }
+
+            function switchGMTab(el, cat) {
+                document.querySelectorAll('.gm-tab').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+                activeGMTab = cat;
+                const filtered = allQuestions.filter(q => q.gm_category === cat);
+                renderStandardQuestions(filtered);
+            }
+
+            function highlightNavType(cycleName) {
+                const name = (cycleName || '').toLowerCase();
+                let id = '';
+                if (name.includes('sustainability')) id = 'nav-qs-sus';
+                else if (name.includes('world university') && name.includes('qs')) id = 'nav-qs-wur';
+                else if (name.includes('world university')) id = 'nav-the-wur';
+                else if (name.includes('impact')) id = 'nav-the-impact';
+                else if (name.includes('greenmetric')) id = 'nav-greenmetric';
+                if (id) document.getElementById(id)?.classList.add('active');
+            }
+
+            function updateLegendCounts() {
+                const qs = window.questions || [];
+                let submitted = 0, accepted = 0, pending = 0, rejected = 0, nostatus = 0;
+                qs.forEach(q => {
+                    const s = q.task_status;
+                    if (s === 'submitted') submitted++;
+                    else if (s === 'accepted') accepted++;
+                    else if (s === 'pending') pending++;
+                    else if (s === 'rejected') rejected++;
+                    else nostatus++;
+                });
+                document.getElementById('count-submitted').textContent = `(${submitted})`;
+                document.getElementById('count-accepted').textContent = `(${accepted})`;
+                document.getElementById('count-pending').textContent = `(${pending})`;
+                document.getElementById('count-rejected').textContent = `(${rejected})`;
+                document.getElementById('count-nostatus').textContent = `(${nostatus})`;
+            }
+
+            function showFormAlert(msg, type = 'error') {
+                const existing = document.getElementById('_formAlert');
+                if (existing) existing.remove();
+                const div = document.createElement('div');
+                div.id = '_formAlert';
+                const isSuccess = type === 'success';
+                div.style.cssText = `position:fixed;top:80px;left:50%;transform:translateX(-50%);
+                    background:${isSuccess ? '#f0fdf4' : '#fef2f2'};
+                    border:1px solid ${isSuccess ? '#bbf7d0' : '#fecaca'};
+                    color:${isSuccess ? '#065f46' : '#991b1b'};
+                    padding:.75rem 1.4rem;border-radius:10px;font-size:.84rem;z-index:2000;
+                    max-width:480px;box-shadow:0 4px 20px rgba(0,0,0,.15);line-height:1.6;
+                    white-space:pre-line;font-weight:500`;
+                div.textContent = msg;
+                document.body.appendChild(div);
+                setTimeout(() => div.remove(), isSuccess ? 4000 : 7000);
             }
 
             Promise.all([loadCycleInfo(), loadQuestions()]);

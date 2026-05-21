@@ -96,37 +96,49 @@ router.get('/my-questions/:ranking_cycle_id', async (req, res) => {
   const jwt = require('jsonwebtoken');
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'No token' });
+
+  let dept_id;
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const dept_id = decoded.department_id;
+    dept_id = decoded.department_id;
+    if (!dept_id) return res.status(403).json({ error: 'No department' });
+  } catch (e) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
 
+  try {
     const result = await db.execute({
-      sql: `SELECT q.*,
-              ta.id as task_id,
-              ta.status as task_status,
-              ta.submitted_at,
-              a.id as answer_id,
-              a.answer_text,
-              a.answer_number,
-              a.updated_at as answer_updated_at
-            FROM questions q
-            JOIN task_assignments ta ON ta.question_id = q.id
-            LEFT JOIN answers a ON a.task_assignment_id = ta.id
-            WHERE ta.department_id = ?
-            AND q.ranking_cycle_id = ?
-            ORDER BY q.id`,
+      sql: `SELECT q.*, ta.id as task_id, ta.submitted_at,
+                    a.id as answer_id, a.answer_text, a.answer_number,
+                    a.updated_at as answer_updated_at,
+                    a.status as task_status, a.admin_comment
+                FROM questions q
+                JOIN task_assignments ta ON ta.question_id = q.id
+                LEFT JOIN answers a ON a.task_assignment_id = ta.id
+                WHERE ta.department_id = ? AND q.ranking_cycle_id = ?
+                ORDER BY q.id`,
       args: [dept_id, req.params.ranking_cycle_id]
     });
 
-    // Attach items to each question
-    const questions = [];
-    for (const q of result.rows) {
-      const items = await db.execute({
-        sql: `SELECT * FROM question_items WHERE question_id = ? ORDER BY CAST(item_number AS INTEGER)`,
-        args: [q.id]
-      });
-      questions.push({ ...q, items: items.rows });
+    const allItems = await db.execute({
+      sql: `SELECT qi.* FROM question_items qi
+                  JOIN questions q ON q.id = qi.question_id
+                  JOIN task_assignments ta ON ta.question_id = q.id
+                  WHERE ta.department_id = ? AND q.ranking_cycle_id = ?
+                  ORDER BY qi.question_id, CAST(qi.item_number AS INTEGER)`,
+      args: [dept_id, req.params.ranking_cycle_id]
+    });
+
+    const itemsMap = {};
+    for (const item of allItems.rows) {
+      if (!itemsMap[item.question_id]) itemsMap[item.question_id] = [];
+      itemsMap[item.question_id].push(item);
     }
+
+    const questions = result.rows.map(q => ({
+      ...q,
+      items: itemsMap[q.id] || []
+    }));
 
     res.json(questions);
   } catch (err) {

@@ -21,6 +21,7 @@
             --navy: #0d1b3e;
             --gold: #c9a227;
             --teal: #0d9488;
+            --dark-teal: #085f58;
             --sidebar-w: 265px;
             --header-h: 66px;
             --light-bg: #f0f2f7;
@@ -339,7 +340,7 @@
             display: inline-flex;
             align-items: center;
             gap: .4rem;
-            background: var(--navy);
+            background: var(--teal);
             color: #fff;
             border: none;
             font-size: .85rem;
@@ -434,7 +435,7 @@
             border-bottom: 3px solid transparent
         }
 
-        .cycle-card.qs-sus .cycle-card-top {
+        /* .cycle-card.qs-sus .cycle-card-top {
             border-color: #16a34a
         }
 
@@ -452,7 +453,7 @@
 
         .cycle-card.greenmetric .cycle-card-top {
             border-color: #0d9488
-        }
+        } */
 
         .cycle-top-row {
             display: flex;
@@ -472,18 +473,18 @@
         }
 
         .badge-qs-sus {
-            background: #f0fdf4;
-            color: #15803d
+            background: #e8f5e9;
+            color: #2e7d32;
         }
 
         .badge-qs-wur {
-            background: #fefce8;
-            color: #8a6000
+            background: #fef9e7;
+            color: #7a6000;
         }
 
         .badge-the-wur {
-            background: #f5f3ff;
-            color: #6d28d9
+            background: #f3e5f5;
+            color: #6a1b9a;
         }
 
         .badge-the-impact {
@@ -492,8 +493,8 @@
         }
 
         .badge-greenmetric {
-            background: #f0fdfa;
-            color: #0f766e
+            background: #e0f2f1;
+            color: #00695c;
         }
 
         .status-dot {
@@ -591,7 +592,7 @@
 
         .btn-open-form {
             flex: 1;
-            background: var(--navy);
+            background: var(--dark-teal);
             color: #fff;
             border: none;
             padding: .5rem;
@@ -607,7 +608,7 @@
         }
 
         .btn-open-form:hover {
-            background: #1a3060
+            background: var(--teal)
         }
 
         .btn-edit-cycle {
@@ -648,7 +649,7 @@
 
         .modal {
             background: #fff;
-            border-radius: 18px;
+            border-radius: 12px;
             width: 100%;
             max-width: 520px;
             box-shadow: 0 20px 60px rgba(13, 27, 62, .25);
@@ -709,7 +710,7 @@
         }
 
         .form-group {
-            margin-bottom: 1rem
+            margin-bottom: 1.2rem
         }
 
         .form-label {
@@ -776,7 +777,8 @@
             font-size: .85rem;
             font-weight: 600;
             cursor: pointer;
-            font-family: 'DM Sans', sans-serif
+            font-family: 'DM Sans', sans-serif;
+            width: 10rem;
         }
 
         .btn-cancel-m:hover {
@@ -784,7 +786,7 @@
         }
 
         .btn-create {
-            background: var(--navy);
+            background: var(--teal);
             color: #fff;
             border: none;
             padding: .6rem 1.6rem;
@@ -796,11 +798,104 @@
             display: flex;
             align-items: center;
             gap: .4rem;
-            transition: background .14s
+            transition: background .14s;
+            justify-content: center;
+            width: 16rem;
         }
 
         .btn-create:hover {
-            background: #1a3060
+            background: #0a776e
+        }
+
+        .create-modal {
+            max-width: 560px;
+            text-align: center;
+        }
+
+        .create-modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: .35rem;
+            text-align: center;
+        }
+
+        .create-modal-sub {
+            font-size: .82rem;
+            color: var(--subtext);
+            line-height: 1.55;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .create-modal-body {
+            padding: 4rem 1.8rem 1rem;
+            text-align: left;
+        }
+
+        .create-modal-footer {
+            display: flex;
+            justify-content: center;
+            gap: .75rem;
+            padding: 0 1.8rem 1.8rem;
+        }
+
+        .alert-modal {
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .alert-modal-body {
+            padding: 2rem 1.8rem;
+        }
+
+        .alert-icon {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem;
+            font-size: 2.8rem;
+        }
+
+        .alert-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: .8rem;
+        }
+
+        .alert-msg {
+            font-size: .84rem;
+            color: var(--subtext);
+            line-height: 1.6;
+        }
+
+        .alert-modal-footer {
+            display: flex;
+            justify-content: center;
+            padding: 0 1.8rem 1.8rem;
+        }
+
+        .btn-alert-ok {
+            background: #e05c5c;
+            color: #fff;
+            border: none;
+            padding: .6rem 2.5rem;
+            border-radius: 9px;
+            font-size: .85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: background .14s;
+            width: 8rem;
+        }
+
+        .btn-alert-ok:hover {
+            background: #c94444;
         }
     </style>
 </head>
@@ -878,11 +973,8 @@
                     <option value="THE Impact Rankings">THE Impact Rankings</option>
                     <option value="UI GreenMetric">UI GreenMetric</option>
                 </select>
-                <select class="select-input" id="filterYear" onchange="renderCycles()">
+                <select class="select-input" id="filterYear" onchange="renderCycles()" style="min-width:110px">
                     <option value="">All Years</option>
-                    <option value="2026">2026</option>
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
                 </select>
                 <div class="filter-count" id="cycleCount">— cycles</div>
             </div>
@@ -896,16 +988,11 @@
 
     <!-- CREATE CYCLE MODAL -->
     <div class="modal-overlay" id="createModal" onclick="closeOnOverlay(event,'createModal')">
-        <div class="modal">
-            <div class="modal-hdr">
-                <div>
-                    <div class="modal-hdr-title">Create Ranking Cycle</div>
-                    <div class="modal-hdr-sub">Set up a new data collection cycle. Once created, you'll be taken
-                        straight to the form.</div>
-                </div>
-                <button class="modal-close" onclick="closeModal('createModal')">✕</button>
-            </div>
-            <div class="modal-body">
+        <div class="modal create-modal">
+            <div class="create-modal-body">
+                <div class="create-modal-title">Create Ranking Cycle</div>
+                <div class="create-modal-sub">Set up a new data collection cycle. Once created, you'll be taken straight
+                    to the form.</div>
                 <div class="form-group">
                     <label class="form-label">Ranking Type <span>*</span></label>
                     <select class="form-input" id="newType" onchange="updateAutoName()">
@@ -921,9 +1008,6 @@
                     <div class="form-group">
                         <label class="form-label">Year <span>*</span></label>
                         <select class="form-input" id="newYear" onchange="updateAutoName()">
-                            <option value="2026">2026</option>
-                            <option value="2025">2025</option>
-                            <option value="2024">2024</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -948,9 +1032,23 @@
                         placeholder="Any notes about this cycle..."></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="create-modal-footer">
                 <button class="btn-cancel-m" onclick="closeModal('createModal')">Cancel</button>
                 <button class="btn-create" onclick="createCycle()">Create &amp; Open Form →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DUPLICATE WARNING MODAL -->
+    <div class="modal-overlay" id="alertModal" onclick="closeOnOverlay(event,'alertModal')">
+        <div class="modal alert-modal">
+            <div class="alert-modal-body">
+                <div class="alert-icon">⚠️</div>
+                <div id="alertTitle" class="alert-title"></div>
+                <div id="alertMsg" class="alert-msg"></div>
+            </div>
+            <div class="alert-modal-footer">
+                <button id="alertConfirmBtn" class="btn-alert-ok">OK</button>
             </div>
         </div>
     </div>
@@ -1034,12 +1132,41 @@
 
         let allCycles = [];
 
+        // Populate year dropdown dynamically
+        const yearSelect = document.getElementById('newYear');
+        const currentYear = new Date().getFullYear();
+
+        // Add default option to modal year select
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = '';
+        defaultOpt.textContent = '— Select Year —';
+        yearSelect.appendChild(defaultOpt);
+
+        for (let y = currentYear; y >= 2020; y--) {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            yearSelect.appendChild(opt);
+        }
+
         async function loadCycles() {
             try {
                 const res = await fetch('http://localhost:3002/api/admin/cycles', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 allCycles = await res.json();
+
+                // Populate filter year dropdown with only years that exist
+                const years = [...new Set(allCycles.map(c => c.year))].sort((a, b) => b - a);
+                const filterYearSelect = document.getElementById('filterYear');
+                filterYearSelect.innerHTML = '<option value="">All Years</option>';
+                years.forEach(y => {
+                    const opt = document.createElement('option');
+                    opt.value = y;
+                    opt.textContent = y;
+                    filterYearSelect.appendChild(opt);
+                });
+
                 renderCycles();
             } catch (e) {
                 document.getElementById('cyclesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--subtext)">Failed to load cycles.</div>';
@@ -1116,6 +1243,17 @@
             window.location.href = `admin-form.html?cycle=${id}&edit=true`;
         }
 
+        function showAlert(title, msg, onConfirm = null) {
+            document.getElementById('alertTitle').textContent = title;
+            document.getElementById('alertMsg').textContent = msg;
+            const btn = document.getElementById('alertConfirmBtn');
+            btn.onclick = () => {
+                closeModal('alertModal');
+                if (onConfirm) onConfirm();
+            };
+            document.getElementById('alertModal').classList.add('show');
+        }
+
         async function createCycle() {
             const type = document.getElementById('newType').value;
             const year = document.getElementById('newYear').value;
@@ -1126,6 +1264,14 @@
             if (!type || !year || !start || !deadline) { alert('Please fill in all required fields.'); return; }
 
             const name = `${type} ${year}`;
+
+            // Check for duplicate
+            const duplicate = allCycles.find(c => c.name.toLowerCase() === name.toLowerCase());
+            if (duplicate) {
+                showAlert('Cycle Already Exists', `A cycle named "${name}" already exists. Please choose a different type or year.`);
+                return;
+            }
+
             try {
                 const res = await fetch('http://localhost:3002/api/admin/cycles', {
                     method: 'POST',

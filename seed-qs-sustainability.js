@@ -3,7 +3,6 @@ const db = require('./db');
 async function seedQuestions() {
     console.log('Seeding QS Sustainability questions with full item structure...');
 
-    // UPDATE THIS to your QS Sustainability cycle ID
     const CYCLE_ID = 1;
 
     // Questions with their items
@@ -12,13 +11,13 @@ async function seedQuestions() {
         {
             code: 'AR1', theme: 'Annual Report', question_type: 'yesno', is_synced: true,
             title: 'Does your institution publish an annual report?',
-            description: 'An annual report summarizes financial performance, academic achievements, and strategic goals.',
+            description: 'An annual report for a higher education institution is an official document that summarizes financial performance, academic achievements, and strategic goals over the past year.',
             items: []
         },
         {
             code: 'AR2', theme: 'Annual Report', question_type: 'url', is_synced: true,
             title: 'If Yes, Please upload/provide the link to your last annual report.',
-            description: 'Provide the direct URL or upload the PDF of your most recent annual report.',
+            description: 'An annual report for a higher education institution is an official document that summarizes financial performance, academic achievements, and strategic goals over the past year.',
             items: [
                 { item_number: '1', label: 'Link or PDF report', answer_type: 'url', max_words: null }
             ]
@@ -28,7 +27,7 @@ async function seedQuestions() {
         {
             code: 'ES1', theme: 'Environmental Impact', question_type: 'checkbox',
             title: "Link to your institution's sustainability/climate action policy.",
-            description: 'Provide the URL to your published sustainability or climate action policy.',
+            description: 'Policy or strategy on how your institution plans to mitigate the impact of their operations on the climate and the environment.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'URL', answer_type: 'url', max_words: null }
@@ -37,7 +36,7 @@ async function seedQuestions() {
         {
             code: 'ES2', theme: 'Environmental Impact', question_type: 'checkbox',
             title: 'Does your institution provide mandatory annual dedicated training on environmental aspects of sustainability for staff members (faculty and professional staff members)? Please insert link to training/evidence description:',
-            description: 'Training for faculty and professional staff on environmental sustainability.',
+            description: 'This refers to annual hours of mandatory staff training (per employee) on environmental aspects of sustainability. Please provide an estimate if exact numbers are not possible to calculate.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Which of the following groups receive this training? — Students', answer_type: 'checkbox', max_words: null },
@@ -69,7 +68,7 @@ async function seedQuestions() {
         {
             code: 'ES5', theme: 'Environmental Impact', question_type: 'checkbox',
             title: "Link to your institution's sustainable procurement/purchasing policy.",
-            description: 'URL to your sustainable procurement or purchasing policy.',
+            description: 'A publicly accessible policy (e.g. on an institution\'s website, or as part of an annual report) that sets out how the university plans to procure (purchase) in a sustainable manner, by, for example, purchasing from local suppliers, or using only recycled materials in building work. This is a key feature of corporate social responsibility.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'URL', answer_type: 'url', max_words: null }
@@ -78,7 +77,7 @@ async function seedQuestions() {
         {
             code: 'ES6', theme: 'Environmental Impact', question_type: 'checkbox',
             title: "Link to your institution's sustainable investment policy.",
-            description: 'URL to your sustainable investment policy.',
+            description: 'A publicly accessible policy (e.g. on an institution\'s website, or as part of an annual report) that sets out how the university invests in a sustainable manner, by, for example, investing in renewable energies or in medicines to tackle global health crises. Socially responsible investing is a key feature of corporate social responsibility.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'URL', answer_type: 'url', max_words: null }
@@ -87,7 +86,7 @@ async function seedQuestions() {
         {
             code: 'ES7', theme: 'Environmental Impact', question_type: 'checkbox',
             title: 'Link to student led society whose purpose is to engage with sustainability.',
-            description: 'URL to a student-led sustainability society.',
+            description: 'The presence of a student-led society on issues of sustainability provides future students the opportunity to be part of a likeminded group on this issue, and demonstrates a supportive campus atmosphere. We ask for proof as a link to the society, or a link to a document that outlines the structure, governance and key stakeholders of the society.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'URL', answer_type: 'url', max_words: null }
@@ -96,7 +95,7 @@ async function seedQuestions() {
         {
             code: 'ES8', theme: 'Environmental Impact', question_type: 'checkbox',
             title: 'Does your university report its carbon emissions in line with the GHG Protocol Corporate Standard or another commonly used standard?',
-            description: 'Evidence of last conducted GHG inventory.',
+            description: 'For more information please visit Environmental Sustainability (Edition 2) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Please provide evidence of the last conducted inventory', answer_type: 'url', max_words: null }
             ]
@@ -104,7 +103,7 @@ async function seedQuestions() {
         {
             code: 'ES9', theme: 'Environmental Impact', question_type: 'number',
             title: 'Please provide the total Scope 1 and 2 carbon emissions in tCO2e (tonnes (t) of carbon dioxide (CO2) equivalent (e)). Please see instructions.',
-            description: 'Total carbon emissions including Scope 3 estimate and supporting URL.',
+            description: 'For more information please visit Environmental Sustainability (Edition 2) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Total Scope 1 & 2 emissions in tCO2e', answer_type: 'number', max_words: null },
                 { item_number: '2', label: 'If you also report on Scope 3 emissions, please list your estimate here, in tCO2e', answer_type: 'number', max_words: null },
@@ -114,7 +113,7 @@ async function seedQuestions() {
         {
             code: 'ES10', theme: 'Environmental Impact', question_type: 'number',
             title: 'Please enter the year you began recording your emissions to GHG standards - see the definition tab for more detail.',
-            description: 'Baseline year and total Scope 1 and 2 for the baseline year.',
+            description: 'This should be the year, no earlier than 2005, which you consider your baseline year to measure progress against your net zero commitment. By baseline year we mean the point in history where you started to track emissions to GHG standards (or closest equivalent) and their progress/changes. Your default baseline year will be the first year (no earlier than 2005) for which you produced 12 months of full data.',
             items: [
                 { item_number: '1', label: 'Baseline year', answer_type: 'number', max_words: null },
                 { item_number: '2', label: 'Total Scope 1 & 2 for the baseline year, in tco2e', answer_type: 'number', max_words: null }
@@ -123,7 +122,7 @@ async function seedQuestions() {
         {
             code: 'ES11', theme: 'Environmental Impact', question_type: 'checkbox',
             title: 'Does your university have a carbon reduction target covering Scope 1 & 2 emissions by at least 2050? If not, please leave the evidence field blank.',
-            description: 'Evidence URL for carbon reduction target.',
+            description: 'For more information please visit Environmental Sustainability (Edition 2) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Please provide evidence', answer_type: 'url', max_words: null }
             ]
@@ -131,7 +130,7 @@ async function seedQuestions() {
         {
             code: 'ES12', theme: 'Environmental Impact', question_type: 'number',
             title: 'Please add the amount of energy generated in campus through renewable sources, in kWh, for the last reporting year. This would include energy consumed, stored or sold on.',
-            description: 'Total energy from renewables for the last reporting year.',
+            description: 'For more information please visit Environmental Sustainability (Edition 2) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Total energy from renewables', answer_type: 'number', max_words: null }
             ]
@@ -139,7 +138,7 @@ async function seedQuestions() {
         {
             code: 'ES13', theme: 'Environmental Impact', question_type: 'number',
             title: 'Please submit your total campus building footprint. See instructions.',
-            description: 'Total campus building footprint in square meters.',
+            description: 'For more information please visit Environmental Sustainability (Edition 2) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Total campus building footprint in square meters (sq^2)', answer_type: 'number', max_words: null }
             ]
@@ -147,7 +146,7 @@ async function seedQuestions() {
         {
             code: 'ES14', theme: 'Environmental Impact', question_type: 'number',
             title: 'Please provide the year your institution has publicly committed to reaching net-zero. If you have not committed to this, please leave the evidence field blank.',
-            description: 'Year of net-zero commitment and evidence URL.',
+            description: 'For more information please visit Environmental Sustainability (Edition 2) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Year', answer_type: 'number', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'url', max_words: null }
@@ -158,7 +157,7 @@ async function seedQuestions() {
         {
             code: 'EE1', theme: 'Environmental Impact', question_type: 'checkbox',
             title: 'Do you offer courses that teach specifically on climate science and/or environmental sustainability?',
-            description: 'Courses linked to official credits or leading to recognised qualifications.',
+            description: 'The emphasis and resource that an institution puts towards climate literacy can be assessed through the variety of courses on offer, and what those courses lead to. For more information, please visit Environmental Education (Edition 2) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'We offer these courses and they are linked to officially recognised credits (e.g., European Credit Transfer and Accumulation System - ECTS, in Europe)', answer_type: 'checkbox', max_words: null },
@@ -171,7 +170,7 @@ async function seedQuestions() {
         {
             code: 'ER1', theme: 'Environmental Impact', question_type: 'checkbox',
             title: 'Presence of a Research Centre with a specific focus on environmental sustainability.',
-            description: 'Research centre with dedicated FTE staff contributing to teaching.',
+            description: 'Please provide a public link or written statement to show the existence of a research centre with a specific focus on environmental sustainability within your institution. For more information please visit Environmental Research (2nd Edition) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'The Research Centre has dedicated FTE staff.', answer_type: 'checkbox', max_words: null },
@@ -184,7 +183,7 @@ async function seedQuestions() {
         {
             code: 'EQ1', theme: 'Social Impact', question_type: 'number', is_synced: true,
             title: 'Faculty Staff Male',
-            description: 'Number of male academic faculty staff (Full Time, Part Time, HC, FTE).',
+            description: 'The number of academic faculty staff employed by your institution who are male.',
             items: [
                 { item_number: '1', label: 'Full Time', answer_type: 'number', max_words: null },
                 { item_number: '2', label: 'Part Time', answer_type: 'number', max_words: null },
@@ -195,7 +194,7 @@ async function seedQuestions() {
         {
             code: 'EQ2', theme: 'Social Impact', question_type: 'number', is_synced: true,
             title: 'Faculty Staff Female',
-            description: 'Number of female academic faculty staff (Full Time, Part Time, HC, FTE).',
+            description: 'The number of academic faculty staff employed by your institution who are female.',
             items: [
                 { item_number: '1', label: 'Full Time', answer_type: 'number', max_words: null },
                 { item_number: '2', label: 'Part Time', answer_type: 'number', max_words: null },
@@ -206,7 +205,7 @@ async function seedQuestions() {
         {
             code: 'EQ3', theme: 'Social Impact', question_type: 'number', is_synced: true,
             title: 'Students Female',
-            description: 'Total number of female students enrolled at all levels.',
+            description: 'Number of students who are female out of the total number of students studying at your university.',
             items: [
                 { item_number: '1', label: 'Full Time', answer_type: 'number', max_words: null },
                 { item_number: '2', label: 'Part Time', answer_type: 'number', max_words: null },
@@ -217,7 +216,7 @@ async function seedQuestions() {
         {
             code: 'EQ5', theme: 'Social Impact', question_type: 'number',
             title: 'Number of members in your senior leadership team',
-            description: 'Total number of individuals in the senior leadership team.',
+            description: 'The definition of "leadership" here is the executive leader of the university plus the highest level of university management. To draw parallels from the corporate world, it is the "C-Suite" - e.g. the CEO, COO, CFO and so forth. The important point is that these individuals report into the executive manager of the university. In our experience, the total headcount for "leadership" would not much exceed 10 people.',
             items: [
                 { item_number: '1', label: 'Total number', answer_type: 'number', max_words: null }
             ]
@@ -225,7 +224,7 @@ async function seedQuestions() {
         {
             code: 'EQ6', theme: 'Social Impact', question_type: 'number',
             title: 'Number of the above members of your senior leadership team who are male.',
-            description: 'Number of male members in senior leadership team.',
+            description: 'Number of male senior executives in your leadership team.',
             items: [
                 { item_number: '1', label: 'Total number', answer_type: 'number', max_words: null }
             ]
@@ -233,7 +232,7 @@ async function seedQuestions() {
         {
             code: 'EQ7', theme: 'Social Impact', question_type: 'checkbox',
             title: 'Does your institution have a current Equality, Diversity and Inclusion (EDI) policy?',
-            description: 'Current EDI policy with protected characteristics.',
+            description: 'For more information please visit Equality (2nd Edition) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'We have a current EDI policy or equivalent', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'url', max_words: null },
@@ -251,7 +250,7 @@ async function seedQuestions() {
         {
             code: 'DI1', theme: 'Social Impact', question_type: 'checkbox',
             title: 'Do you offer support services for people with disabilities?',
-            description: 'Disability support office, accessible campus, mentoring schemes.',
+            description: 'For more information please visit Equality (2nd Edition) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Existence of Disability Support Office', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'url', max_words: null },
@@ -267,7 +266,7 @@ async function seedQuestions() {
         {
             code: 'ST1', theme: 'Social Impact', question_type: 'checkbox',
             title: 'Does your institution provide mandatory annual dedicated training on social aspects of Sustainability for staff members (faculty and professional staff members)? Please insert link to training/evidence description:',
-            description: 'Training for faculty and professional staff on social sustainability.',
+            description: 'This refers to annual hours of mandatory staff training (per employee) on social aspects of sustainability. Please provide an estimate if exact numbers are not possible to calculate.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Which of the following groups receive this training? — Students', answer_type: 'checkbox', max_words: null },
@@ -281,7 +280,7 @@ async function seedQuestions() {
         {
             code: 'KE1', theme: 'Social Impact', question_type: 'checkbox',
             title: 'Do you offer, manage or deliver outreach projects (education, health, information services, reading, community engagement, tutorials) for the local community?',
-            description: 'Education, health, information services, community engagement.',
+            description: 'For more information please visit Knowledge Exchange (2nd Edition) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'richtext', max_words: 200 }
@@ -292,7 +291,7 @@ async function seedQuestions() {
         {
             code: 'HW1', theme: 'Social Impact', question_type: 'checkbox',
             title: 'Do you provide on-campus or local health and wellbeing services?',
-            description: 'Food choices, physical health, sexual health, mental health services.',
+            description: 'For more information please visit Health and Wellbeing (2nd Edition) – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Provision of healthy and affordable food choices for all on campus', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'richtext', max_words: 200 },
@@ -309,7 +308,7 @@ async function seedQuestions() {
         {
             code: 'GG1', theme: 'Governance', question_type: 'checkbox',
             title: 'Do you have an equality, diversity and inclusion committee, office or officer (or the equivalent) tasked by the administration or governing body to advise on and implement policies, programmes and trainings related to diversity, equity, inclusion and human rights on campus?',
-            description: 'EDI committee tasked with implementing policies on diversity and inclusion.',
+            description: 'For more information please visit Good Governance – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Existence of committee, office or officer', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'url', max_words: null },
@@ -321,7 +320,7 @@ async function seedQuestions() {
         {
             code: 'GG2', theme: 'Governance', question_type: 'checkbox',
             title: 'Do you have an Anti-bribery and corruption policy?',
-            description: 'Anti-bribery policy reviewed within last 3 years.',
+            description: 'For more information please visit Good Governance – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Existence of anti-bribery and corruption policy or equivalent', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'url', max_words: null },
@@ -331,7 +330,7 @@ async function seedQuestions() {
         {
             code: 'GG3', theme: 'Governance', question_type: 'checkbox',
             title: 'Does your institution have a dedicated staff member or team whose sole responsibility is to advance sustainable development at the institution? If so, please provide evidence.',
-            description: 'Staff member whose sole responsibility is advancing sustainable development.',
+            description: 'Staff member whose sole responsibility is advancing sustainable development at the institution.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'richtext', max_words: 200 }
@@ -340,7 +339,7 @@ async function seedQuestions() {
         {
             code: 'GG4', theme: 'Governance', question_type: 'checkbox',
             title: 'Does your organisation support and facilitate a holistic ethical organisational culture?',
-            description: 'Ethical values, training, compliance office, whistleblower system.',
+            description: 'For more information please visit Good Governance – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Our organisation develops clear ethical values (e.g., diversity, honesty, respect, fairness) and these are enshrined in a publicly available strategic document.', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Please provide evidence', answer_type: 'url', max_words: null },
@@ -355,7 +354,7 @@ async function seedQuestions() {
         {
             code: 'GG5', theme: 'Governance', question_type: 'checkbox',
             title: 'Does your university have a student union?',
-            description: 'Recognised student union representing undergraduate and postgraduate students.',
+            description: 'For more information please visit Good Governance – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Our university has a recognised student union that represents both undergraduate and postgraduate students at university level', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'This student union is connected/affiliated to a wider national student union body', answer_type: 'checkbox', max_words: null },
@@ -376,7 +375,7 @@ async function seedQuestions() {
         {
             code: 'GG7', theme: 'Governance', question_type: 'checkbox',
             title: 'Does your institution publish their financial reports on an annual basis? If applicable, please tick as appropriate:',
-            description: 'Income, Expenditure, Borrowing, Surplus.',
+            description: 'For more information please visit Good Governance – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Financial reports published — Income', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'Financial reports published — Expenditure', answer_type: 'checkbox', max_words: null },
@@ -388,7 +387,7 @@ async function seedQuestions() {
         {
             code: 'GG8', theme: 'Governance', question_type: 'checkbox',
             title: 'Does your institution publicly share the decisions taken in your annual general meeting? If so, please share the link to these minutes.',
-            description: 'Link to AGM minutes or decisions.',
+            description: 'The minutes from your university\'s governance meetings. This would typically be a meeting held by the senate, board or equivalent governing body and be annual or bi-annual. Minutes should be recorded in clear and concise form, and would typically include the formal recommendations, and formal decisions which a committee has made, in line with its terms of reference. The minutes should be publicly available. This is a key feature of good and transparent governance.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'URL', answer_type: 'url', max_words: null }
@@ -397,7 +396,7 @@ async function seedQuestions() {
         {
             code: 'GG9', theme: 'Governance', question_type: 'checkbox',
             title: "Does your university's governing body have student representation? If so, please share the webpage link. If not, please leave blank.",
-            description: 'Student representation on governing body with webpage link.',
+            description: '"Governing body" to mean any of the following: university senate / university court / academic council / local equivalent. Student representation to mean that (a) permanent seat(s) is provided for a student who has the same rights as the academics on the body. Please note student representation does not refer to a Student Union or Student Club. For more information please visit Good Governance – QS Quacquarelli Symonds.',
             items: [
                 { item_number: '1', label: 'Tick if applicable', answer_type: 'checkbox', max_words: null },
                 { item_number: '2', label: 'URL', answer_type: 'url', max_words: null }
@@ -408,7 +407,7 @@ async function seedQuestions() {
         {
             code: 'AI1', theme: 'Additional Information', question_type: 'number',
             title: "Your institution's water consumption for the previous reporting year. Please use cubic meters (m3), where 1,000 L = 1 m3.",
-            description: 'Water consumption in cubic meters (m3).',
+            description: 'The total water consumption for all buildings, both academic and residential, for the previous reporting year. This year should match the year used for submitting staff & student data. It should be given in cubic meters (m3). If your institution records this in a different format, please convert to m3 for submission.',
             items: [
                 { item_number: '1', label: 'Total number', answer_type: 'number', max_words: null }
             ]
@@ -416,7 +415,7 @@ async function seedQuestions() {
         {
             code: 'AI2', theme: 'Additional Information', question_type: 'number',
             title: "Your institution's energy consumption for the previous reporting year. Please use kWh/year.",
-            description: 'Energy consumption in kWh/year.',
+            description: 'The total energy (all electricity and any other energy sources such as biofuel / coal / oil / renewables, excluding natural gas) consumption for all buildings, both academic and residential, for the previous reporting year. This should match the year used for submitting staff & student data.',
             items: [
                 { item_number: '1', label: 'Total number', answer_type: 'number', max_words: null }
             ]
@@ -424,7 +423,7 @@ async function seedQuestions() {
         {
             code: 'AI3', theme: 'Additional Information', question_type: 'number', is_synced: true,
             title: 'How many students receive a scholarship covering 100% of their fees?',
-            description: 'Number of students with full scholarship.',
+            description: 'A grant or payment made to support a student\'s education, awarded on the basis of academic or other achievement, that covers a full academic year for full payment of fees. For rankings purposes, this is for fees only. The fund may come from the university, a private company, or a philanthropic organization.',
             items: [
                 { item_number: '1', label: 'Total number', answer_type: 'number', max_words: null }
             ]
@@ -432,7 +431,7 @@ async function seedQuestions() {
         {
             code: 'AI4', theme: 'Additional Information', question_type: 'number', is_synced: true,
             title: 'How many students receive a scholarship covering at least 50% of fees?',
-            description: 'Number of students with at least 50% scholarship.',
+            description: 'A grant or payment made to support a student\'s education, awarded on the basis of academic or other achievement, that covers at least 50% of full fees per academic year. For rankings purposes, this is for fees only. The fund may come from the university, a private company, or a philanthropic organization.',
             items: [
                 { item_number: '1', label: 'Total number', answer_type: 'number', max_words: null }
             ]

@@ -33,9 +33,7 @@ const KPIS = [
 ];
 
 async function seedQuestions() {
-    // ── UPDATE THIS to your THE WUR cycle ID ──────────────────
-    const CYCLE_ID = 16;
-    // ──────────────────────────────────────────────────────────
+    const CYCLE_ID = 3;
 
     console.log(`Seeding THE World University Rankings questions for cycle ${CYCLE_ID}...`);
     console.log(`${SUBJECTS.length} subjects × ${KPIS.length} KPIs = ${SUBJECTS.length * KPIS.length} questions`);

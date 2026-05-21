@@ -56,7 +56,7 @@ router.post('/submit', async (req, res) => {
       return res.status(403).json({ error: 'This ranking form has been closed and no longer accepts submissions.' });
     }
   } catch (e) { }
-  
+
   try {
     const existing = await db.execute({
       sql: `SELECT id FROM answers WHERE task_assignment_id = ?`,
@@ -125,6 +125,84 @@ router.post('/submit', async (req, res) => {
       }
     }
 
+    // Sync answers across forms if question is synced
+    try {
+      const taskQuestion = await db.execute({
+        sql: `SELECT q.code, q.title, q.is_synced 
+          FROM task_assignments ta 
+          JOIN questions q ON q.id = ta.question_id 
+          WHERE ta.id = ?`,
+        args: [task_assignment_id]
+      });
+      const question = taskQuestion.rows[0];
+
+      if (question?.is_synced) {
+        const otherTasks = await db.execute({
+          sql: `SELECT ta.id 
+                FROM task_assignments ta
+                JOIN questions q ON q.id = ta.question_id
+                JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+                JOIN ranking_cycles rc_src ON rc_src.id = (
+                  SELECT q2.ranking_cycle_id FROM task_assignments ta2
+                  JOIN questions q2 ON q2.id = ta2.question_id
+                  WHERE ta2.id = ?
+                )
+                WHERE q.title = ? 
+                AND q.is_synced = 1
+                AND ta.id != ?
+                AND rc.year = rc_src.year`,
+          args: [task_assignment_id, question.title, task_assignment_id]
+        });
+
+        for (const task of otherTasks.rows) {
+          const existingSync = await db.execute({
+            sql: `SELECT id FROM answers WHERE task_assignment_id = ?`,
+            args: [task.id]
+          });
+
+          if (existingSync.rows.length > 0) {
+            const syncAnswerId = existingSync.rows[0].id;
+            await db.execute({
+              sql: `UPDATE answers SET answer_text = ?, answer_number = ?, updated_at = datetime('now')
+                    WHERE task_assignment_id = ?`,
+              args: [answers.answer_text || null, answers.answer_number || null, task.id]
+            });
+            await db.execute({
+              sql: `INSERT INTO answer_history (answer_id, task_assignment_id, answer_text, answer_number, changed_by)
+                    VALUES (?, ?, ?, ?, ?)`,
+              args: [syncAnswerId, task.id, answers.answer_text || null, answers.answer_number || null, submittedBy]
+            });
+          } else {
+            const syncInserted = await db.execute({
+              sql: `INSERT INTO answers (task_assignment_id, answer_text, answer_number)
+                    VALUES (?, ?, ?) RETURNING id`,
+              args: [task.id, answers.answer_text || null, answers.answer_number || null]
+            });
+            const syncAnswerId = syncInserted.rows[0]?.id;
+            if (syncAnswerId) {
+              await db.execute({
+                sql: `INSERT INTO answer_history (answer_id, task_assignment_id, answer_text, answer_number, changed_by)
+                      VALUES (?, ?, ?, ?, ?)`,
+                args: [syncAnswerId, task.id, answers.answer_text || null, answers.answer_number || null, submittedBy]
+              });
+            }
+          }
+
+          await db.execute({
+            sql: `UPDATE task_assignments SET status = 'submitted', submitted_at = datetime('now') WHERE id = ?`,
+            args: [task.id]
+          });
+
+          await db.execute({
+            sql: `UPDATE answers SET status = 'submitted' WHERE task_assignment_id = ?`,
+            args: [task.id]
+          });
+        }
+      }
+    } catch (syncErr) {
+      console.error('Sync error:', syncErr);
+    }
+
     // Update task status
     await db.execute({
       sql: `UPDATE task_assignments SET
@@ -134,10 +212,89 @@ router.post('/submit', async (req, res) => {
       args: [task_assignment_id]
     });
 
+    // Update answer status to submitted
+    await db.execute({
+      sql: `UPDATE answers SET status = 'submitted' WHERE task_assignment_id = ?`,
+      args: [task_assignment_id]
+    });
+
     res.json({ success: true, submitted_by: submitterName });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+router.get('/history-all/:taskId', async (req, res) => {
+  const { taskId } = req.params;
+  try {
+    const taskRes = await db.execute({
+      sql: `SELECT q.title, rc.name as cycle_name
+                  FROM task_assignments ta 
+                  JOIN questions q ON q.id = ta.question_id
+                  JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+                  WHERE ta.id = ?`,
+      args: [taskId]
+    });
+    if (!taskRes.rows.length) return res.json([]);
+    const { title, cycle_name } = taskRes.rows[0];
+    const rankingType = cycle_name.replace(/\s+\d{4}$/, '').trim();
+
+    const result = await db.execute({
+      sql: `SELECT 
+                    ah.answer_text, ah.answer_number, ah.changed_at,
+                    u.name as changed_by_name,
+                    rc.year
+                  FROM answer_history ah
+                  LEFT JOIN users u ON u.id = ah.changed_by
+                  JOIN task_assignments ta ON ta.id = ah.task_assignment_id
+                  JOIN questions q ON q.id = ta.question_id
+                  JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+                  WHERE q.title = ?
+                  AND rc.name LIKE ?
+                  ORDER BY rc.year DESC, ah.changed_at DESC`,
+      args: [title, `${rankingType}%`]
+    });
+    res.json(result.rows);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+router.get('/history-by-question/:questionId', async (req, res) => {
+  const { questionId } = req.params;
+  try {
+    const taskRes = await db.execute({
+      sql: `SELECT q.title, rc.name as cycle_name
+                  FROM questions q
+                  JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+                  WHERE q.id = ?`,
+      args: [questionId]
+    });
+    if (!taskRes.rows.length) return res.json([]);
+    const { title, cycle_name } = taskRes.rows[0];
+    const rankingType = cycle_name.replace(/\s+\d{4}$/, '').trim();
+
+    const result = await db.execute({
+      sql: `SELECT 
+                    ah.answer_text, ah.answer_number, ah.changed_at,
+                    u.name as changed_by_name,
+                    rc.year
+                  FROM answer_history ah
+                  LEFT JOIN users u ON u.id = ah.changed_by
+                  JOIN task_assignments ta ON ta.id = ah.task_assignment_id
+                  JOIN questions q ON q.id = ta.question_id
+                  JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+                  WHERE q.title = ?
+                  AND rc.name LIKE ?
+                  ORDER BY rc.year DESC, ah.changed_at DESC`,
+      args: [title, `${rankingType}%`]
+    });
+    res.json(result.rows);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message });
   }
 });
 
