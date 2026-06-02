@@ -78,6 +78,20 @@ router.get('/cycles', adminOnly, async (req, res) => {
     }
 });
 
+router.get('/cycles/:id', adminOnly, async (req, res) => {
+    try {
+        const result = await db.execute({
+            sql: `SELECT * FROM ranking_cycles WHERE id = ?`,
+            args: [req.params.id]
+        });
+        if (!result.rows[0]) return res.status(404).json({ error: 'Not found' });
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // POST create new ranking cycle
 router.post('/cycles', adminOnly, async (req, res) => {
     const { name, year, deadline, status, description } = req.body;
@@ -94,50 +108,46 @@ router.post('/cycles', adminOnly, async (req, res) => {
         // e.g. "QS Sustainability Rankings 2026" → "QS Sustainability Rankings"
         const rankingType = name.replace(/\s+\d{4}$/, '').trim().toLowerCase();
 
-        // Find the oldest existing cycle of the same ranking type to use as a template
         const allCycles = await db.execute({
-            sql: `SELECT id, name FROM ranking_cycles WHERE id != ? ORDER BY year ASC`,
+            sql: `SELECT id, name, is_template FROM ranking_cycles WHERE id != ? ORDER BY year ASC`,
             args: [newCycleId]
         });
 
+        function getRankingCategory(name) {
+            const n = name.toLowerCase();
+            if (n.includes('greenmetric')) return 'greenmetric';
+            if (n.includes('sustainability')) return 'sustainability';
+            if (n.includes('impact')) return 'impact';
+            if (n.includes('world university') || n.includes('wur')) {
+                if (n.includes('qs')) return 'qs-wur';
+                return 'the-wur';
+            }
+            return n;
+        }
+
+        const newCategory = getRankingCategory(name);
         const templateCycle = allCycles.rows.find(c => {
-            const storedType = c.name.replace(/\s+\d{4}$/, '').trim().toLowerCase();
-            return storedType === rankingType && c.is_template === 1;
+            return getRankingCategory(c.name) === newCategory && c.is_template === 1;
         });
 
         if (templateCycle) {
             // Copy all questions from the template cycle to the new one
             // kpi_index is included for THE WUR subject-based questions
             await db.execute({
-                sql: `INSERT INTO questions (ranking_cycle_id, code, title, description, question_type, theme, kpi_index, is_synced)
-          SELECT ?, code, title, description, question_type, theme, kpi_index, is_synced
-          FROM questions WHERE ranking_cycle_id = ?`,
+                sql: `INSERT INTO questions (ranking_cycle_id, code, title, description, question_type, theme, kpi_index, is_synced, gm_category, has_evidence)
+                    SELECT ?, code, title, description, question_type, theme, kpi_index, is_synced, gm_category, has_evidence
+                    FROM questions WHERE ranking_cycle_id = ?`,
                 args: [newCycleId, templateCycle.id]
             });
 
-            // Copy question_items for each new question
-            const newQuestions = await db.execute({
-                sql: `SELECT q_new.id as new_id, q_old.id as old_id
-          FROM questions q_new
-          JOIN questions q_old ON q_old.code = q_new.code 
-            AND q_old.ranking_cycle_id = ?
-          WHERE q_new.ranking_cycle_id = ?`,
+            await db.execute({
+                sql: `INSERT INTO question_items (question_id, item_number, label, answer_type, max_words, options)
+                    SELECT q_new.id, qi.item_number, qi.label, qi.answer_type, qi.max_words, qi.options
+                    FROM question_items qi
+                    JOIN questions q_old ON q_old.id = qi.question_id AND q_old.ranking_cycle_id = ?
+                    JOIN questions q_new ON q_new.code = q_old.code AND q_new.ranking_cycle_id = ?`,
                 args: [templateCycle.id, newCycleId]
             });
-
-            for (const row of newQuestions.rows) {
-                const oldItems = await db.execute({
-                    sql: `SELECT * FROM question_items WHERE question_id = ? ORDER BY CAST(item_number AS INTEGER)`,
-                    args: [row.old_id]
-                });
-                for (const item of oldItems.rows) {
-                    await db.execute({
-                        sql: `INSERT INTO question_items (question_id, item_number, label, answer_type, max_words, options)
-                              VALUES (?, ?, ?, ?, ?, ?)`,
-                        args: [row.new_id, item.item_number, item.label, item.answer_type, item.max_words, item.options || null]
-                    });
-                }
-            }
             console.log(`✓ Copied questions from cycle ${templateCycle.id} ("${templateCycle.name}") → new cycle ${newCycleId}`);
         } else {
             console.log(`⚠ No template found for "${rankingType}" — seed questions manually for cycle ${newCycleId}`);
@@ -202,9 +212,9 @@ router.post('/assign', adminOnly, async (req, res) => {
         async function assignOne(qid) {
             await db.execute({
                 sql: `INSERT INTO task_assignments (question_id, department_id, status)
-                      VALUES (?, ?, 'pending')
-                      ON CONFLICT(question_id) DO UPDATE SET
-                      department_id = excluded.department_id`,
+              VALUES (?, ?, 'pending')
+              ON CONFLICT(question_id) DO UPDATE SET
+              department_id = excluded.department_id`,
                 args: [qid, department_id]
             });
             const taRes = await db.execute({
@@ -215,8 +225,8 @@ router.post('/assign', adminOnly, async (req, res) => {
             if (taId) {
                 await db.execute({
                     sql: `INSERT INTO answers (task_assignment_id, status)
-                          VALUES (?, 'pending')
-                          ON CONFLICT(task_assignment_id) DO NOTHING`,
+                  VALUES (?, 'pending')
+                  ON CONFLICT(task_assignment_id) DO NOTHING`,
                     args: [taId]
                 });
             }
@@ -247,9 +257,9 @@ router.post('/assign', adminOnly, async (req, res) => {
             syncQ?.is_synced
                 ? db.execute({
                     sql: `SELECT q.id FROM questions q
-                          JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
-                          WHERE q.title = ? AND q.is_synced = 1 AND q.id != ? AND rc.year = ?`,
-                    args: [syncQ.title, question_id, syncQ.year]
+                        JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+                        WHERE q.code = ? AND q.is_synced = 1 AND q.id != ? AND rc.year = ?`,
+                    args: [syncQ.code, question_id, syncQ.year]
                 })
                 : Promise.resolve({ rows: [] })
         ]);
@@ -263,7 +273,7 @@ router.post('/assign', adminOnly, async (req, res) => {
 
         await Promise.all(allIds.map(id => assignOne(id)));
 
-        res.json({ success: true });
+        res.json({ success: true, assignedIds: allIds });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });

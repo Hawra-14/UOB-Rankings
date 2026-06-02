@@ -130,12 +130,12 @@
 
         .bell-dot {
             position: absolute;
-            top: 6px;
-            right: 7px;
-            width: 8px;
-            height: 8px;
+            top: 5px;
+            right: 5px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
-            background: #f59e0b;
+            background: var(--amber);
             border: 2px solid var(--navy)
         }
 
@@ -149,7 +149,7 @@
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: #16a34a;
+            background: var(--teal);
             color: #fff;
             font-size: .82rem;
             font-weight: 700;
@@ -645,7 +645,7 @@
 
         .q-table td {
             padding: .72rem 1rem;
-            border-bottom: 1px solid #f3f4f8;
+            border-bottom: 2px solid #e2e8f4;
             font-size: .82rem;
             color: var(--text);
             /* vertical-align: top; */
@@ -1329,13 +1329,24 @@
 
         .gm-tab.active {
             background: #fff;
-            color: var(--navy);
+            color: var(--tab-active-color, var(--navy));
             font-weight: 700;
-            box-shadow: inset 0 -3px 0 var(--teal);
+            box-shadow: inset 0 -3px 0 var(--tab-active-color, var(--teal));
         }
 
         .gm-tab.active span {
-            color: var(--teal);
+            color: var(--tab-active-color, var(--teal));
+        }
+
+        #impactTabsWrap .gm-tab.active {
+            background: #fff;
+            color: var(--tab-active-color, #c2410c);
+            font-weight: 700;
+            box-shadow: inset 0 -3px 0 var(--tab-active-color, #c2410c);
+        }
+
+        #impactTabsWrap .gm-tab.active span {
+            color: var(--tab-active-color, #c2410c);
         }
     </style>
 </head>
@@ -1466,6 +1477,28 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- THE Impact SDG Tabs -->
+                <div id="impactTabsWrap" style="display:none;margin-bottom:1.1rem">
+                    <div
+                        style="display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#e8eaf0">
+                        <div class="gm-tab active" onclick="switchImpactTab(this,'SDG3: Good Health and Wellbeing')"
+                            data-cat="SDG3: Good Health and Wellbeing">SDG 3<span>Good Health</span></div>
+                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG4: Quality Education')"
+                            data-cat="SDG4: Quality Education">SDG 4<span>Quality Education</span></div>
+                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG5: Gender Equality')"
+                            data-cat="SDG5: Gender Equality">SDG 5<span>Gender Equality</span></div>
+                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG7: Affordable and Clean Energy')"
+                            data-cat="SDG7: Affordable and Clean Energy">SDG 7<span>Clean Energy</span></div>
+                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG8: Decent Work and Economic Growth')"
+                            data-cat="SDG8: Decent Work and Economic Growth">SDG 8<span>Decent Work</span></div>
+                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG13: Climate Action')"
+                            data-cat="SDG13: Climate Action">SDG 13<span>Climate Action</span></div>
+                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG17: Partnerships for the Goals')"
+                            data-cat="SDG17: Partnerships for the Goals">SDG 17<span>Partnerships</span></div>
+                    </div>
+                </div>
+
                 <div class="questions-panel-wrap">
                     <div id="sectionsContainer" class="sections-area">
                         <div style="text-align:center;padding:3rem;color:var(--subtext)">Loading questions...</div>
@@ -1587,6 +1620,7 @@
             let currentAssignQuestionId = null;
             let isGreenMetric = false;
             let activeGMTab = 'SI';
+            let activeImpactTab = 'SDG3: Good Health and Wellbeing';
 
             // ── Helpers ────────────────────────────────────────────────
             function toggleEditMode() {
@@ -1596,12 +1630,6 @@
                 document.body.classList.toggle('edit-mode', active);
                 btn.textContent = active ? '✓ Exit Edit Mode' : '✎ Edit Mode';
                 banner.style.display = active ? 'flex' : 'none';
-                // ← respect GreenMetric tab
-                if (isGreenMetric) {
-                    renderSections(allQuestions.filter(q => q.gm_category === activeGMTab));
-                } else {
-                    renderSections();
-                }
             }
 
             function formatDate(d) {
@@ -1701,7 +1729,7 @@
                 if (name.includes('qs sustainability')) return { bg: '#e8f5e9', text: '#2e7d32', border: '#a5d6a7' };
                 if (name.includes('qs world university rankings')) return { bg: '#fef9e7', text: '#7a6000', border: '#f0d060' };
                 if (name.includes('the world university rankings')) return { bg: '#f3e5f5', text: '#6a1b9a', border: '#ce93d8' };
-                if (name.includes('the impact')) return { bg: '#fff3e0', text: '#e65100', border: '#ffcc80' };
+                if (name.includes('the impact')) return { bg: '#fff7ed', text: '#c2410c', border: '#c2410c' };
                 if (name.includes('greenmetric')) return { bg: '#e0f2f1', text: '#00695c', border: '#80cbc4' };
             }
 
@@ -1922,7 +1950,7 @@
                 switch (q.question_type) {
                     case 'yesno': {
                         const saved = q.answer_text || '';
-                        return `<div style="font-size:.8rem;font-weight:600;color:var(--teal);margin-bottom:.3rem">Please select one option:</div>
+                        return `${isTheImpact ? '' : '<div style="font-size:.8rem;font-weight:600;color:var(--teal);margin-bottom:.3rem">Please select one option:</div>'}
                         <label class="check-item"><input type="radio" name="admin_q${taskId}" value="yes" class="admin-input" ${saved === 'yes' ? 'checked' : ''} ${dis} onchange="markDirty(${taskId})"> Yes</label>
                         <label class="check-item"><input type="radio" name="admin_q${taskId}" value="no" class="admin-input" ${saved === 'no' ? 'checked' : ''} ${dis} onchange="markDirty(${taskId})"> No</label>`;
                     }
@@ -1978,8 +2006,49 @@
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ question_id: currentAssignQuestionId, department_id: parseInt(deptId), deadline })
                     });
-                    const data = await res.json();
-                    if (data.success) { closeAssignModal(); loadQuestions(); }
+                    let data;
+                    try {
+                        data = await res.json();
+                    } catch (e) {
+                        console.error('Failed to parse response:', e);
+                        closeAssignModal();
+                        loadQuestions();
+                        return;
+                    }
+                    if (data.success) {
+                        closeAssignModal();
+                        const deptId = parseInt(document.getElementById('assignDept').value);
+                        const deptName = departments.find(d => d.id === deptId)?.name || '';
+                        (data.assignedIds || [currentAssignQuestionId]).forEach(qid => {
+                            const q = allQuestions.find(q => q.id === qid);
+                            if (q) {
+                                q.department_id = deptId;
+                                q.department_name = deptName;
+                                q.task_status = 'pending';
+                            }
+                            // Update the DOM row directly instead of re-rendering
+                            const row = document.querySelector(`tr[data-qid="${qid}"]`);
+                            if (row) {
+                                // Update dept cell
+                                const deptCell = row.querySelector('td:nth-last-child(2)');
+                                if (deptCell) deptCell.innerHTML = `<span class="dept-tag">${deptName}</span>`;
+                                // Update action button to reassign
+                                const actionCell = row.querySelector('.action-col');
+                                if (actionCell) actionCell.innerHTML = `<button class="btn-reassign" data-qid="${qid}" onclick="event.stopPropagation();openAssignModalById(this)" title="Reassign">&#8634;</button>`;
+                                // Update status dot
+                                const statusCell = row.querySelector('.status-cell');
+                                if (statusCell) {
+                                    const saveBtn = statusCell.querySelector('.btn-save-row');
+                                    const saveBtnHtml = saveBtn ? saveBtn.outerHTML : '';
+                                    statusCell.innerHTML = `${getStatusDot('pending')}
+                                    <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
+                                        ${saveBtnHtml}
+                                    </div>`;
+                                }
+                            }
+                        });
+                        updateLegendCounts();
+                    }
                     else showAlert('Save Failed', data.error || 'Failed to save');
                 } catch (e) {
                     showAlert('Server Error', 'Something went wrong. Make sure the server is running.');
@@ -2019,6 +2088,70 @@
 
             // ── Row renderers ──────────────────────────────────────────
             function renderRow(q) {
+                // Metric header row
+                if (q.question_type === 'metric') {
+                    const colspan = isTheImpact ? 7 : isGreenMetric ? 7 : 6;
+                    return `<tr data-qid="${q.id}" style="background:#f0f2f7;cursor:default" onclick="">
+                        <td colspan="${colspan}" style="padding:.55rem 1rem;font-size:.82rem;font-weight:700;color:var(--navy);border-bottom:1px solid var(--border)">
+                            ${q.title}
+                        </td>
+                    </tr>`;
+                }
+                if (isTheImpact) {
+                    const updatedAt = formatDate(q.answer_updated_at);
+                    const inputHtml = buildInput(q);
+                    const deptCell = q.department_name
+                        ? `<span class="dept-tag">${q.department_name}</span>`
+                        : `<span class="unassigned">Unassigned</span>`;
+                    const actionBtn = q.department_id
+                        ? `<button class="btn-reassign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Reassign">&#8634;</button>`
+                        : `<button class="btn-assign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Assign">+</button>`;
+                    const saveBtn = `<button class="btn-save-row" data-saveid="${q.task_id || q.id}"
+        onclick="event.stopPropagation();saveRowAnswer(${q.task_id || q.id},this)"
+        title="Save Changes">💾 Save</button>`;
+                    const reviewBtn = (q.task_status === 'submitted' || q.task_status === 'accepted' || q.task_status === 'rejected')
+                        ? `<button onclick="event.stopPropagation();openReviewById(${q.id})" title="Evaluate Submission"
+            style="background:#eef2ff;color:#3730a3;border:1.5px solid #c7d2fe;padding:.25rem .4rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;line-height:1;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center">
+            Evaluate</button>`
+                        : '';
+
+                    let evidenceVal = '';
+                    try {
+                        const parsed = JSON.parse(q.answer_text || '{}');
+                        evidenceVal = parsed['evidence'] ?? '';
+                    } catch (e) { evidenceVal = ''; }
+
+                    const evidenceCell = q.has_evidence === 1
+                        ? `<td><input class="url-input admin-input" type="url" placeholder="https://..."
+            value="${evidenceVal}" style="background:#f5f7fc"
+            oninput="markDirty(${q.task_id || q.id})"/></td>`
+                        : `<td style="color:var(--subtext);text-align:center">—</td>`;
+
+                    const publicCell = `<td style="text-align:center">
+        <label class="check-item" style="justify-content:center;margin:0">
+            <input type="checkbox" class="admin-input" oninput="markDirty(${q.task_id || q.id})"> Yes
+        </label>
+    </td>`;
+
+                    return `<tr data-qid="${q.id}"
+        data-title="${q.title.replace(/"/g, '&quot;')}"
+        data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
+        data-taskid="${q.task_id || ''}"
+        onclick="selectRow(this)">
+        <td><div class="q-text">${q.title}</div></td>
+        <td>${inputHtml}</td>
+        ${evidenceCell}
+        ${publicCell}
+        <td class="status-cell">
+            ${getStatusDot(q.task_status)}
+            <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
+                ${saveBtn}${reviewBtn}
+            </div>
+        </td>
+        <td style="text-align:center">${deptCell}</td>
+        <td class="action-col">${actionBtn}</td>
+    </tr>`;
+                }
                 const updatedAt = formatDate(q.answer_updated_at);
                 const inputHtml = buildInput(q);
                 const deptCell = q.department_name
@@ -2036,7 +2169,7 @@
                         Evaluate</button>`
                     : '';
                 // Extract evidence URL from items if GreenMetric
-                const needsEvidence = isGreenMetric && q.has_evidence === 1;
+                const needsEvidence = (isGreenMetric || isTheImpact) && q.has_evidence === 1;
                 const evidenceItem = needsEvidence ? (q.items || []).find(item => item.answer_type === 'url') : null;
                 let evidenceVal = '';
                 if (evidenceItem) {
@@ -2047,7 +2180,7 @@
                     } catch (e) { evidenceVal = ''; }
                 }
 
-                const evidenceCell = isGreenMetric
+                const evidenceCell = (isGreenMetric || isTheImpact)
                     ? (needsEvidence
                         ? `<td><input class="url-input admin-input" type="url" placeholder="https://..." 
                         value="${evidenceVal}" style="background:#f5f7fc"
@@ -2173,6 +2306,29 @@
                 const hdr = getTableHeaderColor();
                 const thStyle = `background:${hdr.bg};color:${hdr.text};border-bottom:2px solid ${hdr.border};padding:.75rem 1rem;`;
 
+                if (isTheImpact) {
+                    return `<div class="table-wrap"><table class="q-table">
+                        <colgroup>
+                            <col style="width:30%"/>
+                            <col style="width:22%"/>
+                            <col style="width:18%"/>
+                            <col style="width:10%"/>
+                            <col style="width:9%"/>
+                            <col style="width:11%"/><col class="col-act"/>
+                        </colgroup>
+                        <thead><tr>
+                            <th style="${thStyle};text-align:left">${thFirst}</th>
+                            <th style="${thStyle};text-align:left">Answer</th>
+                            <th style="${thStyle};text-align:center">Evidence</th>
+                            <th style="${thStyle};text-align:center">Public</th>
+                            <th style="${thStyle};text-align:center">Status</th>
+                            <th style="${thStyle};text-align:center">Assigned To</th>
+                            <th style="${thStyle};text-align:center" class="action-col">Assign</th>
+                        </tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table></div>`;
+                }
+
                 if (isGreenMetric) {
                     return `<div class="table-wrap"><table class="q-table">
                         <colgroup>
@@ -2246,7 +2402,7 @@
                 if (!qs.length) { container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)">No questions found.</div>`; return; }
 
                 let secIdx = 0;
-                container.innerHTML = groups.map(([theme, qs]) => {
+                const html = groups.map(([theme, qs]) => {
                     const sid = 'sec_' + (secIdx++);
                     const assigned = qs.filter(q => q.task_status && q.task_status !== 'pending').length;
                     const useSubSections = THEMES_WITH_SUBSECTIONS.includes(theme);
@@ -2297,8 +2453,11 @@
                         <div id="body_${sid}">${bodyHtml}</div>
                     </div>`;
                 }).join('');
-                setTimeout(initQuillEditors, 0);
-                updateLegendCounts();
+                requestAnimationFrame(() => {
+                    container.innerHTML = html;
+                    setTimeout(initQuillEditors, 0);
+                    updateLegendCounts();
+                });
             }
 
             let dirtyRows = new Set();
@@ -2553,9 +2712,8 @@
             // ── Load functions ─────────────────────────────────────────
             async function loadCycleInfo() {
                 try {
-                    const res = await fetch('http://localhost:3002/api/admin/cycles', { headers: { 'Authorization': `Bearer ${token}` } });
-                    const cycles = await res.json();
-                    const cycle = cycles.find(c => String(c.id) === String(cycleId));
+                    const res = await fetch(`http://localhost:3002/api/admin/cycles/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const cycle = await res.json();
                     if (cycle) {
                         document.getElementById('pageTitle').textContent = cycle.name;
                         document.title = cycle.name + ' – UoB Rankings Tracker';
@@ -2577,7 +2735,12 @@
 
                         const name = (cycle.name || '').toLowerCase();
                         isGreenMetric = name.includes('greenmetric');
+                        isTheImpact = name.includes('impact');
                         currentCycleName = cycle.name || '';
+                        const hdr = getTableHeaderColor();
+                        if (hdr) {
+                            document.documentElement.style.setProperty('--tab-active-color', hdr.text);
+                        }
                         const syncBanner = document.querySelector('.banner-yellow');
                         if (syncBanner) {
                             const name = (cycle.name || '').toLowerCase();
@@ -2590,8 +2753,10 @@
                         if (isGreenMetric) {
                             document.getElementById('gmTabsWrap').style.display = 'block';
                             document.querySelector('.def-panel').style.display = 'none';
-                        }
-                        else {
+                        } else if (isTheImpact) {
+                            document.getElementById('impactTabsWrap').style.display = 'block';
+                            document.querySelector('.def-panel').style.display = 'none';
+                        } else {
                             document.querySelector('.def-panel').style.display = '';
                         }
                     }
@@ -2636,11 +2801,9 @@
                     const data = await res.json();
                     if (data.success) {
                         closeCloseModal();
-                        // Update UI
                         document.getElementById('closeFormBtn').textContent = '🔒 Form Closed';
                         document.getElementById('closeFormBtn').disabled = true;
                         document.getElementById('editModeBtn').disabled = true;
-                        // Show banner
                         const banner = document.createElement('div');
                         banner.className = 'banner';
                         banner.style.cssText = 'background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-bottom:.55rem';
@@ -2677,6 +2840,15 @@
                 const filtered = allQuestions.filter(q => q.gm_category === cat);
                 renderSections(filtered);
                 document.querySelector('.def-panel').style.display = 'none'; // ← hide def panel
+            }
+
+            function switchImpactTab(el, theme) {
+                document.querySelectorAll('#impactTabsWrap .gm-tab').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+                activeImpactTab = theme;
+                const filtered = allQuestions.filter(q => q.theme === theme);
+                renderSections(filtered);
+                document.querySelector('.def-panel').style.display = 'none';
             }
 
             function formatGMCode(code) {
@@ -2746,9 +2918,10 @@
                         closeModal('reviewModal');
                         const q = allQuestions.find(q => q.task_id === _reviewTaskId);
                         if (q) q.task_status = status;
-                        // change:
                         if (isGreenMetric) {
                             renderSections(allQuestions.filter(q => q.gm_category === activeGMTab));
+                        } else if (isTheImpact) {
+                            renderSections(allQuestions.filter(q => q.theme === activeImpactTab));
                         } else {
                             renderSections();
                         }
@@ -2769,11 +2942,12 @@
                 if (isGreenMetric) {
                     document.querySelector('.def-panel').style.display = 'none';
                     renderSections(allQuestions.filter(q => q.gm_category === activeGMTab));
+                } else if (isTheImpact) {
+                    document.querySelector('.def-panel').style.display = 'none';
+                    renderSections(allQuestions.filter(q => q.theme === activeImpactTab));
                 } else {
                     renderSections();
                 }
-                if (editMode) setTimeout(toggleEditMode, 300);
-                highlightNavType();
             });
         </script>
 </body>

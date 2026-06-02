@@ -297,6 +297,13 @@
     }
 
     /* ══ RANKING FORM CARDS ══ */
+    #formsList {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-bottom: 1rem;
+    }
+
     .form-card {
       background: #fff;
       border-radius: 16px;
@@ -633,8 +640,6 @@
       color: var(--subtext)
     }
 
-    .sched-info {}
-
     .sched-name {
       font-size: .82rem;
       font-weight: 700;
@@ -886,9 +891,12 @@
     };
 
     function getConfig(name) {
-      for (const [key, val] of Object.entries(rankingConfig)) {
-        if (name.toLowerCase().includes(key.toLowerCase())) return val;
-      }
+      const n = name.toLowerCase();
+      if (n.includes('greenmetric')) return rankingConfig['GreenMetric'];
+      if (n.includes('impact')) return rankingConfig['THE Impact'];
+      if (n.includes('qs') && n.includes('sustainability')) return rankingConfig['QS Sustainability'];
+      if (n.includes('qs')) return rankingConfig['QS WUR'];
+      if (n.includes('the') && n.includes('world')) return rankingConfig['THE WUR'];
       return rankingConfig['QS WUR'];
     }
 
@@ -930,7 +938,7 @@
                 <div class="form-card-desc">${r.description || 'Complete your assigned data submissions.'}</div>
                 <div class="form-card-footer">
                   <span class="form-due">📅 Due: ${deadline} &nbsp;·&nbsp; ${r.submitted}/${r.assigned} answered</span>
-                  <a href="${cfg.formUrl}?cycle=${r.id}" class="btn-open">Open →</a>
+                  <a href="${cfg.formUrl}?cycle=${r.id}" class="btn-open">Open</a>
                 </div>
               </div>
             </div>`;

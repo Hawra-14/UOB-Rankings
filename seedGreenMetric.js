@@ -3,7 +3,7 @@ const db = require('./db');
 async function seedGreenMetric() {
     console.log('Seeding GreenMetric questions...');
 
-    const CYCLE_ID = 4;
+    const CYCLE_ID = 5;
 
     const questions = [
 

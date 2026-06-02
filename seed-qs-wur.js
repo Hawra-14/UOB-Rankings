@@ -3,7 +3,7 @@ const db = require('./db');
 async function seedWUR() {
     console.log('Seeding QS WUR questions...');
 
-    const CYCLE_ID = 2;
+    const CYCLE_ID = 1;
 
     const questions = [
 

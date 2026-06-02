@@ -91,6 +91,24 @@ router.get('/my-rankings', async (req, res) => {
   }
 });
 
+router.get('/my-rankings/:id', async (req, res) => {
+  const jwt = require('jsonwebtoken');
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'No token' });
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    const result = await db.execute({
+      sql: `SELECT * FROM ranking_cycles WHERE id = ?`,
+      args: [req.params.id]
+    });
+    if (!result.rows[0]) return res.status(404).json({ error: 'Not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // GET assigned questions for a department in a ranking cycle — includes items
 router.get('/my-questions/:ranking_cycle_id', async (req, res) => {
   const jwt = require('jsonwebtoken');

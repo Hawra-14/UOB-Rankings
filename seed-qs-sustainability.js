@@ -3,7 +3,7 @@ const db = require('./db');
 async function seedQuestions() {
     console.log('Seeding QS Sustainability questions with full item structure...');
 
-    const CYCLE_ID = 1;
+    const CYCLE_ID = 2;
 
     // Questions with their items
     const questions = [
