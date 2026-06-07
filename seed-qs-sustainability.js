@@ -461,7 +461,7 @@ async function seedQuestions() {
             itemCount++;
         }
 
-        console.log(`  ✓ ${q.code} — ${q.title.slice(0, 50)}... (${q.items.length} items)`);
+        console.log(`  ✓ ${q.code} - ${q.title.slice(0, 50)}... (${q.items.length} items)`);
     }
 
     console.log(`\nDone! ${questionCount} questions and ${itemCount} items seeded.`);

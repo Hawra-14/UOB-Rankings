@@ -518,6 +518,19 @@
             align-items: flex-start;
         }
 
+        .q-row.g-eq .status-cell.status-cell {
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .q-row.g-main>div:not(:first-child):not(:nth-child(2)),
+        .q-row.g-wur>div:not(:first-child):not(:nth-child(2)),
+        .q-row.g-gm>div:not(:first-child):not(:nth-child(2)) {
+            text-align: center;
+            justify-self: center;
+        }
+
         .q-text {
             font-size: .83rem;
             color: var(--text);
@@ -546,6 +559,19 @@
             text-align: center;
             font-size: .95rem;
             padding-top: .1rem
+        }
+
+        /* div-based rows (standard, equality, WUR) */
+        div.status-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        td.status-cell {
+            text-align: center;
+            vertical-align: middle;
         }
 
         .txt-input {
@@ -1187,7 +1213,7 @@
 
         <div class="main-wrap">
             <div class="center">
-                <a href="ranking-forms.html" class="back-btn">← Back to My Ranking Forms</a>
+                <a href="ranking-forms.html" class="back-btn">Back to My Ranking Forms</a>
                 <div class="page-title" id="pageTitle">Loading...</div>
                 <div class="page-sub" id="pageSub"></div>
                 <div class="banner banner-green" id="deadlineBanner"></div>
@@ -1367,7 +1393,7 @@
                     const taskId = window._selectedTaskId;
                     if (!taskId) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>'; return; }
                     document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Loading history...</p>';
-                    fetch(`http://localhost:3002/api/submissions/history-all/${taskId}`, { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(`https://uob-rankings.onrender.com/api/submissions/history-all/${taskId}`, { headers: { 'Authorization': `Bearer ${token}` } })
                         .then(r => r.json()).then(rows => {
                             if (!rows.length) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions recorded.</p>'; return; }
                             document.getElementById('defBody').innerHTML = rows.map(h => {
@@ -1428,7 +1454,6 @@
 
             function getTableHeaderColor() {
                 const name = (currentCycleName || '').toLowerCase();
-                console.log('getTableHeaderColor called with:', name); // ← add
                 if (name.includes('qs sustainability')) return { bg: '#e8f5e9', text: '#2e7d32', border: '#a5d6a7' };
                 if (name.includes('qs world university rankings')) return { bg: '#fef9e7', text: '#7a6000', border: '#f0d060' };
                 if (name.includes('the world university rankings')) return { bg: '#f3e5f5', text: '#6a1b9a', border: '#ce93d8' };
@@ -1814,7 +1839,7 @@
                 const answerData = getAnswerValue(q);
                 try {
                     btn.textContent = '...'; btn.disabled = true;
-                    const res = await fetch('http://localhost:3002/api/submissions/submit', {
+                    const res = await fetch('https://uob-rankings.onrender.com/api/submissions/submit', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ task_assignment_id: taskId, answers: answerData, user_id: user.id })
@@ -1825,8 +1850,6 @@
                         q.answer_number = answerData.answer_number;
                         q.task_status = 'submitted';
                         q.answer_updated_at = new Date().toISOString();
-                        console.log('saved answer:', answerData); // ← add
-                        console.log('q after save:', q); // ← add
                         btn.textContent = '✓ Saved';
                         btn.style.background = 'var(--teal)';
                         setTimeout(() => {
@@ -1835,7 +1858,6 @@
                             btn.classList.add('btn-edit');
                             btn.style.background = '';
                             btn.disabled = false;
-                            console.log('q.answer_text before re-render:', q.answer_text); // ← add
                             if (isGreenMetric) {
                                 renderStandardQuestions(allQuestions.filter(q => q.gm_category === activeGMTab));
                             } else if (isTheImpact) {
@@ -1907,9 +1929,14 @@
                         onclick="selectRow(this)">
                         <div class="q-text">${isGreenMetric ? `<span class="kpi-num">${formatGMCode(q.code)}</span>${formatGMTitle(q.title)}` : q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div>
                         <div style="padding-top:.1rem">${inputHtml}${rejectionBanner}</div>
-                        <div class="status-cell">${getStatusDot(q.task_status)}</div>
-                        <div class="date-cell">${updatedAt}</div>
-                        <div class="action-cell">${actionBtn}</div>
+                        <div class="status-cell">${getStatusDot(q.task_status)}
+                            ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                        </div>
+                        <div class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</div>
+                        <div class="action-cell">
+                            ${actionBtn}
+                            
+                        </div>
                     </div>`;
                 }
 
@@ -1954,16 +1981,20 @@
                         <td><div class="q-text"><span class="kpi-num">${formatGMCode(q.code)}</span>${formatGMTitle(q.title)}</div></td>
                         <td>${inputHtml}${rejectionBanner}</td>
                         ${evidenceCell}
-                        <td class="status-cell">${getStatusDot(q.task_status)}</td>
-                        <td class="date-cell" style="text-align:center">${updatedAt}</td>
-                        <td style="text-align:center">${actionBtn}</td>
+                        <td class="status-cell">${getStatusDot(q.task_status)}
+    ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+</td>
+                        <td class="date-cell" style="text-align:center">${q.deadline ? formatDate(q.deadline) : '—'}</td>
+                        <td style="text-align:center">
+                            ${actionBtn}
+                        </td>
                     </tr>`;
                 }
 
                 function renderImpactRow(q) {
                     if (q.question_type === 'metric') {
                         return `<tr style="background:#f0f2f7;cursor:default">
-                            <td colspan="6" style="padding:.55rem 1rem;font-size:.82rem;font-weight:700;color:var(--navy)">${q.title}</td>
+                            <td colspan="7" style="padding:.55rem 1rem;font-size:.82rem;font-weight:700;color:var(--navy)">${q.title}</td>
                         </tr>`;
                     }
                     const locked = q.task_status && q.task_status !== 'pending' && q.task_status !== 'rejected';
@@ -1985,7 +2016,7 @@
                     } catch (e) { evidenceVal = ''; }
 
                     const evidenceCell = q.has_evidence === 1
-                        ? `<td><input class="url-input" type="url" id="evidence_${q.task_id}" placeholder="https://..." value="${evidenceVal}" ${locked ? 'readonly style="background:#f0f2f7"' : ''}/></td>`
+                        ? `<td style="text-align:center"><input class="url-input" type="url" id="evidence_${q.task_id}" placeholder="https://..." value="${evidenceVal}" style="max-width:90%;${locked ? 'background:#f0f2f7' : ''}"/></td>`
                         : `<td style="color:var(--subtext);text-align:center">—</td>`;
 
                     // Public
@@ -2009,8 +2040,14 @@
                         <td>${inputHtml}${rejectionBanner}</td>
                         ${evidenceCell}
                         ${publicCell}
-                        <td class="status-cell">${getStatusDot(q.task_status)}</td>
-                        <td style="text-align:center">${actionBtn}</td>
+                        <td class="status-cell">
+                            ${getStatusDot(q.task_status)}
+                            ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                        </td>
+                        <td class="date-cell" style="text-align:center">${q.deadline ? formatDate(q.deadline) : '—'}</td>
+                        <td style="text-align:center">
+                            ${actionBtn}
+                        </td>
                     </tr>`;
                 }
 
@@ -2067,9 +2104,14 @@
                         onclick="selectRow(this)">
                         <div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div>
                         ${inputs}
-                        <div class="status-cell">${getStatusDot(q.task_status)}</div>
-                        <div class="date-cell">${updatedAt}</div>
-                        <div class="action-cell">${actionBtn}</div>
+                        <div class="status-cell">${getStatusDot(q.task_status)}
+    ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+</div>
+                        <div class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</div>
+                        <div class="action-cell">
+                            ${actionBtn}
+                            
+                        </div>
                     </div>`;
                 }
 
@@ -2090,18 +2132,17 @@
                         subOrder.forEach(sub => {
                             const subQs = subGroups[sub];
                             const isEquality = sub === 'Equality';
-                            console.log('subHdrStyle:', subHdrStyle);
 
                             if (isEquality) {
                                 const gridQs = subQs.filter(q => /^EQ[1-9]$/.test(q.code) && (q.items || []).length === 4);
                                 const normalQs = subQs.filter(q => !(/^EQ[1-9]$/.test(q.code) && (q.items || []).length === 4));
 
                                 if (gridQs.length) {
-                                    rowsHtml += `<div class="subsec-hdr g-eq""><div>Equality</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                                    rowsHtml += `<div class="subsec-hdr g-eq""><div>Equality</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Due Date</div><div>Action</div></div>`;
                                     gridQs.forEach(q => { rowsHtml += renderEqualityRow(q); });
                                 }
                                 if (normalQs.length) {
-                                    rowsHtml += `<div class="subsec-hdr g-main"><div>Equality</div><div>${isGreenMetric ? 'Answer' : 'URL / Response'}</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                                    rowsHtml += `<div class="subsec-hdr g-main"><div>Equality</div><div style="text-align:left">${isGreenMetric ? 'Answer' : 'URL / Response'}</div><div>Status</div><div>Due Date</div><div>Action</div></div>`;
                                     normalQs.forEach(q => { rowsHtml += isGridQuestion(q) ? renderEqualityRow(q) : renderRow(q); });
                                 }
                             } else {
@@ -2118,7 +2159,7 @@
                                             <th style="${thStyle};text-align:left">Answer</th>
                                             <th style="${thStyle};text-align:center">Evidence (URL)</th>
                                             <th style="${thStyle};text-align:center">Status</th>
-                                            <th style="${thStyle};text-align:center">Updated At</th>
+                                            <th style="${thStyle};text-align:center">Due Date</th>
                                             <th style="${thStyle};text-align:center">Action</th>
                                         </tr></thead>
                                         <tbody>${qs.map(q => renderGMRow(q)).join('')}</tbody>
@@ -2127,22 +2168,24 @@
                                     const hdr = getTableHeaderColor();
                                     const thStyle = `background:${hdr.bg};color:${hdr.text};border-bottom:2px solid ${hdr.border};padding:.75rem 1rem;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;`; rowsHtml = `<div class="table-wrap"><table style="width:100%;border-collapse:collapse;table-layout:fixed">
                                         <colgroup>
-                                                <col style="width:28%"/><col style="width:24%"/>
-                                                <col style="width:16%"/>
-                                                <col style="width:9%"/><col style="width:8%"/><col style="width:10%"/>
-                                            </colgroup>
+                                            <col style="width:26%"/><col style="width:22%"/>
+                                            <col style="width:15%"/>
+                                            <col style="width:8%"/><col style="width:9%"/>
+                                            <col style="width:10%"/><col style="width:10%"/>
+                                        </colgroup>
                                         <thead><tr>
                                             <th style="${thStyle};text-align:left">${theme}</th>
                                             <th style="${thStyle};text-align:left">Answer</th>
                                             <th style="${thStyle};text-align:center">Evidence</th>
                                             <th style="${thStyle};text-align:center">Public</th>
                                             <th style="${thStyle};text-align:center">Status</th>
+                                            <th style="${thStyle};text-align:center">Due Date</th>
                                             <th style="${thStyle};text-align:center">Action</th>
                                         </tr></thead>
                                         <tbody>${qs.map(q => renderImpactRow(q)).join('')}</tbody>
                                     </table></div>`;
                                 } else {
-                                    rowsHtml = `<div class="subsec-hdr g-main""><div>${theme}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                                    rowsHtml = `<div class="subsec-hdr g-main""><div>${theme}</div><div style="text-align:left">URL / Response</div><div>Status</div><div>Due Date</div><div>Action</div></div>`;
                                     qs.forEach(q => { rowsHtml += renderRow(q); });
                                 }
 
@@ -2155,12 +2198,12 @@
                         if (hasGrid && hasNormal) {
                             const gridQs = qs.filter(q => isGridQuestion(q));
                             const normalQs = qs.filter(q => !isGridQuestion(q));
-                            rowsHtml += `<div class="subsec-hdr g-main""><div>${theme}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                            rowsHtml += `<div class="subsec-hdr g-main""><div>${theme}</div><div style="text-align:left">URL / Response</div><div>Status</div><div>Due Date</div><div>Action</div></div>`;
                             normalQs.forEach(q => { rowsHtml += renderRow(q); });
-                            rowsHtml += `<div class="subsec-hdr g-eq"><div>${theme}</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                            rowsHtml += `<div class="subsec-hdr g-eq"><div>${theme}</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Due Date</div><div>Action</div></div>`;
                             gridQs.forEach(q => { rowsHtml += renderEqualityRow(q); });
                         } else if (hasGrid) {
-                            rowsHtml = `<div class="subsec-hdr g-eq"><div>${theme}</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                            rowsHtml = `<div class="subsec-hdr g-eq"><div>${theme}</div><div>Full Time</div><div>Part Time</div><div>HC</div><div>FTE</div><div>Status</div><div>Due Date</div><div>Action</div></div>`;
                             qs.forEach(q => { rowsHtml += renderEqualityRow(q); });
                         } else if (isGreenMetric) {
                             const hdr = getTableHeaderColor();
@@ -2175,7 +2218,7 @@
                                     <th style="${thStyle};text-align:left">Answer</th>
                                     <th style="${thStyle};text-align:center">Evidence (URL)</th>
                                     <th style="${thStyle};text-align:center">Status</th>
-                                    <th style="${thStyle};text-align:center">Updated At</th>
+                                    <th style="${thStyle};text-align:center">Due Date</th>
                                     <th style="${thStyle};text-align:center">Action</th>
                                 </tr></thead>
                                 <tbody>${qs.map(q => renderGMRow(q)).join('')}</tbody>
@@ -2184,9 +2227,10 @@
                             const hdr = getTableHeaderColor();
                             const thStyle = `background:${hdr.bg};color:${hdr.text};border-bottom:2px solid ${hdr.border};padding:.75rem 1rem;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;`; rowsHtml = `<div class="table-wrap"><table style="width:100%;border-collapse:collapse;table-layout:fixed">
                                 <colgroup>
-                                    <col style="width:28%"/><col style="width:24%"/>
-                                    <col style="width:16%"/>
-                                    <col style="width:9%"/><col style="width:8%"/><col style="width:10%"/>
+                                    <col style="width:26%"/><col style="width:22%"/>
+                                    <col style="width:15%"/>
+                                    <col style="width:8%"/><col style="width:9%"/>
+                                    <col style="width:10%"/><col style="width:10%"/>
                                 </colgroup>
                                 <thead><tr>
                                     <th style="${thStyle};text-align:left">${theme}</th>
@@ -2194,12 +2238,13 @@
                                     <th style="${thStyle};text-align:center">Evidence</th>
                                     <th style="${thStyle};text-align:center">Public</th>
                                     <th style="${thStyle};text-align:center">Status</th>
+                                    <th style="${thStyle};text-align:center">Due Date</th>
                                     <th style="${thStyle};text-align:center">Action</th>
                                 </tr></thead>
                                 <tbody>${qs.map(q => renderImpactRow(q)).join('')}</tbody>
                             </table></div>`;
                         } else {
-                            rowsHtml = `<div class="subsec-hdr g-main""><div>${theme}</div><div>URL / Response</div><div>Status</div><div>Updated At</div><div>Action</div></div>`;
+                            rowsHtml = `<div class="subsec-hdr g-main""><div>${theme}</div><div style="text-align:left">URL / Response</div><div>Status</div><div>Due Date</div><div>Action</div></div>`;
                             qs.forEach(q => { rowsHtml += renderRow(q); });
                         }
                     }
@@ -2224,9 +2269,7 @@
             }
 
             function renderWurSections(questions) {
-                console.log('currentCycleName in renderWurSections:', currentCycleName); // ← add
                 const hdr = getTableHeaderColor();
-                console.log('hdr:', hdr); // ← add
                 const container = document.getElementById('sectionsContainer');
                 if (!questions.length) {
                     container.innerHTML = `<div style="text-align:center;padding:3rem;color:var(--subtext)"><div style="font-size:2rem;margin-bottom:.5rem">📋</div><div style="font-weight:600">No THE WUR questions assigned to your department yet.</div></div>`;
@@ -2253,18 +2296,21 @@
                             data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
                             data-taskid="${q.task_id || ''}"
                             onclick="selectRow(this)">
-                            <div class="q-text"><span class="kpi-num">${q.kpi_index || (i + 1)}</span>${q.title}</div>
+                            <div class="q-text">${q.title}</div>
                             <div>${inputHtml}</div>
-                            <div class="status-cell">${getStatusDot(q.task_status)}</div>
-                            <div class="date-cell">${updatedAt}</div>
-                            <div class="action-cell">${actionBtn}</div>
+                            <div class="status-cell">${getStatusDot(q.task_status)}
+                                ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                            </div>
+                            <div class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</div>
+                            <div class="action-cell">
+                                ${actionBtn}
+                            </div>
                         </div>`;
                     }).join('');
                     const hdr = getTableHeaderColor();
                     const subHdrStyle = hdr ? `background:${hdr.bg};border-bottom:2px solid ${hdr.border};color:${hdr.text}` : '';
-                    console.log('subHdrStyle value:', subHdrStyle); // ← add
                     return `<div class="sec-block">
-                        <div class="sec-hdr">
+                        <div class="sec-hdr" onclick="toggleSec('${sid}')">
                             <span class="sec-hdr-title">${subject}</span>
                             <div style="display:flex;align-items:center;gap:.6rem">
                                 <span style="font-size:.75rem;color:var(--subtext)">${answered}/${qs.length} answered</span>
@@ -2272,7 +2318,13 @@
                             </div>
                         </div>
                         <div id="body_${sid}">
-                            <div class="subsec-hdr g-wur"><div>KPI</div><div>Value</div><div>Status</div><div>Updated At</div><div>Action</div></div>
+                            <div class="subsec-hdr g-wur">
+                                <div>${subject}</div>
+                                <div style="text-align:left">URL / Response</div>
+                                <div>Status</div>
+                                <div>Due Date</div>
+                                <div>Action</div>
+                            </div>
                             ${rows}
                         </div>
                     </div>`;
@@ -2284,7 +2336,7 @@
 
             async function loadCycleInfo() {
                 try {
-                    const res = await fetch(`http://localhost:3002/api/questions/my-rankings/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`https://uob-rankings.onrender.com/api/questions/my-rankings/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const cycle = await res.json();
                     if (cycle) {
                         document.getElementById('pageTitle').textContent = cycle.name;
@@ -2321,30 +2373,21 @@
 
             async function loadQuestions() {
                 try {
-                    const res = await fetch(`http://localhost:3002/api/questions/my-questions/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`https://uob-rankings.onrender.com/api/questions/my-questions/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     allQuestions = await res.json();
                 } catch (e) {
                     document.getElementById('sectionsContainer').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions. Make sure the server is running.</div>';
                     return;
                 }
                 const hasKpiIndex = allQuestions.some(q => q.kpi_index != null);
-                console.log('hasKpiIndex:', hasKpiIndex, 'isTheWur:', isTheWur); // ← add
                 if (hasKpiIndex) isTheWur = true;
 
-                // Hide GM tabs with no assigned questions
+                // Show all GM tabs; default to the first tab that has questions, else SI
                 if (isGreenMetric) {
                     const assignedCats = new Set(allQuestions.map(q => q.gm_category).filter(Boolean));
-                    document.querySelectorAll('.gm-tab').forEach(tab => {
-                        const cat = tab.dataset.cat;
-                        if (!assignedCats.has(cat)) {
-                            tab.style.display = 'none';
-                        }
-                    });
-                    // Set activeGMTab to the first category that has questions
                     const firstAssigned = ['SI', 'EC', 'WS', 'WR', 'TR', 'ED', 'GD'].find(cat => assignedCats.has(cat));
                     if (firstAssigned) {
                         activeGMTab = firstAssigned;
-                        // Update active tab highlight
                         document.querySelectorAll('.gm-tab').forEach(tab => {
                             tab.classList.toggle('active', tab.dataset.cat === firstAssigned);
                         });
@@ -2379,7 +2422,7 @@
                 for (const q of qs) {
                     const answerData = getAnswerValue(q);
                     try {
-                        const res = await fetch('http://localhost:3002/api/submissions/submit', {
+                        const res = await fetch('https://uob-rankings.onrender.com/api/submissions/submit', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                             body: JSON.stringify({ task_assignment_id: q.task_id, answers: answerData, user_id: user.id })
@@ -2393,7 +2436,7 @@
             }
 
             function logout() {
-                fetch('http://localhost:3002/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                fetch('https://uob-rankings.onrender.com/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
                 localStorage.clear();
                 window.location.href = 'login.html';
             }
@@ -2446,7 +2489,7 @@
             }
 
             function updateLegendCounts() {
-                const qs = window.questions || [];
+                const qs = allQuestions || [];
                 let submitted = 0, accepted = 0, pending = 0, rejected = 0, nostatus = 0;
                 qs.forEach(q => {
                     const s = q.task_status;

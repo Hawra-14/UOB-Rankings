@@ -586,34 +586,34 @@
 
         .sec-arrow {
             color: var(--gold);
-            font-size: .8rem
+            font-size: .8rem;
         }
 
         /* TABLE */
         .table-wrap {
-            overflow-x: auto
+            overflow-x: hidden;
         }
 
         .q-table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed
+            table-layout: fixed;
         }
 
         .q-table col.col-q {
-            width: 22%
+            width: 22%;
         }
 
         .q-table col.col-resp {
-            width: 30%
+            width: 30%;
         }
 
         .q-table col.col-st {
-            width: 7%
+            width: 7%;
         }
 
         .q-table col.col-date {
-            width: 11%
+            width: 11%;
         }
 
         .q-table col.col-dept {
@@ -650,6 +650,11 @@
             color: var(--text);
             /* vertical-align: top; */
             overflow: hidden
+        }
+
+        .q-table td input,
+        .q-table td select {
+            max-width: 100%;
         }
 
         .q-table tr:last-child td {
@@ -1413,7 +1418,7 @@
                 <div
                     style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.9rem;flex-wrap:wrap">
                     <div>
-                        <a href="admin-cycles.html" class="back-btn" style="margin-bottom:.6rem">← Back to Ranking
+                        <a href="admin-cycles.html" class="back-btn" style="margin-bottom:.6rem">Back to Ranking
                             Cycles</a>
                         <div class="page-title" id="pageTitle">Loading...</div>
                         <div class="page-sub" id="pageSub"></div>
@@ -1662,8 +1667,8 @@
                     if (!taskId && !questionId) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>'; return; }
                     document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Loading history...</p>';
                     const histUrl = taskId
-                        ? `http://localhost:3002/api/submissions/history-all/${taskId}`
-                        : `http://localhost:3002/api/submissions/history-by-question/${questionId}`;
+                        ? `https://uob-rankings.onrender.com/api/submissions/history-all/${taskId}`
+                        : `https://uob-rankings.onrender.com/api/submissions/history-by-question/${questionId}`;
                     fetch(histUrl, { headers: { 'Authorization': `Bearer ${token}` } })
                         .then(r => r.json()).then(rows => {
                             if (!rows.length) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions.</p>'; return; }
@@ -2001,7 +2006,7 @@
                 btn.disabled = true;
 
                 try {
-                    const res = await fetch('http://localhost:3002/api/admin/assign', {
+                    const res = await fetch('https://uob-rankings.onrender.com/api/admin/assign', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ question_id: currentAssignQuestionId, department_id: parseInt(deptId), deadline })
@@ -2025,6 +2030,7 @@
                                 q.department_id = deptId;
                                 q.department_name = deptName;
                                 q.task_status = 'pending';
+                                q.deadline = deadline;
                             }
                             // Update the DOM row directly instead of re-rendering
                             const row = document.querySelector(`tr[data-qid="${qid}"]`);
@@ -2032,6 +2038,9 @@
                                 // Update dept cell
                                 const deptCell = row.querySelector('td:nth-last-child(2)');
                                 if (deptCell) deptCell.innerHTML = `<span class="dept-tag">${deptName}</span>`;
+                                // Update due date cell
+                                const dueDateCell = row.querySelector('.date-cell');
+                                if (dueDateCell) dueDateCell.textContent = formatDate(deadline);
                                 // Update action button to reassign
                                 const actionCell = row.querySelector('.action-col');
                                 if (actionCell) actionCell.innerHTML = `<button class="btn-reassign" data-qid="${qid}" onclick="event.stopPropagation();openAssignModalById(this)" title="Reassign">&#8634;</button>`;
@@ -2090,7 +2099,7 @@
             function renderRow(q) {
                 // Metric header row
                 if (q.question_type === 'metric') {
-                    const colspan = isTheImpact ? 7 : isGreenMetric ? 7 : 6;
+                    const colspan = isTheImpact ? 8 : isGreenMetric ? 7 : 7;
                     return `<tr data-qid="${q.id}" style="background:#f0f2f7;cursor:default" onclick="">
                         <td colspan="${colspan}" style="padding:.55rem 1rem;font-size:.82rem;font-weight:700;color:var(--navy);border-bottom:1px solid var(--border)">
                             ${q.title}
@@ -2107,12 +2116,12 @@
                         ? `<button class="btn-reassign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Reassign">&#8634;</button>`
                         : `<button class="btn-assign" data-qid="${q.id}" onclick="event.stopPropagation();openAssignModalById(this)" title="Assign">+</button>`;
                     const saveBtn = `<button class="btn-save-row" data-saveid="${q.task_id || q.id}"
-        onclick="event.stopPropagation();saveRowAnswer(${q.task_id || q.id},this)"
-        title="Save Changes">💾 Save</button>`;
+                        onclick="event.stopPropagation();saveRowAnswer(${q.task_id || q.id},this)"
+                        title="Save Changes">💾 Save</button>`;
                     const reviewBtn = (q.task_status === 'submitted' || q.task_status === 'accepted' || q.task_status === 'rejected')
                         ? `<button onclick="event.stopPropagation();openReviewById(${q.id})" title="Evaluate Submission"
-            style="background:#eef2ff;color:#3730a3;border:1.5px solid #c7d2fe;padding:.25rem .4rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;line-height:1;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center">
-            Evaluate</button>`
+                        style="background:#eef2ff;color:#3730a3;border:1.5px solid #c7d2fe;padding:.25rem .4rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;line-height:1;vertical-align:middle;display:inline-flex;align-items:center;justify-content:center">
+                        Evaluate</button>`
                         : '';
 
                     let evidenceVal = '';
@@ -2123,34 +2132,36 @@
 
                     const evidenceCell = q.has_evidence === 1
                         ? `<td><input class="url-input admin-input" type="url" placeholder="https://..."
-            value="${evidenceVal}" style="background:#f5f7fc"
-            oninput="markDirty(${q.task_id || q.id})"/></td>`
+                        value="${evidenceVal}" style="background:#f5f7fc"
+                        oninput="markDirty(${q.task_id || q.id})"/></td>`
                         : `<td style="color:var(--subtext);text-align:center">—</td>`;
 
                     const publicCell = `<td style="text-align:center">
-        <label class="check-item" style="justify-content:center;margin:0">
-            <input type="checkbox" class="admin-input" oninput="markDirty(${q.task_id || q.id})"> Yes
-        </label>
-    </td>`;
+                        <label class="check-item" style="justify-content:center;margin:0">
+                            <input type="checkbox" class="admin-input" oninput="markDirty(${q.task_id || q.id})"> Yes
+                        </label>
+                    </td>`;
 
                     return `<tr data-qid="${q.id}"
-        data-title="${q.title.replace(/"/g, '&quot;')}"
-        data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
-        data-taskid="${q.task_id || ''}"
-        onclick="selectRow(this)">
-        <td><div class="q-text">${q.title}</div></td>
-        <td>${inputHtml}</td>
-        ${evidenceCell}
-        ${publicCell}
-        <td class="status-cell">
-            ${getStatusDot(q.task_status)}
-            <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
-                ${saveBtn}${reviewBtn}
-            </div>
-        </td>
-        <td style="text-align:center">${deptCell}</td>
-        <td class="action-col">${actionBtn}</td>
-    </tr>`;
+                        data-title="${q.title.replace(/"/g, '&quot;')}"
+                        data-desc="${(q.description || '').replace(/"/g, '&quot;')}"
+                        data-taskid="${q.task_id || ''}"
+                        onclick="selectRow(this)">
+                        <td><div class="q-text">${q.title}</div></td>
+                        <td>${inputHtml}</td>
+                        ${evidenceCell}
+                        ${publicCell}
+                        <td class="status-cell">
+                            ${getStatusDot(q.task_status)}
+                            ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                            <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
+                                ${saveBtn}${reviewBtn}
+                            </div>
+                        </td>
+                        <td class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</td>
+                        <td style="text-align:center">${deptCell}</td>
+                        <td class="action-col">${actionBtn}</td>
+                    </tr>`;
                 }
                 const updatedAt = formatDate(q.answer_updated_at);
                 const inputHtml = buildInput(q);
@@ -2198,11 +2209,12 @@
                     ${evidenceCell}
                     <td class="status-cell">
                         ${getStatusDot(q.task_status)}
+                        ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                         <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
                             ${saveBtn}${reviewBtn}
                         </div>
                     </td>
-                    <td class="date-cell">${updatedAt}</td>
+                    <td class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</td>
                     <td style="text-align:center">${deptCell}</td>
                     <td class="action-col">${actionBtn}</td>
                 </tr>`;
@@ -2242,11 +2254,12 @@
                     </td>
                     <td class="status-cell">
                         ${getStatusDot(q.task_status)}
+                        ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                         <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
                             ${saveBtn}${reviewBtn}
                         </div>
                     </td>
-                    <td class="date-cell">${updatedAt}</td>
+                    <td class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</td>
                     <td style="text-align:center">${deptCell}</td>
                     <td class="action-col">${actionBtn}</td>
                 </tr>`;
@@ -2292,11 +2305,12 @@
                     <td><input type="number" value="${fte}" readonly style="${calcStyle}"/></td>
                     <td class="status-cell">
                         ${getStatusDot(q.task_status)}
+                        ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                         <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
                             ${saveBtn}${reviewBtn}
                         </div>
                     </td>
-                    <td class="date-cell">${updatedAt}</td>
+                    <td class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</td>
                     <td style="vertical-align:middle;white-space:normal;text-align:center">${deptCell}</td>
                     <td class="action-col">${actionBtn}</td>
                 </tr>`;
@@ -2309,10 +2323,11 @@
                 if (isTheImpact) {
                     return `<div class="table-wrap"><table class="q-table">
                         <colgroup>
-                            <col style="width:30%"/>
                             <col style="width:22%"/>
-                            <col style="width:18%"/>
-                            <col style="width:10%"/>
+                            <col style="width:17%"/>
+                            <col style="width:12%"/>
+                            <col style="width:6%"/>
+                            <col style="width:9%"/>
                             <col style="width:9%"/>
                             <col style="width:11%"/><col class="col-act"/>
                         </colgroup>
@@ -2322,6 +2337,7 @@
                             <th style="${thStyle};text-align:center">Evidence</th>
                             <th style="${thStyle};text-align:center">Public</th>
                             <th style="${thStyle};text-align:center">Status</th>
+                            <th style="${thStyle};text-align:center">Due Date</th>
                             <th style="${thStyle};text-align:center">Assigned To</th>
                             <th style="${thStyle};text-align:center" class="action-col">Assign</th>
                         </tr></thead>
@@ -2332,34 +2348,37 @@
                 if (isGreenMetric) {
                     return `<div class="table-wrap"><table class="q-table">
                         <colgroup>
-                            <col style="width:22%"/><col style="width:28%"/>
-                            <col style="width:18%"/>
-                            <col style="width:7%"/><col style="width:10%"/>
-                            <col style="width:15%"/><col class="col-act"/>
+                            <col style="width:20%"/>
+                            <col style="width:23%"/>
+                            <col style="width:15%"/>
+                            <col style="width:8%"/>
+                            <col style="width:10%"/>
+                            <col style="width:13%"/><col class="col-act"/>
                         </colgroup>
                         <thead><tr>
                             <th style="${thStyle};text-align:left">${thFirst}</th>
                             <th style="${thStyle};text-align:left">Answer</th>
                             <th style="${thStyle};text-align:center">Evidence (URL)</th>
                             <th style="${thStyle};text-align:center">Status</th>
-                            <th style="${thStyle};text-align:center">Updated At</th>
+                            <th style="${thStyle};text-align:center">Due Date</th>
                             <th style="${thStyle};text-align:center">Assigned To</th>
                             <th style="${thStyle};text-align:center" class="action-col">Assign</th>
                         </tr></thead>
                         <tbody>${rows}</tbody>
                     </table></div>`;
                 }
+
                 return `<div class="table-wrap"><table class="q-table">
                     <colgroup>
-                        <col class="col-q"/><col class="col-resp"/>
-                        <col style="width:9%"/><col style="width:11%"/>
-                        <col style="width:16%"/><col class="col-act"/>
+                        <col style="width:24%"/><col style="width:28%"/>
+                        <col style="width:8%"/><col style="width:11%"/>
+                        <col style="width:15%"/><col class="col-act"/>
                     </colgroup>
                     <thead><tr>
                         <th style="${thStyle};text-align:left">${thFirst}</th>
                         <th style="${thStyle};text-align:left">URL / Response</th>
                         <th style="${thStyle};text-align:center">Status</th>
-                        <th style="${thStyle};text-align:center">Updated At</th>
+                        <th style="${thStyle};text-align:center">Due Date</th>
                         <th style="${thStyle};text-align:center">Assigned To</th>
                         <th style="${thStyle};text-align:center" class="action-col">Assign</th>
                     </tr></thead>
@@ -2373,14 +2392,14 @@
 
                 return `<div class="table-wrap"><table class="q-table" style="table-layout:fixed">
                     <thead><tr>
-                        <th style="${thStyle};width:18%">${thFirst}</th>
-                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">Full Time</th>
-                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">Part Time</th>
-                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">HC</th>
-                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">FTE</th>
-                        <th style="${thStyle};width:9.5%;text-align:center;white-space:normal;padding:.4rem .2rem">Status</th>
-                        <th style="${thStyle};width:11%;text-align:center;white-space:normal;padding:.4rem .2rem">Updated At</th>
-                        <th style="${thStyle};width:12%;text-align:center;white-space:normal;padding:.4rem .2rem">Assigned To</th>
+                        <th style="${thStyle};width:17%">${thFirst}</th>
+                        <th style="${thStyle};width:9%;text-align:center;white-space:normal;padding:.4rem .2rem">Full Time</th>
+                        <th style="${thStyle};width:9%;text-align:center;white-space:normal;padding:.4rem .2rem">Part Time</th>
+                        <th style="${thStyle};width:9%;text-align:center;white-space:normal;padding:.4rem .2rem">HC</th>
+                        <th style="${thStyle};width:9%;text-align:center;white-space:normal;padding:.4rem .2rem">FTE</th>
+                        <th style="${thStyle};width:9%;text-align:center;white-space:normal;padding:.4rem .2rem">Status</th>
+                        <th style="${thStyle};width:9%;text-align:center;white-space:normal;padding:.4rem .2rem">Due Date</th>
+                        <th style="${thStyle};width:11%;text-align:center;white-space:normal;padding:.4rem .2rem">Assigned To</th>
                         <th style="${thStyle};width:10%;text-align:center;white-space:normal;padding:.4rem .2rem" class="action-col">Assign</th>
                     </tr></thead>
                     <tbody>${rows}</tbody>
@@ -2574,7 +2593,7 @@
                 btn.disabled = true;
 
                 try {
-                    const res = await fetch('http://localhost:3002/api/submissions/submit', {
+                    const res = await fetch('https://uob-rankings.onrender.com/api/submissions/submit', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({
@@ -2712,7 +2731,7 @@
             // ── Load functions ─────────────────────────────────────────
             async function loadCycleInfo() {
                 try {
-                    const res = await fetch(`http://localhost:3002/api/admin/cycles/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`https://uob-rankings.onrender.com/api/admin/cycles/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const cycle = await res.json();
                     if (cycle) {
                         document.getElementById('pageTitle').textContent = cycle.name;
@@ -2765,7 +2784,7 @@
 
             async function loadQuestions() {
                 try {
-                    const res = await fetch(`http://localhost:3002/api/admin/cycles/${cycleId}/questions`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`https://uob-rankings.onrender.com/api/admin/cycles/${cycleId}/questions`, { headers: { 'Authorization': `Bearer ${token}` } });
                     allQuestions = await res.json();
                 } catch (e) {
                     document.getElementById('sectionsContainer').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions.</div>';
@@ -2774,7 +2793,7 @@
 
             async function loadDepartments() {
                 try {
-                    const res = await fetch('http://localhost:3002/api/admin/departments', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch('https://uob-rankings.onrender.com/api/admin/departments', { headers: { 'Authorization': `Bearer ${token}` } });
                     departments = await res.json();
                 } catch (e) { console.error(e); }
             }
@@ -2794,7 +2813,7 @@
                 btn.textContent = '...';
                 btn.disabled = true;
                 try {
-                    const res = await fetch(`http://localhost:3002/api/admin/cycles/${cycleId}/close`, {
+                    const res = await fetch(`https://uob-rankings.onrender.com/api/admin/cycles/${cycleId}/close`, {
                         method: 'PATCH',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
@@ -2822,7 +2841,7 @@
             }
 
             function logout() {
-                fetch('http://localhost:3002/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                fetch('https://uob-rankings.onrender.com/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
                 localStorage.clear(); window.location.href = 'login.html';
             }
 
@@ -2839,7 +2858,7 @@
                 activeGMTab = cat;
                 const filtered = allQuestions.filter(q => q.gm_category === cat);
                 renderSections(filtered);
-                document.querySelector('.def-panel').style.display = 'none'; // ← hide def panel
+                document.querySelector('.def-panel').style.display = 'none'; // hide def panel
             }
 
             function switchImpactTab(el, theme) {
@@ -2908,7 +2927,7 @@
             async function submitReview(status) {
                 const comment = document.getElementById('reviewComment').value.trim();
                 try {
-                    const res = await fetch(`http://localhost:3002/api/admin/answers/${_reviewTaskId}/status`, {
+                    const res = await fetch(`https://uob-rankings.onrender.com/api/admin/answers/${_reviewTaskId}/status`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ status, comment })

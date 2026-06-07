@@ -839,7 +839,7 @@
             ar.textContent = el.classList.contains('open') ? '▴' : '▾';
         }
         function logout() {
-            fetch('http://localhost:3002/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+            fetch('https://uob-rankings.onrender.com/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
             localStorage.clear(); window.location.href = 'login.html';
         }
 
@@ -877,7 +877,7 @@
 
         async function loadCycles() {
             try {
-                const res = await fetch('http://localhost:3002/api/admin/cycles', {
+                const res = await fetch('https://uob-rankings.onrender.com/api/admin/cycles', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const cycles = await res.json();
@@ -891,7 +891,7 @@
             const cycleId = document.getElementById('cycleFilter').value;
             if (!cycleId) return;
             try {
-                const res = await fetch(`http://localhost:3002/api/admin/progress/${cycleId}`, {
+                const res = await fetch(`https://uob-rankings.onrender.com/api/admin/progress/${cycleId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 progressData = await res.json();

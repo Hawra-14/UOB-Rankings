@@ -8,7 +8,7 @@ async function seedGreenMetric() {
     const questions = [
 
         // ════════════════════════════════════════════════════════
-        // SI — Setting & Infrastructure (1.1 – 1.19)
+        // SI  Setting & Infrastructure (1.1 – 1.19)
         // ════════════════════════════════════════════════════════
         {
             code: 'SI_1_1', gm_category: 'SI', theme: 'Setting & Infrastructure', question_type: 'radio', is_synced: false, has_evidence: false,
@@ -209,7 +209,7 @@ async function seedGreenMetric() {
         },
 
         // ════════════════════════════════════════════════════════
-        // EC — Energy & Climate Change (2.1 – 2.15)
+        // EC  Energy & Climate Change (2.1 – 2.15)
         // ════════════════════════════════════════════════════════
         {
             code: 'EC_2_1', gm_category: 'EC', theme: 'Energy & Climate Change', question_type: 'radio', is_synced: false, has_evidence: true,

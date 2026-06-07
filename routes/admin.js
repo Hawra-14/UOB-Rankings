@@ -164,7 +164,7 @@ router.post('/cycles', adminOnly, async (req, res) => {
 router.get('/cycles/:id/questions', adminOnly, async (req, res) => {
     try {
         const result = await db.execute({
-            sql: `SELECT q.*, ta.id as task_id, ta.department_id,
+            sql: `SELECT q.*, ta.id as task_id, ta.department_id, ta.deadline,
                     d.name as department_name,
                     a.answer_text, a.answer_number, a.updated_at as answer_updated_at,
                     a.status as task_status, a.admin_comment
@@ -206,16 +206,17 @@ router.get('/cycles/:id/questions', adminOnly, async (req, res) => {
 
 // POST assign a question to a department
 router.post('/assign', adminOnly, async (req, res) => {
-    const { question_id, department_id } = req.body;
+    const { question_id, department_id, deadline } = req.body;
     try {
         // Helper: assign one question + insert answer row
         async function assignOne(qid) {
             await db.execute({
-                sql: `INSERT INTO task_assignments (question_id, department_id, status)
-              VALUES (?, ?, 'pending')
-              ON CONFLICT(question_id) DO UPDATE SET
-              department_id = excluded.department_id`,
-                args: [qid, department_id]
+                sql: `INSERT INTO task_assignments (question_id, department_id, deadline, status)
+                    VALUES (?, ?, ?, 'pending')
+                    ON CONFLICT(question_id) DO UPDATE SET
+                    department_id = excluded.department_id,
+                    deadline = excluded.deadline`,
+                args: [qid, department_id, deadline || null]
             });
             const taRes = await db.execute({
                 sql: `SELECT id FROM task_assignments WHERE question_id = ?`,

@@ -958,7 +958,7 @@
         }
 
         function logout() {
-            fetch('http://localhost:3002/api/auth/logout', {
+            fetch('https://uob-rankings.onrender.com/api/auth/logout', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -995,7 +995,7 @@
 
         async function loadDashboard() {
             try {
-                const res = await fetch('http://localhost:3002/api/admin/dashboard', {
+                const res = await fetch('https://uob-rankings.onrender.com/api/admin/dashboard', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();

@@ -34,12 +34,15 @@ router.get('/ranking/:ranking_cycle_id', async (req, res) => {
 router.get('/department/:department_id/ranking/:ranking_cycle_id', async (req, res) => {
   try {
     const questions = await db.execute({
-      sql: `SELECT q.*, ta.status, ta.id as task_id, ta.submitted_at
-            FROM questions q
-            JOIN task_assignments ta ON ta.question_id = q.id
-            WHERE ta.department_id = ?
-            AND q.ranking_cycle_id = ?
-            ORDER BY q.id`,
+      sql: `SELECT q.*, ta.id as task_id, ta.submitted_at, ta.deadline,
+            a.id as answer_id, a.answer_text, a.answer_number,
+            a.updated_at as answer_updated_at,
+            a.status as task_status, a.admin_comment
+        FROM questions q
+        JOIN task_assignments ta ON ta.question_id = q.id
+        LEFT JOIN answers a ON a.task_assignment_id = ta.id
+        WHERE ta.department_id = ? AND q.ranking_cycle_id = ?
+        ORDER BY q.id`,
       args: [req.params.department_id, req.params.ranking_cycle_id]
     });
 
@@ -126,7 +129,7 @@ router.get('/my-questions/:ranking_cycle_id', async (req, res) => {
 
   try {
     const result = await db.execute({
-      sql: `SELECT q.*, ta.id as task_id, ta.submitted_at,
+      sql: `SELECT q.*, ta.id as task_id, ta.submitted_at, ta.deadline,
                     a.id as answer_id, a.answer_text, a.answer_number,
                     a.updated_at as answer_updated_at,
                     a.status as task_status, a.admin_comment

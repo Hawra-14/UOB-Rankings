@@ -1096,7 +1096,7 @@
         }
 
         function logout() {
-            fetch('http://localhost:3002/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+            fetch('https://uob-rankings.onrender.com/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
             localStorage.clear(); window.location.href = 'login.html';
         }
 
@@ -1151,7 +1151,7 @@
 
         async function loadCycles() {
             try {
-                const res = await fetch('http://localhost:3002/api/admin/cycles', {
+                const res = await fetch('https://uob-rankings.onrender.com/api/admin/cycles', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 allCycles = await res.json();
@@ -1275,7 +1275,7 @@
             btn.disabled = true;
 
             try {
-                const res = await fetch('http://localhost:3002/api/admin/cycles', {
+                const res = await fetch('https://uob-rankings.onrender.com/api/admin/cycles', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ name, year: parseInt(year), deadline, start_date: start, description: desc })

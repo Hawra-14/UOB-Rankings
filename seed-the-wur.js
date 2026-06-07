@@ -49,7 +49,7 @@ async function seedQuestions() {
             });
             count++;
         }
-        console.log(`  ✓ ${subject} — 15 KPIs inserted`);
+        console.log(`  ✓ ${subject} - 15 KPIs inserted`);
     }
 
     console.log(`\nDone! ${count} questions seeded across ${SUBJECTS.length} subjects.`);

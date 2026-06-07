@@ -908,7 +908,7 @@
     // Load assigned ranking cycles
     async function loadRankings() {
       try {
-        const res = await fetch('http://localhost:3002/api/questions/my-rankings', {
+        const res = await fetch('https://uob-rankings.onrender.com/api/questions/my-rankings', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const rankings = await res.json();
@@ -952,7 +952,7 @@
     // Logout
     document.querySelector('.nav-logout').addEventListener('click', async (e) => {
       e.preventDefault();
-      await fetch('http://localhost:3002/api/auth/logout', {
+      await fetch('https://uob-rankings.onrender.com/api/auth/logout', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
