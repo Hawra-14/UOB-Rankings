@@ -229,31 +229,30 @@ router.get('/history-all/:taskId', async (req, res) => {
   const { taskId } = req.params;
   try {
     const taskRes = await db.execute({
-      sql: `SELECT q.title, rc.name as cycle_name
-                  FROM task_assignments ta 
-                  JOIN questions q ON q.id = ta.question_id
-                  JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
-                  WHERE ta.id = ?`,
+      sql: `SELECT q.title, q.theme, rc.name as cycle_name
+              FROM task_assignments ta 
+              JOIN questions q ON q.id = ta.question_id
+              JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+              WHERE ta.id = ?`,
       args: [taskId]
     });
     if (!taskRes.rows.length) return res.json([]);
-    const { title, cycle_name } = taskRes.rows[0];
+    const { title, theme, cycle_name } = taskRes.rows[0];
     const rankingType = cycle_name.replace(/\s+\d{4}$/, '').trim();
 
     const result = await db.execute({
-      sql: `SELECT 
-                    ah.answer_text, ah.answer_number, ah.changed_at,
-                    u.name as changed_by_name,
-                    rc.year
-                  FROM answer_history ah
-                  LEFT JOIN users u ON u.id = ah.changed_by
-                  JOIN task_assignments ta ON ta.id = ah.task_assignment_id
-                  JOIN questions q ON q.id = ta.question_id
-                  JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
-                  WHERE q.title = ?
-                  AND rc.name LIKE ?
-                  ORDER BY rc.year DESC, ah.changed_at DESC`,
-      args: [title, `${rankingType}%`]
+      sql: `SELECT ah.answer_text, ah.answer_number, ah.changed_at,
+                u.name as changed_by_name, rc.year
+              FROM answer_history ah
+              LEFT JOIN users u ON u.id = ah.changed_by
+              JOIN task_assignments ta ON ta.id = ah.task_assignment_id
+              JOIN questions q ON q.id = ta.question_id
+              JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+              WHERE q.title = ?
+              AND (q.theme = ? OR (q.theme IS NULL AND ? IS NULL))
+              AND rc.name LIKE ?
+              ORDER BY rc.year DESC, ah.changed_at DESC`,
+      args: [title, theme, theme, `${rankingType}%`]
     });
     res.json(result.rows);
   } catch (e) {

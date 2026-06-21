@@ -220,6 +220,24 @@
             border-left-color: var(--gold)
         }
 
+        .nav-sub {
+            padding-left: 2.6rem;
+            font-size: .82rem;
+            color: rgba(255, 255, 255, 0.5)
+        }
+
+        .nav-sub:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, .75)
+        }
+
+        .nav-sub.active {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--gold)
+        }
+
         .nav-icon {
             font-size: 1rem;
             width: 22px;
@@ -256,41 +274,6 @@
         .sidebar::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, .15);
             border-radius: 4px
-        }
-
-        .nav-children {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height .25s ease
-        }
-
-        .nav-children.open {
-            max-height: 300px
-        }
-
-        .nav-child {
-            display: flex;
-            align-items: center;
-            gap: .85rem;
-            padding: .72rem 1.4rem .72rem 2.6rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: .82rem;
-            font-weight: 500;
-            border-left: 3px solid transparent;
-            text-decoration: none;
-            transition: background .16s, color .16s
-        }
-
-        .nav-child:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: rgba(255, 255, 255, .75)
-        }
-
-        .nav-child.active {
-            color: #fff;
-            font-weight: 600;
-            border-left-color: var(--gold);
-            background: rgba(255, 255, 255, .06)
         }
 
         .main-wrap {
@@ -1185,26 +1168,18 @@
         <aside class="sidebar">
             <div class="nav-section-label">Navigation</div>
             <a class="nav-item" href="dashboard-dept.html"><span class="nav-icon">🏠</span> Home</a>
-            <div class="nav-item" style="padding-right:.8rem">
-                <a href="ranking-forms.html"
-                    style="display:flex;align-items:center;gap:.85rem;flex:1;color:inherit;text-decoration:none">
-                    <span class="nav-icon">📋</span> My Ranking Forms
-                </a>
-                <span onclick="toggleForms()" style="cursor:pointer;font-size:.7rem;padding:.2rem .3rem"
-                    id="formsArrow">▴</span>
-            </div>
-            <div class="nav-children open" id="navForms">
-                <a class="nav-child" id="nav-qs-sus" href="ranking-forms.html"><span class="nav-icon">🌿</span> QS
-                    Sustainability</a>
-                <a class="nav-child" id="nav-qs-wur" href="ranking-forms.html"><span class="nav-icon">🏆</span> QS
-                    WUR</a>
-                <a class="nav-child" id="nav-the-wur" href="ranking-forms.html"><span class="nav-icon">📊</span> THE
-                    WUR</a>
-                <a class="nav-child" id="nav-the-impact" href="ranking-forms.html"><span class="nav-icon">🎯</span> THE
-                    Impact</a>
-                <a class="nav-child" id="nav-greenmetric" href="ranking-forms.html"><span class="nav-icon">🌱</span>
-                    GreenMetric</a>
-            </div>
+            <a class="nav-item" href="ranking-forms.html"><span class="nav-icon">📋</span> My Ranking Forms</a>
+            <a class="nav-item nav-sub" id="nav-sustainability" href="ranking-forms.html"><span
+                    class="nav-icon">🌿</span>
+                QS Sustainability</a>
+            <a class="nav-item nav-sub" id="nav-qs-wur" href="ranking-forms.html"><span class="nav-icon">🏆</span> QS
+                WUR</a>
+            <a class="nav-item nav-sub" id="nav-the-wur" href="ranking-forms.html"><span class="nav-icon">📊</span> THE
+                WUR</a>
+            <a class="nav-item nav-sub" id="nav-the-impact" href="ranking-forms.html"><span class="nav-icon">🎯</span>
+                THE Impact</a>
+            <a class="nav-item nav-sub" id="nav-greenmetric" href="ranking-forms.html"><span class="nav-icon">🌱</span>
+                Green Metric</a>
             <a class="nav-item" href="progress.html"><span class="nav-icon">📈</span> Progress</a>
             <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
             <div class="nav-spacer"></div>
@@ -1353,6 +1328,10 @@
         </div>
 
         <script>
+            const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+                ? 'http://localhost:3002'
+                : 'https://uob-rankings.onrender.com';
+
             function markDirty() { } // no-op in dept form
 
             const token = localStorage.getItem('token');
@@ -1393,7 +1372,7 @@
                     const taskId = window._selectedTaskId;
                     if (!taskId) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>'; return; }
                     document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Loading history...</p>';
-                    fetch(`https://uob-rankings.onrender.com/api/submissions/history-all/${taskId}`, { headers: { 'Authorization': `Bearer ${token}` } })
+                    fetch(`${API_BASE}/api/submissions/history-all/${taskId}`, { headers: { 'Authorization': `Bearer ${token}` } })
                         .then(r => r.json()).then(rows => {
                             if (!rows.length) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions recorded.</p>'; return; }
                             document.getElementById('defBody').innerHTML = rows.map(h => {
@@ -1839,7 +1818,7 @@
                 const answerData = getAnswerValue(q);
                 try {
                     btn.textContent = '...'; btn.disabled = true;
-                    const res = await fetch('https://uob-rankings.onrender.com/api/submissions/submit', {
+                    const res = await fetch(`${API_BASE}/api/submissions/submit`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ task_assignment_id: taskId, answers: answerData, user_id: user.id })
@@ -1919,7 +1898,7 @@
                         : `<button class="btn-submit-row" onclick="submitQuestion(${q.task_id}, this)">Submit</button>`;
                     const rejectionBanner = q.task_status === 'rejected'
                         ? `<div style="margin-top:.5rem;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:.5rem .75rem;font-size:.76rem;color:#991b1b">
-                            ✕ Rejected${q.admin_comment ? ` — <em>${q.admin_comment}</em>` : ''}
+                            ✕ Rejected${q.admin_comment ? ` - <em>${q.admin_comment}</em>` : ''}
                         </div>`
                         : '';
                     return `<div class="q-row g-main"
@@ -1930,12 +1909,11 @@
                         <div class="q-text">${isGreenMetric ? `<span class="kpi-num">${formatGMCode(q.code)}</span>${formatGMTitle(q.title)}` : q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div>
                         <div style="padding-top:.1rem">${inputHtml}${rejectionBanner}</div>
                         <div class="status-cell">${getStatusDot(q.task_status)}
-                            ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                            ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                         </div>
                         <div class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</div>
                         <div class="action-cell">
                             ${actionBtn}
-                            
                         </div>
                     </div>`;
                 }
@@ -1982,8 +1960,8 @@
                         <td>${inputHtml}${rejectionBanner}</td>
                         ${evidenceCell}
                         <td class="status-cell">${getStatusDot(q.task_status)}
-    ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
-</td>
+                            ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                        </td>
                         <td class="date-cell" style="text-align:center">${q.deadline ? formatDate(q.deadline) : '—'}</td>
                         <td style="text-align:center">
                             ${actionBtn}
@@ -2005,7 +1983,7 @@
                         : `<button class="btn-submit-row" onclick="submitQuestion(${q.task_id}, this)">Submit</button>`;
                     const rejectionBanner = q.task_status === 'rejected'
                         ? `<div style="margin-top:.5rem;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:.5rem .75rem;font-size:.76rem;color:#991b1b">
-                            ✕ Rejected${q.admin_comment ? ` — <em>${q.admin_comment}</em>` : ''}
+                            ✕ Rejected${q.admin_comment ? ` - <em>${q.admin_comment}</em>` : ''}
                         </div>` : '';
 
                     // Evidence
@@ -2042,7 +2020,7 @@
                         ${publicCell}
                         <td class="status-cell">
                             ${getStatusDot(q.task_status)}
-                            ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                            ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                         </td>
                         <td class="date-cell" style="text-align:center">${q.deadline ? formatDate(q.deadline) : '—'}</td>
                         <td style="text-align:center">
@@ -2105,7 +2083,7 @@
                         <div class="q-text">${q.title}${q.is_synced ? ' <span style="color:var(--teal);font-size:.78rem;font-weight:700" title="This answer syncs across ranking forms">↔</span>' : ''}</div>
                         ${inputs}
                         <div class="status-cell">${getStatusDot(q.task_status)}
-    ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+    ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
 </div>
                         <div class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</div>
                         <div class="action-cell">
@@ -2299,7 +2277,7 @@
                             <div class="q-text">${q.title}</div>
                             <div>${inputHtml}</div>
                             <div class="status-cell">${getStatusDot(q.task_status)}
-                                ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                                ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                             </div>
                             <div class="date-cell">${q.deadline ? formatDate(q.deadline) : '—'}</div>
                             <div class="action-cell">
@@ -2336,7 +2314,7 @@
 
             async function loadCycleInfo() {
                 try {
-                    const res = await fetch(`https://uob-rankings.onrender.com/api/questions/my-rankings/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE}/api/questions/my-rankings/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const cycle = await res.json();
                     if (cycle) {
                         document.getElementById('pageTitle').textContent = cycle.name;
@@ -2373,7 +2351,7 @@
 
             async function loadQuestions() {
                 try {
-                    const res = await fetch(`https://uob-rankings.onrender.com/api/questions/my-questions/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE}/api/questions/my-questions/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     allQuestions = await res.json();
                 } catch (e) {
                     document.getElementById('sectionsContainer').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions. Make sure the server is running.</div>';
@@ -2422,7 +2400,7 @@
                 for (const q of qs) {
                     const answerData = getAnswerValue(q);
                     try {
-                        const res = await fetch('https://uob-rankings.onrender.com/api/submissions/submit', {
+                        const res = await fetch(`${API_BASE}/api/submissions/submit`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                             body: JSON.stringify({ task_assignment_id: q.task_id, answers: answerData, user_id: user.id })
@@ -2436,7 +2414,7 @@
             }
 
             function logout() {
-                fetch('https://uob-rankings.onrender.com/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
                 localStorage.clear();
                 window.location.href = 'login.html';
             }
@@ -2480,12 +2458,58 @@
             function highlightNavType(cycleName) {
                 const name = (cycleName || '').toLowerCase();
                 let id = '';
-                if (name.includes('sustainability')) id = 'nav-qs-sus';
+                if (name.includes('sustainability')) id = 'nav-sustainability';
                 else if (name.includes('world university') && name.includes('qs')) id = 'nav-qs-wur';
                 else if (name.includes('world university')) id = 'nav-the-wur';
                 else if (name.includes('impact')) id = 'nav-the-impact';
                 else if (name.includes('greenmetric')) id = 'nav-greenmetric';
                 if (id) document.getElementById(id)?.classList.add('active');
+            }
+
+            async function wireSidebarLinks() {
+                try {
+                    const res = await fetch(`${API_BASE}/api/questions/my-rankings`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const rankings = await res.json();
+                    if (!Array.isArray(rankings)) return;
+
+                    function navType(name) {
+                        const n = (name || '').toLowerCase();
+                        if (n.includes('greenmetric')) return 'greenmetric';
+                        if (n.includes('impact')) return 'the-impact';
+                        if (n.includes('sustainability')) return 'sustainability';
+                        if (n.includes('qs') && n.includes('world')) return 'qs-wur';
+                        if (n.includes('the') && n.includes('world')) return 'the-wur';
+                        if (n.includes('qs')) return 'qs-wur';
+                        return n;
+                    }
+
+                    const navIds = {
+                        'sustainability': 'nav-qs-sus',
+                        'qs-wur': 'nav-qs-wur',
+                        'the-wur': 'nav-the-wur',
+                        'impact': 'nav-the-impact',
+                        'greenmetric': 'nav-greenmetric'
+                    };
+
+                    const latestByType = {};
+                    rankings.forEach(r => {
+                        const t = navType(r.name);
+                        if (!latestByType[t] || (r.year || 0) > (latestByType[t].year || 0)) {
+                            latestByType[t] = r;
+                        }
+                    });
+
+                    Object.keys(latestByType).forEach(type => {
+                        const el = document.getElementById('nav-' + type);
+                        if (!el) return;
+                        const cycle = latestByType[type];
+                        el.href = cycle ? `form.html?cycle=${cycle.id}` : 'ranking-forms.html';
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
             }
 
             function updateLegendCounts() {
@@ -2525,6 +2549,7 @@
             }
 
             loadCycleInfo().then(() => loadQuestions());
+            wireSidebarLinks();
         </script>
 </body>
 

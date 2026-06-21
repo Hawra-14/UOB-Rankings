@@ -301,7 +301,7 @@
     /* ══ CARDS GRID ══ */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
       gap: 1.2rem;
     }
 
@@ -342,12 +342,12 @@
     .donut-bg {
       fill: none;
       stroke: #f0f2f7;
-      stroke-width: 14
+      stroke-width: 8;
     }
 
     .donut-fill {
       fill: none;
-      stroke-width: 14;
+      stroke-width: 6;
       stroke-linecap: round;
       transition: stroke-dasharray 1s ease
     }
@@ -355,12 +355,12 @@
     /* Water fill illusion inside donut */
     .donut-water {
       position: absolute;
-      bottom: 14px;
-      left: 14px;
-      right: 14px;
+      bottom: 27px;
+      left: 27px;
+      right: 27px;
       border-radius: 50%;
       overflow: hidden;
-      height: 132px;
+      height: 105px;
       display: flex;
       align-items: flex-end;
     }
@@ -380,9 +380,9 @@
       align-items: center;
       justify-content: center;
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       font-weight: 900;
-      color: #c8d0e0;
+      color: #6b7c9e;
       pointer-events: none;
     }
 
@@ -474,8 +474,8 @@
       <div class="user-pill">
         <div class="user-avatar" id="userAvatar">AD</div>
         <div>
-          <div class="user-name" id="userName">Admin</div>
-          <div class="user-role">Administrator</div>
+          <div class="user-name" id="userName">User</div>
+          <div class="user-role">Department User</div>
         </div>
       </div>
     </div>
@@ -487,12 +487,15 @@
       <div class="nav-section-label">Navigation</div>
       <a class="nav-item " href="dashboard-dept.html"><span class="nav-icon">🏠</span> Home</a>
       <a class="nav-item " href="ranking-forms.html"><span class="nav-icon">📋</span> My Ranking Forms</a>
-      <a class="nav-item nav-sub " href="form-qs-sustainability.html"><span class="nav-icon">🌿</span> QS
+      <a class="nav-item nav-sub" id="nav-sustainability" href="ranking-forms.html"><span class="nav-icon">🌿</span> QS
         Sustainability</a>
-      <a class="nav-item nav-sub " href="form-qs-wur.html"><span class="nav-icon">🏆</span> QS WUR</a>
-      <a class="nav-item nav-sub" href="#"><span class="nav-icon">📊</span> THE WUR</a>
-      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🎯</span> THE Impact</a>
-      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🌱</span> Green Metric</a>
+      <a class="nav-item nav-sub" id="nav-qs-wur" href="ranking-forms.html"><span class="nav-icon">🏆</span> QS WUR</a>
+      <a class="nav-item nav-sub" id="nav-the-wur" href="ranking-forms.html"><span class="nav-icon">📊</span> THE
+        WUR</a>
+      <a class="nav-item nav-sub" id="nav-the-impact" href="ranking-forms.html"><span class="nav-icon">🎯</span> THE
+        Impact</a>
+      <a class="nav-item nav-sub" id="nav-greenmetric" href="ranking-forms.html"><span class="nav-icon">🌱</span> Green
+        Metric</a>
       <a class="nav-item active" href="progress.html"><span class="nav-icon">📈</span> Progress</a>
       <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
       <div class="nav-spacer"></div>
@@ -504,151 +507,147 @@
       <div class="page-title">Progress</div>
       <div class="page-sub">Your submission completion across all ranking forms</div>
 
-      <div class="cards-grid">
-
-        <!-- QS Sustainability – 35% green -->
-        <a class="prog-card" href="form-qs-sustainability.html">
-          <div class="donut-wrap">
-            <svg viewBox="0 0 160 160">
-              <circle class="donut-bg" cx="80" cy="80" r="60" />
-              <circle class="donut-fill" cx="80" cy="80" r="60" stroke="#10b981" stroke-dasharray="132 245"
-                stroke-dashoffset="0" />
-            </svg>
-            <div class="donut-water">
-              <div class="water-fill" style="height:35%;background:#10b981"></div>
-            </div>
-            <div class="donut-pct">35%</div>
-          </div>
-          <div class="card-name-row">
-            <div class="card-dot" style="background:#10b981;margin-top:3px"></div>
-            <div class="card-name">QS Sustainability</div>
-          </div>
-          <div class="card-detail" style="padding-left:1.1rem">12 / 35 questions answered</div>
-          <div class="prog-bar-wrap">
-            <div class="prog-bar" style="width:35%;background:linear-gradient(90deg,#34d399,#10b981)"></div>
-          </div>
-          <div class="card-deadline">📅 Deadline: Jun 15, 2025</div>
-        </a>
-
-        <!-- QS WUR – 60% teal -->
-        <a class="prog-card" href="form-qs-wur.html">
-          <div class="donut-wrap">
-            <svg viewBox="0 0 160 160">
-              <circle class="donut-bg" cx="80" cy="80" r="60" />
-              <circle class="donut-fill" cx="80" cy="80" r="60" stroke="#0891b2" stroke-dasharray="226 245"
-                stroke-dashoffset="0" />
-            </svg>
-            <div class="donut-water">
-              <div class="water-fill" style="height:60%;background:#0891b2"></div>
-            </div>
-            <div class="donut-pct">60%</div>
-          </div>
-          <div class="card-name-row">
-            <div class="card-dot" style="background:#0891b2;margin-top:3px"></div>
-            <div class="card-name">QS World University Rankings</div>
-          </div>
-          <div class="card-detail" style="padding-left:1.1rem">6 / 9 indicators submitted</div>
-          <div class="prog-bar-wrap">
-            <div class="prog-bar" style="width:60%;background:linear-gradient(90deg,#22d3ee,#0891b2)"></div>
-          </div>
-          <div class="card-deadline">📅 Deadline: Mar 31, 2025</div>
-        </a>
-
-        <!-- THE WUR – 20% purple -->
-        <a class="prog-card" href="#">
-          <div class="donut-wrap">
-            <svg viewBox="0 0 160 160">
-              <circle class="donut-bg" cx="80" cy="80" r="60" />
-              <circle class="donut-fill" cx="80" cy="80" r="60" stroke="#7c3aed" stroke-dasharray="75 245"
-                stroke-dashoffset="0" />
-            </svg>
-            <div class="donut-water">
-              <div class="water-fill" style="height:20%;background:#7c3aed"></div>
-            </div>
-            <div class="donut-pct">20%</div>
-          </div>
-          <div class="card-name-row">
-            <div class="card-dot" style="background:#7c3aed;margin-top:3px"></div>
-            <div class="card-name">THE World University Rankings</div>
-          </div>
-          <div class="card-detail" style="padding-left:1.1rem">4 / 18 indicators submitted</div>
-          <div class="prog-bar-wrap">
-            <div class="prog-bar" style="width:20%;background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div>
-          </div>
-          <div class="card-deadline">📅 Deadline: Apr 30, 2025</div>
-        </a>
-
-        <!-- THE Impact – 45% red -->
-        <a class="prog-card" href="#">
-          <div class="donut-wrap">
-            <svg viewBox="0 0 160 160">
-              <circle class="donut-bg" cx="80" cy="80" r="60" />
-              <circle class="donut-fill" cx="80" cy="80" r="60" stroke="#ef4444" stroke-dasharray="170 245"
-                stroke-dashoffset="0" />
-            </svg>
-            <div class="donut-water">
-              <div class="water-fill" style="height:45%;background:#ef4444"></div>
-            </div>
-            <div class="donut-pct">45%</div>
-          </div>
-          <div class="card-name-row">
-            <div class="card-dot" style="background:#ef4444;margin-top:3px"></div>
-            <div class="card-name">THE Impact Rankings</div>
-          </div>
-          <div class="card-detail" style="padding-left:1.1rem">8 / 17 SDGs submitted</div>
-          <div class="prog-bar-wrap">
-            <div class="prog-bar" style="width:45%;background:linear-gradient(90deg,#f87171,#ef4444)"></div>
-          </div>
-          <div class="card-deadline">📅 Deadline: May 15, 2025</div>
-        </a>
-
-        <!-- UI GreenMetric – 10% green -->
-        <a class="prog-card" href="#">
-          <div class="donut-wrap">
-            <svg viewBox="0 0 160 160">
-              <circle class="donut-bg" cx="80" cy="80" r="60" />
-              <circle class="donut-fill" cx="80" cy="80" r="60" stroke="#22c55e" stroke-dasharray="38 245"
-                stroke-dashoffset="0" />
-            </svg>
-            <div class="donut-water">
-              <div class="water-fill" style="height:10%;background:#22c55e"></div>
-            </div>
-            <div class="donut-pct">10%</div>
-          </div>
-          <div class="card-name-row">
-            <div class="card-dot" style="background:#22c55e;margin-top:3px"></div>
-            <div class="card-name">UI GreenMetric Ranking</div>
-          </div>
-          <div class="card-detail" style="padding-left:1.1rem">6 / 61 indicators submitted</div>
-          <div class="prog-bar-wrap">
-            <div class="prog-bar" style="width:10%;background:linear-gradient(90deg,#86efac,#22c55e)"></div>
-          </div>
-          <div class="card-deadline">📅 Deadline: Jun 30, 2025</div>
-        </a>
-
+      <div class="cards-grid" id="cardsGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--subtext)">Loading progress...</div>
       </div><!-- /cards-grid -->
     </div><!-- /main -->
   </div><!-- /layout -->
+
   <script>
+    const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3002'
+      : 'https://uob-rankings.onrender.com';
+
     // Auth check
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (!token) {
-      window.location.href = 'login.html';
-    }
+    if (!token) window.location.href = 'login.html';
 
     // Display user info
     document.querySelector('.user-name').textContent = user.name || 'User';
     document.querySelector('.user-role').textContent = user.role === 'admin' ? 'Administrator' : 'Department User';
-
     const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
     document.querySelector('.user-avatar').textContent = initials;
+
+    // ── Helpers ──────────────────────────────────────────────
+    function getColor(name) {
+      const n = (name || '').toLowerCase();
+      if (n.includes('greenmetric')) return '#0d9488';
+      if (n.includes('impact')) return '#f97316';
+      if (n.includes('sustainability')) return '#16a34a';
+      if (n.includes('qs')) return '#c9a227';
+      if (n.includes('the') && n.includes('world')) return '#8b5cf6';
+      return '#0891b2';
+    }
+
+    function formatDate(d) {
+      if (!d) return '—';
+      const dt = new Date(d);
+      if (isNaN(dt)) return '—';
+      return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    // ── Load progress data ───────────────────────────────────
+    async function loadProgress() {
+      const grid = document.getElementById('cardsGrid');
+      try {
+        const res = await fetch(`${API_BASE}/api/questions/my-rankings`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        let rankings = await res.json();
+
+        // Keep only the most recent cycle per ranking type
+        function rankingType(name) {
+          const n = (name || '').toLowerCase();
+          if (n.includes('greenmetric')) return 'greenmetric';
+          if (n.includes('impact')) return 'the-impact';
+          if (n.includes('sustainability')) return 'sustainability';
+          if (n.includes('qs') && n.includes('world')) return 'qs-wur';
+          if (n.includes('the') && n.includes('world')) return 'the-wur';
+          if (n.includes('qs')) return 'qs-wur';
+          return n;
+        }
+
+        // Wire each sidebar type link to that type's latest form (uses full list)
+        if (Array.isArray(rankings)) {
+          const latestByType = {};
+          rankings.forEach(r => {
+            const t = rankingType(r.name);
+            if (!latestByType[t] || (r.year || 0) > (latestByType[t].year || 0)) {
+              latestByType[t] = r;
+            }
+          });
+          Object.keys(latestByType).forEach(type => {
+            const el = document.getElementById('nav-' + type);
+            if (!el) return;
+            const cycle = latestByType[type];
+            el.href = cycle ? `form.html?cycle=${cycle.id}` : 'ranking-forms.html';
+          });
+        }
+
+        if (Array.isArray(rankings) && rankings.length) {
+          // Find the highest year across all forms, then keep only that year's forms
+          const maxYear = Math.max(...rankings.map(r => r.year || 0));
+          rankings = rankings.filter(r => (r.year || 0) === maxYear);
+        }
+
+        if (!Array.isArray(rankings) || !rankings.length) {
+          grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--subtext)">
+              <div style="font-size:2rem;margin-bottom:.5rem">📊</div>
+              <div style="font-weight:600;margin-bottom:.3rem">No ranking forms assigned yet</div>
+              <div style="font-size:.84rem">Your progress will appear here once questions are assigned to your department.</div>
+            </div>`;
+          return;
+        }
+
+        const circumference = 2 * Math.PI * 60; // r = 60
+
+        grid.innerHTML = rankings.map(r => {
+          const assigned = r.assigned || 0;
+          const submitted = r.submitted || 0;
+          const pct = assigned ? Math.round((submitted / assigned) * 100) : 0;
+          const color = getColor(r.name);
+          const dash = (pct / 100) * circumference;
+          const nextDue = formatDate(r.next_due || r.deadline);
+
+          const deadlineLine = r.outstanding > 0
+            ? `<div class="card-deadline">📅 Next due: ${nextDue}</div>`
+            : `<div class="card-deadline">✔️ All questions answered</div>`;
+
+          return `
+            <a class="prog-card" href="form.html?cycle=${r.id}">
+              <div class="donut-wrap">
+                <svg viewBox="0 0 160 160">
+                  <circle class="donut-bg" cx="80" cy="80" r="60" />
+                  <circle class="donut-fill" cx="80" cy="80" r="60" stroke="${color}"
+                    stroke-dasharray="${dash} ${circumference}" stroke-dashoffset="0" />
+                </svg>
+                <div class="donut-water">
+                  <div class="water-fill" style="height:${pct}%;background:${color}"></div>
+                </div>
+                <div class="donut-pct">${pct}%</div>
+              </div>
+              <div class="card-name-row">
+                <div class="card-dot" style="background:${color};margin-top:3px"></div>
+                <div class="card-name">${r.name}</div>
+              </div>
+              <div class="card-detail" style="padding-left:1.1rem">${submitted} / ${assigned} answered</div>
+              <div class="prog-bar-wrap">
+                <div class="prog-bar" style="width:${pct}%;background:${color}"></div>
+              </div>
+              ${deadlineLine}
+            </a>`;
+        }).join('');
+      } catch (e) {
+        console.error(e);
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--subtext)">Failed to load progress.</div>`;
+      }
+    }
 
     // Logout
     document.querySelector('.nav-logout').addEventListener('click', async (e) => {
       e.preventDefault();
-      await fetch('https://uob-rankings.onrender.com/api/auth/logout', {
+      await fetch(`${API_BASE}/api/auth/logout`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -656,6 +655,8 @@
       localStorage.removeItem('user');
       window.location.href = 'login.html';
     });
+
+    loadProgress();
   </script>
 </body>
 

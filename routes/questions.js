@@ -76,9 +76,11 @@ router.get('/my-rankings', async (req, res) => {
     const dept_id = decoded.department_id;
 
     const result = await db.execute({
-      sql: `SELECT DISTINCT rc.*,
+      sql: `SELECT rc.*,
               COUNT(ta.id) as assigned,
-              COUNT(CASE WHEN ta.status != 'pending' THEN 1 END) as submitted
+              COUNT(CASE WHEN ta.status != 'pending' THEN 1 END) as submitted,
+              MIN(CASE WHEN ta.status IN ('pending','rejected') THEN ta.deadline END) as next_due,
+              COUNT(CASE WHEN ta.status IN ('pending','rejected') THEN 1 END) as outstanding
             FROM ranking_cycles rc
             JOIN questions q ON q.ranking_cycle_id = rc.id
             JOIN task_assignments ta ON ta.question_id = q.id

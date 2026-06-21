@@ -1007,8 +1007,8 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Year <span>*</span></label>
-                        <select class="form-input" id="newYear" onchange="updateAutoName()">
-                        </select>
+                        <input class="form-input" id="newYear" type="text" inputmode="numeric" maxlength="4" 
+                            placeholder="e.g. 2026" oninput="updateAutoName()" />
                     </div>
                     <div class="form-group">
                         <label class="form-label">Auto-Generated Name</label>
@@ -1022,7 +1022,7 @@
                         <input class="form-input" id="newStart" type="date" />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">End / Deadline <span>*</span></label>
+                        <label class="form-label">End Date <span>*</span></label>
                         <input class="form-input" id="newDeadline" type="date" />
                     </div>
                 </div>
@@ -1054,6 +1054,10 @@
     </div>
 
     <script>
+        const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+            ? 'http://localhost:3002'
+            : 'https://uob-rankings.onrender.com';
+
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         if (!token || user.role !== 'admin') window.location.href = 'login.html';
@@ -1096,7 +1100,7 @@
         }
 
         function logout() {
-            fetch('https://uob-rankings.onrender.com/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+            fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
             localStorage.clear(); window.location.href = 'login.html';
         }
 
@@ -1132,26 +1136,9 @@
 
         let allCycles = [];
 
-        // Populate year dropdown dynamically
-        const yearSelect = document.getElementById('newYear');
-        const currentYear = new Date().getFullYear();
-
-        // Add default option to modal year select
-        const defaultOpt = document.createElement('option');
-        defaultOpt.value = '';
-        defaultOpt.textContent = '— Select Year —';
-        yearSelect.appendChild(defaultOpt);
-
-        for (let y = currentYear; y >= 2020; y--) {
-            const opt = document.createElement('option');
-            opt.value = y;
-            opt.textContent = y;
-            yearSelect.appendChild(opt);
-        }
-
         async function loadCycles() {
             try {
-                const res = await fetch('https://uob-rankings.onrender.com/api/admin/cycles', {
+                const res = await fetch(`${API_BASE}/api/admin/cycles`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 allCycles = await res.json();
@@ -1208,7 +1195,7 @@
         </div>
         <div class="cycle-title">${c.name}</div>
         <div class="cycle-dates">📅 Start: ${startFmt} &nbsp;🗓️ End: ${endFmt}</div>
-        <div class="cycle-desc">${c.description || 'No description provided.'}</div>
+        <div class="cycle-desc">${c.description ? `<div class="cycle-desc">${c.description}</div>` : ''}</div>
         <div class="cycle-progress-row">
           <span class="cycle-prog-label">Completion</span>
           <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${getProgColor(pct)}"></div></div>
@@ -1275,7 +1262,7 @@
             btn.disabled = true;
 
             try {
-                const res = await fetch('https://uob-rankings.onrender.com/api/admin/cycles', {
+                const res = await fetch(`${API_BASE}/api/admin/cycles`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ name, year: parseInt(year), deadline, start_date: start, description: desc })

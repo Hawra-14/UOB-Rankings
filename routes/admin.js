@@ -164,7 +164,7 @@ router.post('/cycles', adminOnly, async (req, res) => {
 router.get('/cycles/:id/questions', adminOnly, async (req, res) => {
     try {
         const result = await db.execute({
-            sql: `SELECT q.*, ta.id as task_id, ta.department_id, ta.deadline,
+            sql: `SELECT q.*, ta.id as task_id, ta.department_id, ta.deadline, ta.submitted_at,
                     d.name as department_name,
                     a.answer_text, a.answer_number, a.updated_at as answer_updated_at,
                     a.status as task_status, a.admin_comment

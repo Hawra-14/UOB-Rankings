@@ -1608,6 +1608,10 @@
         </div>
 
         <script>
+            const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+                ? 'http://localhost:3002'
+                : 'https://uob-rankings.onrender.com';
+
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             if (!token || user.role !== 'admin') window.location.href = 'login.html';
@@ -1667,8 +1671,8 @@
                     if (!taskId && !questionId) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No question selected.</p>'; return; }
                     document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">Loading history...</p>';
                     const histUrl = taskId
-                        ? `https://uob-rankings.onrender.com/api/submissions/history-all/${taskId}`
-                        : `https://uob-rankings.onrender.com/api/submissions/history-by-question/${questionId}`;
+                        ? `${API_BASE}/api/submissions/history-all/${taskId}`
+                        : `${API_BASE}/api/submissions/history-by-question/${questionId}`;
                     fetch(histUrl, { headers: { 'Authorization': `Bearer ${token}` } })
                         .then(r => r.json()).then(rows => {
                             if (!rows.length) { document.getElementById('defBody').innerHTML = '<p style="color:var(--subtext)">No previous submissions.</p>'; return; }
@@ -2006,7 +2010,7 @@
                 btn.disabled = true;
 
                 try {
-                    const res = await fetch('https://uob-rankings.onrender.com/api/admin/assign', {
+                    const res = await fetch(`${API_BASE}/api/admin/assign`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ question_id: currentAssignQuestionId, department_id: parseInt(deptId), deadline })
@@ -2153,7 +2157,7 @@
                         ${publicCell}
                         <td class="status-cell">
                             ${getStatusDot(q.task_status)}
-                            ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                            ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                             <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
                                 ${saveBtn}${reviewBtn}
                             </div>
@@ -2209,7 +2213,7 @@
                     ${evidenceCell}
                     <td class="status-cell">
                         ${getStatusDot(q.task_status)}
-                        ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                        ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                         <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
                             ${saveBtn}${reviewBtn}
                         </div>
@@ -2254,7 +2258,7 @@
                     </td>
                     <td class="status-cell">
                         ${getStatusDot(q.task_status)}
-                        ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                        ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                         <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
                             ${saveBtn}${reviewBtn}
                         </div>
@@ -2305,7 +2309,7 @@
                     <td><input type="number" value="${fte}" readonly style="${calcStyle}"/></td>
                     <td class="status-cell">
                         ${getStatusDot(q.task_status)}
-                        ${updatedAt !== '—' ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
+                        ${(q.submitted_at && updatedAt !== '—') ? `<div style="font-size:.68rem;color:var(--subtext);margin-top:.25rem">↻ ${updatedAt}</div>` : ''}
                         <div style="margin-top:.3rem;display:flex;flex-direction:column;gap:.3rem;justify-content:center;align-items:center">
                             ${saveBtn}${reviewBtn}
                         </div>
@@ -2593,7 +2597,7 @@
                 btn.disabled = true;
 
                 try {
-                    const res = await fetch('https://uob-rankings.onrender.com/api/submissions/submit', {
+                    const res = await fetch(`${API_BASE}/api/submissions/submit`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({
@@ -2731,7 +2735,7 @@
             // ── Load functions ─────────────────────────────────────────
             async function loadCycleInfo() {
                 try {
-                    const res = await fetch(`https://uob-rankings.onrender.com/api/admin/cycles/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE}/api/admin/cycles/${cycleId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const cycle = await res.json();
                     if (cycle) {
                         document.getElementById('pageTitle').textContent = cycle.name;
@@ -2784,7 +2788,7 @@
 
             async function loadQuestions() {
                 try {
-                    const res = await fetch(`https://uob-rankings.onrender.com/api/admin/cycles/${cycleId}/questions`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE}/api/admin/cycles/${cycleId}/questions`, { headers: { 'Authorization': `Bearer ${token}` } });
                     allQuestions = await res.json();
                 } catch (e) {
                     document.getElementById('sectionsContainer').innerHTML = '<div style="text-align:center;padding:3rem;color:var(--subtext)">Failed to load questions.</div>';
@@ -2793,7 +2797,7 @@
 
             async function loadDepartments() {
                 try {
-                    const res = await fetch('https://uob-rankings.onrender.com/api/admin/departments', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const res = await fetch(`${API_BASE}/api/admin/departments`, { headers: { 'Authorization': `Bearer ${token}` } });
                     departments = await res.json();
                 } catch (e) { console.error(e); }
             }
@@ -2813,7 +2817,7 @@
                 btn.textContent = '...';
                 btn.disabled = true;
                 try {
-                    const res = await fetch(`https://uob-rankings.onrender.com/api/admin/cycles/${cycleId}/close`, {
+                    const res = await fetch(`${API_BASE}/api/admin/cycles/${cycleId}/close`, {
                         method: 'PATCH',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
@@ -2841,7 +2845,7 @@
             }
 
             function logout() {
-                fetch('https://uob-rankings.onrender.com/api/auth/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
                 localStorage.clear(); window.location.href = 'login.html';
             }
 
@@ -2927,7 +2931,7 @@
             async function submitReview(status) {
                 const comment = document.getElementById('reviewComment').value.trim();
                 try {
-                    const res = await fetch(`https://uob-rankings.onrender.com/api/admin/answers/${_reviewTaskId}/status`, {
+                    const res = await fetch(`${API_BASE}/api/admin/answers/${_reviewTaskId}/status`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify({ status, comment })
@@ -2966,6 +2970,14 @@
                     renderSections(allQuestions.filter(q => q.theme === activeImpactTab));
                 } else {
                     renderSections();
+                }
+
+                // If opened via "Edit" button, start in edit mode
+                if (editMode) {
+                    const btn = document.getElementById('editModeBtn');
+                    if (btn && !btn.disabled && !btn.classList.contains('active')) {
+                        toggleEditMode();
+                    }
                 }
             });
         </script>

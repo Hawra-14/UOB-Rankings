@@ -935,6 +935,10 @@
     </div>
 
     <script>
+        const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+            ? 'http://localhost:3002'
+            : 'https://uob-rankings.onrender.com';
+
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         if (!token || user.role !== 'admin') window.location.href = 'login.html';
@@ -958,7 +962,7 @@
         }
 
         function logout() {
-            fetch('https://uob-rankings.onrender.com/api/auth/logout', {
+            fetch(`${API_BASE}/api/auth/logout`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -995,7 +999,7 @@
 
         async function loadDashboard() {
             try {
-                const res = await fetch('https://uob-rankings.onrender.com/api/admin/dashboard', {
+                const res = await fetch(`${API_BASE}/api/admin/dashboard`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
