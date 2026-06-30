@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error – UoB Rankings Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0d1b3e; --gold: #c9a227; --light-bg: #f0f2f7; --text: #1e2d50; --subtext: #6b7c9e;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--light-bg); color: var(--text); display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; padding: 2rem; }
+        .error-container { max-width: 500px; background: #fff; padding: 3rem 2rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(13, 27, 62, 0.08); border-top: 4px solid var(--gold); }
+        .error-code { font-family: 'Playfair Display', serif; font-size: 6rem; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 0.5rem; }
+        .error-title { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 1rem; }
+        .error-msg { font-size: 0.95rem; color: var(--subtext); line-height: 1.6; margin-bottom: 2rem; }
+        .btn-gold { display: inline-flex; align-items: center; justify-content: center; background: var(--gold); color: var(--navy); text-decoration: none; font-weight: 700; padding: 0.8rem 1.8rem; border-radius: 8px; transition: background 0.2s; }
+        .btn-gold:hover { background: #b8911f; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-code" id="errCode">404</div>
+        <div class="error-title" id="errTitle">Page Not Found</div>
+        <div class="error-msg" id="errMsg">We couldn't find the page you were looking for. It might have been moved, deleted, or never existed in the first place.</div>
+        <a href="/login.html" class="btn-gold" id="backBtn">Return to Safety</a>
+    </div>
+
+    <script>
+        // Dynamically update the page based on URL parameters (e.g., error.html?code=500)
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code') || '404';
+        
+        const errCodeEl = document.getElementById('errCode');
+        const errTitleEl = document.getElementById('errTitle');
+        const errMsgEl = document.getElementById('errMsg');
+        
+        errCodeEl.textContent = code;
+
+        if (code === '500') {
+            errTitleEl.textContent = 'Server Error';
+            errMsgEl.textContent = 'Something went wrong on our end. Please try again later or contact the IT department if the issue persists.';
+        } else if (code === '403' || code === '401') {
+            errTitleEl.textContent = 'Access Denied';
+            errMsgEl.textContent = 'You do not have permission to view this page. Please log in with the appropriate credentials.';
+        } else {
+            errTitleEl.textContent = 'Page Not Found';
+            errMsgEl.textContent = 'We couldn\'t find the page you were looking for. Please check the URL and try again.';
+        }
+    </script>
+</body>
+</html>
