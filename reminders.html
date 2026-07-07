@@ -193,7 +193,7 @@
             
             <a class="nav-item active" href="admin-reminders.html"><span class="nav-icon">🔔</span> Reminders <span class="nav-badge">4</span></a>
             
-            <a class="nav-item" href="#"><span class="nav-icon">🏛️</span> Departments</a>
+            <a class="nav-item" href="department.html"><span class="nav-icon">🏛️</span> Departments</a>
             <div class="nav-spacer"></div>
             <div class="nav-logout" onclick="logout()"><span class="nav-icon">🚪</span> Logout</div>
         </aside>
@@ -486,7 +486,7 @@
 
     <script type="text/javascript">
     (function() {
-        emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); 
+        emailjs.init("VXvxWXpOx2kV5tXWF"); 
     })();
 
     function sendReminderEmails() {
@@ -512,7 +512,16 @@
                 alert('Reminder emails sent successfully!');
                 btn.textContent = '📧 Send Reminder Emails';
                 btn.disabled = false;
-            }, function(error) {
+            }, fetch('https://your-server-url.onrender.com/api/reminders/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                reminder_type: document.getElementById('reminderTypeSel').value,
+                message: document.getElementById('emailMessage').value
+                // You can add logic here to grab the cycle/dept IDs if needed
+            })
+        }),
+            function(error) {
                 console.log('FAILED...', error);
                 alert('Failed to send emails. Check console.');
                 btn.textContent = '📧 Send Reminder Emails';
@@ -521,5 +530,64 @@
     }
 
     </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+    // 1. Initialize EmailJS
+    emailjs.init("VXvxWXpOx2kV5tXWF"); 
+
+    async function sendReminderEmails() {
+        const btn = document.getElementById('sendBtn');
+        const message = document.getElementById('emailMessage').value;
+        const type = document.getElementById('reminderTypeSel').value;
+
+        if (selectedTags.length === 0) {
+            alert('Please select at least one recipient.');
+            return;
+        }
+
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+
+        try {
+            // 2. Send via EmailJS
+            await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+                to_name: "Department Head",
+                message: message
+            });
+
+            // 3. Log to your Database
+            await fetch('/api/reminders/log', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    reminder_type: type,
+                    message: message
+                })
+            });
+
+            // 4. Success Pop-up
+            showSuccessPopup();
+            
+        } catch (error) {
+            console.error('FAILED...', error);
+            alert('Failed to send. Check console for details.');
+        } finally {
+            btn.textContent = '📧 Send Reminder Emails';
+            btn.disabled = false;
+        }
+    }
+
+    function showSuccessPopup() {
+        // Simple success pop-up logic
+        const popup = document.createElement('div');
+        popup.innerHTML = `
+            <div style="position:fixed; top:20px; right:20px; background:#10b981; color:white; padding:1rem 2rem; border-radius:8px; z-index:9999; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                ✓ Reminder sent and logged successfully!
+            </div>
+        `;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 3000);
+    }
+</script>
 </body>
 </html>

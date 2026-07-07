@@ -55,7 +55,7 @@
       inset: 0;
       background:
         linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.1) 40%, rgba(13, 20, 10, 0.65) 100%),
-        url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/University_of_Bahrain_aerial.jpg/1280px-University_of_Bahrain_aerial.jpg') center/cover no-repeat;
+        url( 'assets/image/uob.jpg') center/cover no-repeat ;
     }
 
     .left-bg-fallback {
@@ -160,7 +160,7 @@
 
     .logo-area {
       text-align: center;
-      margin-bottom: 1.8rem
+      margin-bottom: 1.6rem
     }
 
     .logo-circle {
@@ -193,54 +193,6 @@
       font-weight: 700;
       color: var(--navy);
       margin-bottom: .35rem
-    }
-
-    .form-sub {
-      font-size: .85rem;
-      color: var(--subtext);
-      margin-bottom: 1.6rem
-    }
-
-    .role-toggle {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .6rem;
-      margin-bottom: 1.5rem
-    }
-
-    .role-card {
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      padding: .9rem .8rem;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color .18s, background .18s, box-shadow .18s;
-      background: #fff;
-    }
-
-    .role-card.active {
-      border-color: var(--navy);
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(13, 27, 62, 0.08);
-    }
-
-    .role-icon {
-      font-size: 1.4rem;
-      margin-bottom: .3rem;
-      display: block
-    }
-
-    .role-name {
-      font-size: .88rem;
-      font-weight: 700;
-      color: var(--navy);
-      display: block
-    }
-
-    .role-sub {
-      font-size: .72rem;
-      color: var(--subtext);
-      display: block
     }
 
     .field {
@@ -532,35 +484,20 @@
       <div class="form-wrap">
 
         <!-- Logo -->
-        <div class="logo-area">
-          <div class="logo-circle">
-            <svg viewBox="0 0 46 46" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="23" cy="23" r="20" fill="none" stroke="#c9a227" stroke-width="1.8" />
-              <polygon points="23,7 26,17 37,17 29,23 32,33 23,27 14,33 17,23 9,17 20,17" fill="#c9a227"
-                opacity=".95" />
-            </svg>
+         <div style="text-align:center;margin-bottom:22px;animation:fadeUp 0.7s 0.85s ease both;opacity:0;">
+          <img src="assets/image/UOB-new-logo.png" alt="University of Bahrain"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+            style="height:68px;width:auto;object-fit:contain;"/>
+          <div style="display:none;">
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--uob-blue),var(--uob-blue2));display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 6px 20px rgba(13,59,102,0.25);">
+              <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:#fff;">UoB</span>
+            </div>
           </div>
-          <div class="logo-name">University of Bahrain</div>
+          <div style="font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:var(--uob-blue);letter-spacing:0.8px;margin-top:7px;">UNIVERSITY OF BAHRAIN</div>
         </div>
 
         <!-- Title -->
         <div class="form-title">Sign in</div>
-        <div class="form-sub">Enter your department credentials to access the portal.</div>
-
-        <!-- Role toggle -->
-        <div class="role-toggle">
-          <div class="role-card active" id="roleAdmin" onclick="selectRole('admin')">
-            <span class="role-icon">🛡️</span>
-            <span class="role-name">Admin</span>
-            <span class="role-sub">Full access</span>
-          </div>
-          <div class="role-card" id="roleDept" onclick="selectRole('dept')">
-            <span class="role-icon">🏛️</span>
-            <span class="role-name">Department</span>
-            <span class="role-sub">Submit data</span>
-          </div>
-        </div>
-
         <!-- Fields -->
         <div class="field">
           <label for="email">Email</label>
