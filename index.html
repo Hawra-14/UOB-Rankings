@@ -1,715 +1,1232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Rankings & Requirements — University of Bahrain</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UoB Rankings Portal — Institutional Standing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --navy:#0b1f3a;--navy2:#102a4c;--navy3:#0d2444;
-  --gold:#c9a227;--gold2:#e8b830;--gold-pale:#fdf6e3;
-  --white:#fff;--off:#f7f9fc;--card:#fff;
-  --border:#e4eaf3;--text:#0f172a;--mid:#334155;--muted:#64748b;
-  --shadow:0 10px 40px rgba(11,31,58,.09);--shadow-lg:0 24px 64px rgba(11,31,58,.14);
-  --r:24px;
-}
-html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;color:var(--text);background:var(--off);overflow-x:hidden;cursor:none;}
+  :root {
+    /* Bright Color Palette */
+    --primary-blue: #094FA3;
+    --bright-blue: #4B95FA;
+    --light-blue: #91BDFC;
+    --primary-gold: #B99B68;
+    --bright-gold: #E4C082;
+    --light-gold: #F6EBD9;
+    --supporting-red: #ED1C24;
+    --bright-red: #FB7165;
+    --light-red: #FEEAE7;
+    
+    --bg: #F6EBD9;
+    --surface: #FFFFFF;
+    --surface-alt: #D0E3FE;
+    --border: rgba(9, 79, 163, 0.15);
+    --text-primary: #032E64;
+    --text-secondary: #595F61;
+    --text-light: #7B8285;
+    
+    --serif: 'Instrument Serif', serif;
+    --sans: 'Inter', sans-serif;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-/* CURSOR */
-#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--gold);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s,background .18s;}
-#cur-ring{position:fixed;width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(201,162,39,.45);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease;}
-@media(hover:none){#cur,#cur-ring{display:none;}body{cursor:auto;}}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  html {
+    scroll-behavior: auto;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--sans);
+    overflow-x: hidden;
+  }
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:600;height:66px;padding:0 48px;display:flex;align-items:center;background:rgba(255,255,255,.93);backdrop-filter:blur(20px);border-bottom:1px solid rgba(11,31,58,.07);transition:box-shadow .3s;}
-.nav-logo{display:flex;align-items:center;gap:11px;text-decoration:none;flex-shrink:0;}
-.logo-fb{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--gold);background:#fff;border-radius:6px;padding:4px 10px;}
-.logo-box{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(11,31,58,.26);overflow:hidden;padding:3px;}
-.logo-box img{width:33px;height:33px;object-fit:contain;filter:brightness(0) invert(1);}
-.logo-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--navy);line-height:1.2;display:block;}
-.logo-tag{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.9px;text-transform:uppercase;display:block;}
-.nav-gap{flex:1;}
-.nav-links{display:flex;gap:22px;margin-right:22px;}
-.nav-links a{font-size:13.5px;font-weight:600;color:var(--mid);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s;}
-.nav-links a:hover,.nav-links a.active{color:var(--navy);border-bottom-color:var(--gold);}
-.btn-signin{padding:9px 20px;background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border:none;border-radius:10px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 14px rgba(11,31,58,.24);transition:all .22s;}
-.btn-signin:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(11,31,58,.32);}
+  body {
+    background: var(--bg);
+    cursor: none;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* PAGE TRANSITION */
-.p-out{position:fixed;inset:0;z-index:9000;background:var(--navy);opacity:0;pointer-events:none;transition:opacity .38s;}
-.p-out.go{opacity:1;pointer-events:all;}
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
 
-/* WRAP */
-.rk-wrap{padding:90px 0 80px;}
-.rk-container{width:min(1180px,calc(100% - 40px));margin:0 auto;}
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--light-gold); }
+  ::-webkit-scrollbar-thumb { background: var(--bright-blue); border-radius: 10px; }
 
-/* HERO */
-.rk-hero{position:relative;border-radius:var(--r);overflow:hidden;min-height:460px;box-shadow:var(--shadow-lg);background:var(--navy);margin:24px auto 32px;}
-.rk-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(1.08) brightness(.52);transform:scale(1.04);transition:transform 8s ease;}
-.rk-hero:hover .rk-hero-bg{transform:scale(1.08);}
-.rk-hero-overlay{position:absolute;inset:0;background:linear-gradient(100deg,rgba(11,31,58,.94) 0%,rgba(11,31,58,.72) 44%,rgba(11,31,58,.18) 100%);}
-.rk-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:56px 56px;animation:gridScroll 28s linear infinite;}
-@keyframes gridScroll{0%{background-position:0 0;}100%{background-position:56px 56px;}}
-.hero-orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;}
-.orb-gold{width:480px;height:480px;background:radial-gradient(circle,rgba(201,162,39,.2),transparent 68%);top:-120px;right:-80px;animation:orbPulse 9s ease-in-out infinite;}
-.orb-blue{width:360px;height:360px;background:radial-gradient(circle,rgba(21,101,192,.14),transparent 68%);bottom:-60px;left:-40px;animation:orbPulse 13s ease-in-out infinite reverse;}
-.orb-mid{width:200px;height:200px;background:radial-gradient(circle,rgba(201,162,39,.1),transparent 70%);top:55%;left:38%;animation:orbPulse 7s ease-in-out infinite;}
-@keyframes orbPulse{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(18px,-24px) scale(1.07);}}
-.hsh{position:absolute;pointer-events:none;animation:hshFloat ease-in-out infinite;}
-@keyframes hshFloat{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-14px) rotate(4deg);}}
-.hsh1{width:70px;height:70px;border-radius:50%;border:4px solid rgba(201,162,39,.22);top:18%;right:9%;animation-duration:6s;}
-.hsh2{width:38px;height:38px;border-radius:11px;background:rgba(201,162,39,.12);bottom:24%;right:17%;animation-duration:8.5s;animation-delay:-3s;}
-.hsh3{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.1);top:64%;right:7%;animation-duration:5.5s;animation-delay:-1.5s;}
-.hsh4{width:50px;height:50px;border-radius:50%;border:3px solid rgba(255,255,255,.07);top:32%;right:25%;animation-duration:10s;animation-delay:-4s;}
-.rk-hero-inner{position:relative;z-index:2;padding:52px 48px;max-width:700px;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;font-weight:800;letter-spacing:.6px;color:rgba(255,255,255,.9);margin-bottom:18px;opacity:0;animation:fadeUp .6s ease .1s forwards;}
-.hero-dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 5px rgba(201,162,39,.22);flex-shrink:0;animation:dotPulse 2.4s ease-in-out infinite;}
-@keyframes dotPulse{0%,100%{box-shadow:0 0 0 5px rgba(201,162,39,.22);}50%{box-shadow:0 0 0 10px rgba(201,162,39,0);}}
-.rk-hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,4.4vw,54px);font-weight:900;line-height:1.06;color:#fff;margin:0 0 16px;opacity:0;animation:fadeUp .7s ease .26s forwards;}
-.rk-hero h1 em{color:var(--gold);font-style:normal;display:block;}
-.rk-hero-sub{font-size:16px;line-height:1.84;color:rgba(255,255,255,.82);max-width:54ch;margin:0 0 24px;opacity:0;animation:fadeUp .7s ease .42s forwards;}
-.rk-pills{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:26px;opacity:0;animation:fadeUp .6s ease .54s forwards;}
-.rk-pill{padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.19);color:rgba(255,255,255,.92);transition:all .22s;}
-.rk-pill:hover{background:rgba(201,162,39,.24);border-color:rgba(201,162,39,.6);}
-.rk-hero-actions{display:flex;gap:10px;flex-wrap:wrap;opacity:0;animation:fadeUp .6s ease .66s forwards;}
-.btn-gold{display:inline-flex;align-items:center;gap:6px;padding:11px 22px;border-radius:12px;background:var(--gold);color:var(--navy);border:none;font-size:14px;font-weight:800;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 6px 22px rgba(201,162,39,.42);transition:all .22s;text-decoration:none;}
-.btn-gold:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 10px 32px rgba(201,162,39,.52);}
-.btn-ghost{display:inline-flex;align-items:center;gap:5px;padding:11px 18px;border-radius:12px;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .22s;text-decoration:none;}
-.btn-ghost:hover{background:rgba(255,255,255,.18);transform:translateY(-2px);}
+  /* --- Custom Cursor --- */
+  .cursor-dot, .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-dot {
+    width: 8px; height: 8px;
+    background: var(--primary-blue);
+    border-radius: 50%;
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px;
+    border: 2px solid var(--primary-blue);
+    border-radius: 50%;
+    transition: width 0.3s var(--ease-out), height 0.3s var(--ease-out), border-color 0.3s;
+  }
+  .cursor-ring.hover {
+    width: 64px; height: 64px;
+    border-color: var(--supporting-red);
+    background: rgba(237, 28, 36, 0.1);
+  }
 
-/* STATS STRIP */
-.stats-strip{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:36px;overflow:hidden;}
-.stat{flex:1;padding:28px 20px;text-align:center;border-right:1px solid var(--border);}
-.stat:last-child{border-right:none;}
-.stat-n{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;line-height:1;margin-bottom:6px;background:linear-gradient(135deg,var(--navy),#1976d2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.stat-l{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);}
+  /* --- Loader --- */
+  .loader {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, var(--light-gold) 0%, var(--surface-alt) 100%);
+    z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    transition: opacity 0.8s var(--ease-out), visibility 0.8s;
+  }
+  .loader.hidden { opacity: 0; visibility: hidden; }
+  .loader-logo {
+    width: 100px;
+    height: auto;
+  }
+  .loader-text {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-style: italic;
+    color: var(--primary-blue);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-/* REVEAL */
-.rv{opacity:0;transform:translateY(28px);transition:opacity .72s cubic-bezier(.4,0,.2,1),transform .72s cubic-bezier(.4,0,.2,1);}
-.rv.d1{transition-delay:.12s;}.rv.d2{transition-delay:.22s;}
-.rv.on{opacity:1;transform:translateY(0);}
+  /* --- Regular Navigation Header --- */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 0;
+    box-shadow: 0 2px 20px rgba(9, 79, 163, 0.1);
+    border-bottom: 2px solid var(--light-gold);
+    opacity: 0;
+    animation: fadeIn 1s var(--ease-out) 1.5s forwards;
+  }
+  
+  .nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+  }
 
-/* SECTIONS */
-.rk-section{padding:38px 0;}
-.rk-section+.rk-section{border-top:1px solid var(--border);}
-.rk-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--navy);margin-bottom:10px;}
-.rk-kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
-.rk-h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,38px);font-weight:700;color:var(--text);line-height:1.14;margin:0 0 14px;}
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
 
-/* SPLIT */
-.rk-split{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;}
-.rk-split.rev{grid-template-columns:.9fr 1.1fr;}
-.rk-split.rev .rk-vis{order:2;}.rk-split.rev .rk-txt{order:1;}
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
 
-/* PHOTO */
-.rk-photo{border-radius:20px;overflow:hidden;box-shadow:var(--shadow-lg);background:var(--off);aspect-ratio:4/3;position:relative;}
-.rk-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease;}
-.rk-photo:hover img{transform:scale(1.04);}
-.rk-photo-ph{width:100%;height:100%;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#eef2ff,#e0e7ff);color:var(--muted);gap:10px;font-size:14px;font-weight:600;}
-.rk-photo-ph .ph-ico{font-size:52px;opacity:.45;}
+  .nav-logo img {
+    height: 50px;
+    width: auto;
+  }
 
-/* CARD */
-.rk-card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:20px 22px;}
-.rk-lead{font-size:14.5px;line-height:1.88;color:var(--muted);margin:0 0 14px;}
-.rk-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
-.rk-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;font-size:12.5px;font-weight:800;background:rgba(11,31,58,.05);color:var(--navy);border:1px solid rgba(11,31,58,.09);}
-.rk-badge .bd{width:8px;height:8px;border-radius:50%;background:var(--gold);}
+  .nav-brand-text {
+    display: flex;
+    flex-direction: column;
+  }
 
-/* STEPS */
-.steps-card{border:1px solid var(--border);border-radius:20px;background:var(--card);box-shadow:var(--shadow);overflow:hidden;margin-top:20px;}
-.step{display:flex;gap:14px;padding:15px 18px;border-top:1px solid var(--border);align-items:flex-start;transition:background .2s;}
-.step:first-child{border-top:none;}
-.step:hover{background:rgba(201,162,39,.04);}
-.step-n{width:36px;height:36px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(201,162,39,.14);color:var(--navy);font-weight:900;font-size:15px;}
-.step-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:2px;}
-.step-desc{font-size:13px;color:var(--muted);line-height:1.75;}
+  .nav-brand-text .uni-name {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--primary-blue);
+    letter-spacing: -0.02em;
+  }
 
-/* ACCORDION */
-.acc{display:flex;flex-direction:column;gap:9px;}
-.acc-item{border:1px solid var(--border);border-radius:15px;overflow:hidden;}
-.acc-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:800;color:var(--text);text-align:left;transition:background .2s;position:relative;}
-.acc-btn:hover{background:rgba(11,31,58,.025);}
-.acc-btn.open{background:rgba(201,162,39,.05);color:var(--navy);}
-.acc-btn.open::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--gold),var(--gold2));border-radius:0 2px 2px 0;}
-.acc-ico{width:22px;height:22px;border-radius:7px;background:rgba(11,31,58,.07);display:flex;align-items:center;justify-content:center;font-size:11px;transition:transform .3s,background .2s;flex-shrink:0;}
-.acc-btn.open .acc-ico{transform:rotate(180deg);background:rgba(201,162,39,.22);}
-.acc-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.4,0,.2,1),opacity .28s;opacity:0;background:var(--card);}
-.acc-body.open{max-height:600px;opacity:1;}
-.acc-body-inner{padding:4px 20px 18px;}
-.rk-list{padding:0 0 0 18px;color:var(--muted);line-height:2.05;margin:0;}
-.rk-list li{padding:1px 0;}
-.template-box{background:linear-gradient(135deg,var(--off),#eef3ff);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-top:10px;}
-.template-label{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:6px;}
-.template-text{font-size:13.5px;line-height:1.88;color:var(--muted);}
-.btn-sm{display:inline-flex;align-items:center;gap:5px;margin-top:14px;padding:9px 18px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all .2s;}
-.btn-sm:hover{background:var(--navy2);transform:translateY(-1px);}
+  .nav-brand-text .portal-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--primary-gold);
+  }
 
-/* MINI STAT TILES */
-.mini-stats{display:grid;gap:10px;margin-top:14px;}
-.mini-grid-2{grid-template-columns:1fr 1fr;}
-.mini-grid-3{grid-template-columns:1fr 1fr 1fr;}
-.mini-tile{border-radius:16px;padding:16px 14px;text-align:center;}
-.mini-tile .mn{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1;margin-bottom:4px;}
-.mini-tile .ml{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.75;}
-.mt-navy{background:var(--navy);box-shadow:0 8px 24px rgba(11,31,58,.22);}
-.mt-navy .mn{color:var(--gold);}.mt-navy .ml{color:rgba(255,255,255,.5);}
-.mt-blue{background:linear-gradient(135deg,#1565C0,#1976d2);box-shadow:0 8px 24px rgba(21,101,192,.26);}
-.mt-blue .mn,.mt-blue .ml{color:#fff;}
-.mt-amber{background:linear-gradient(135deg,#F59E0B,#D97706);box-shadow:0 8px 24px rgba(245,158,11,.26);}
-.mt-amber .mn,.mt-amber .ml{color:#fff;}
-.mt-green{background:linear-gradient(135deg,#10B981,#059669);box-shadow:0 8px 24px rgba(16,185,129,.26);}
-.mt-green .mn,.mt-green .ml{color:#fff;}
-.mt-forest{background:linear-gradient(135deg,#1B5E20,#2E7D32);box-shadow:0 8px 24px rgba(27,94,32,.22);}
-.mt-forest .mn,.mt-forest .ml{color:#fff;}
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
 
-/* CHECKLIST */
-.chk-list{display:flex;flex-direction:column;gap:9px;margin-top:8px;}
-.chk-row{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:rgba(255,255,255,.88);}
-.chk-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px;}
+  .nav-links a {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+    position: relative;
+    padding: 8px 0;
+  }
 
-/* CTA */
-.rk-cta{border-radius:var(--r);background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 60%,var(--navy) 100%);color:#fff;padding:46px 42px;box-shadow:var(--shadow-lg);overflow:hidden;position:relative;margin-top:48px;}
-.rk-cta::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:50px 50px;}
-.cta-glow{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;}
-.cta-g1{width:420px;height:420px;background:radial-gradient(circle,rgba(201,162,39,.22),transparent 68%);top:-100px;left:-60px;}
-.cta-g2{width:300px;height:300px;background:radial-gradient(circle,rgba(21,101,192,.15),transparent 68%);bottom:-70px;right:-50px;}
-.cta-inner{position:relative;z-index:2;display:flex;gap:32px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
-.cta-inner h2{font-family:'Playfair Display',serif;font-size:clamp(22px,2.8vw,32px);font-weight:900;margin-bottom:10px;line-height:1.12;}
-.cta-inner p{font-size:15px;line-height:1.82;color:rgba(255,255,255,.78);max-width:62ch;margin:0;}
-.cta-actions{display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0;}
+  .nav-links a:hover {
+    color: var(--primary-blue);
+  }
 
-/* FOOTER */
-footer{background:#071525;padding:26px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-.ft-brand{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--gold);}
-.ft-note{font-size:12px;color:rgba(255,255,255,.28);}
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--supporting-red);
+    transition: width 0.3s var(--ease-out);
+  }
 
-/* KEYFRAMES */
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+  .nav-links a:hover::after {
+    width: 100%;
+  }
 
-/* RESPONSIVE */
-@media(max-width:1020px){
-  nav{padding:0 22px;}
-  .nav-links{display:none;}
-  .rk-hero-inner{padding:40px 28px;}
-  .rk-container{width:calc(100% - 32px);}
-  .rk-split,.rk-split.rev{grid-template-columns:1fr;}
-  .rk-split.rev .rk-vis{order:1;}.rk-split.rev .rk-txt{order:2;}
-  .rk-photo{aspect-ratio:16/9;}
-  .stats-strip{flex-wrap:wrap;}
-  .stat{min-width:140px;border-right:none;border-bottom:1px solid var(--border);}
-  .stat:last-child{border-bottom:none;}
-  .rk-cta{padding:32px 22px;}
-  .cta-inner{flex-direction:column;align-items:flex-start;}
-}
-@media(max-width:600px){
-  .rk-hero{min-height:380px;}
-  .rk-hero h1{font-size:clamp(26px,7.5vw,36px);}
-  .rk-hero-actions{flex-direction:column;}
-  .btn-gold,.btn-ghost{width:100%;justify-content:center;}
-  footer{padding:18px 20px;}
-  .mini-grid-2{grid-template-columns:1fr 1fr;}
-  .mini-grid-3{grid-template-columns:1fr 1fr 1fr;}
-}
+  .nav-cta {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+    color: white;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s var(--ease-out);
+    border: none;
+    box-shadow: 0 4px 15px rgba(9, 79, 163, 0.3);
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(9, 79, 163, 0.4);
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* --- Hero Section --- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: 140px 24px 100px;
+    background: linear-gradient(135deg, var(--light-gold) 0%, var(--surface-alt) 50%, var(--light-red) 100%);
+  }
+
+  .hero-image-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.2;
+  }
+
+  .hero-image-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(246,235,217,0.7) 0%, rgba(208,227,254,0.8) 100%);
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+  }
+  
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: white;
+    border: 2px solid var(--bright-gold);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--primary-blue);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1s var(--ease-out) 1.8s forwards;
+    box-shadow: 0 4px 15px rgba(185, 155, 104, 0.2);
+  }
+  
+  .hero-tag .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--supporting-red);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-weight: 400;
+    margin-bottom: 24px;
+    color: var(--primary-blue);
+  }
+
+  .hero-title .line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero-title .line span {
+    display: inline-block;
+    transform: translateY(110%);
+    animation: revealUp 1.2s var(--ease-out) forwards;
+  }
+
+  .hero-title .line:nth-child(1) span { animation-delay: 1.6s; }
+  .hero-title .line:nth-child(2) span { animation-delay: 1.75s; color: var(--primary-gold); font-style: italic; }
+  
+  @keyframes revealUp { to { transform: translateY(0); } }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  .hero-desc {
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 1s var(--ease-out) 2.1s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s var(--ease-out) 2.3s forwards;
+  }
+  
+  .btn {
+    padding: 18px 40px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: all 0.4s var(--ease-out);
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+    color: white;
+    box-shadow: 0 6px 20px rgba(9, 79, 163, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(9, 79, 163, 0.4);
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--primary-blue);
+    border: 3px solid var(--primary-blue);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .btn-secondary:hover {
+    background: var(--primary-blue);
+    color: white;
+    transform: translateY(-3px);
+  }
+
+
+
+
+  @keyframes scrollPulse {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* --- Campus Gallery Section --- */
+  .campus-gallery {
+    padding: 100px 0;
+    background: white;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 60px;
+  }
+
+  .gallery-item {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    cursor: none;
+    transition: transform 0.5s var(--ease-out);
+    box-shadow: 0 8px 30px rgba(9, 79, 163, 0.1);
+    border: 3px solid white;
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 50px rgba(9, 79, 163, 0.2);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.1);
+  }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(9,79,163,0.9) 100%);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out);
+    display: flex;
+    align-items: flex-end;
+    padding: 24px;
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-caption {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .gallery-item.large {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: auto;
+  }
+
+  /* --- Section Shared --- */
+  section { position: relative; }
+  .section-pad { padding: 120px 0; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+  
+  .section-header { margin-bottom: 64px; max-width: 700px; }
+  .section-header.center { margin: 0 auto 64px; text-align: center; }
+  
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--supporting-red);
+    margin-bottom: 20px;
+    padding: 8px 20px;
+    background: var(--light-red);
+    border-radius: 100px;
+  }
+
+  .kicker::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--supporting-red);
+    border-radius: 50%;
+  }
+  
+  .sec-title {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    color: var(--primary-blue);
+  }
+
+  .sec-title em {
+    font-style: italic;
+    color: var(--primary-gold);
+  }
+  
+  .sec-desc {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  /* Reveal Animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  }
+
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* --- Bento Grid (Rankings) --- */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(280px, auto);
+    gap: 24px;
+  }
+  
+  .bento-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s var(--ease-out);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 15px rgba(9, 79, 163, 0.08);
+  }
+
+  .bento-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--bright-blue), var(--bright-gold), var(--supporting-red));
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .bento-card:hover::before {
+    opacity: 1;
+  }
+  
+  .bento-card:hover {
+    border-color: var(--bright-blue);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(9, 79, 163, 0.15);
+  }
+  
+  /* Card Sizes */
+  .bento-card.large { grid-column: span 2; grid-row: span 2; }
+  .bento-card.wide { grid-column: span 2; }
+  .bento-card.tall { grid-row: span 2; }
+
+  .card-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--bright-blue), var(--primary-blue));
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 20px rgba(75, 149, 250, 0.3);
+  }
+  
+  .card-title {
+    font-family: var(--serif);
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    color: var(--primary-blue);
+  }
+
+  .card-org {
+    font-size: 0.85rem;
+    color: var(--primary-gold);
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .card-desc {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    flex-grow: 1;
+  }
+
+  .card-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  .metric-name { color: var(--text-secondary); font-weight: 500; }
+  .metric-val { font-weight: 700; color: var(--primary-blue); }
+
+  .metric-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--light-gold);
+    border-radius: 10px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .metric-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--bright-blue), var(--supporting-red));
+    border-radius: 10px;
+    width: 0;
+    transition: width 1.5s var(--ease-out);
+  }
+
+  .bento-card.active .metric-fill { width: var(--w); }
+
+  .card-glow {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(75, 149, 250, 0.15), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+    top: var(--y, 50%);
+    left: var(--x, 50%);
+    transform: translate(-50%, -50%);
+  }
+
+  .bento-card:hover .card-glow { opacity: 1; }
+
+  /* --- Horizontal Gallery (Pinned Scroll) --- */
+  .gallery-section {
+    height: 300vh;
+    position: relative;
+    background: linear-gradient(180deg, var(--light-gold) 0%, var(--surface-alt) 50%, var(--light-red) 100%);
+  }
+
+  .gallery-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  .gallery-header {
+    padding: 0 10vw;
+    margin-bottom: 48px;
+  }
+  
+  .gallery-track {
+    display: flex;
+    gap: 24px;
+    padding: 0 10vw;
+    will-change: transform;
+  }
+  
+  .gallery-card {
+    flex-shrink: 0;
+    width: 380px;
+    height: 500px;
+    background: white;
+    border: 3px solid white;
+    border-radius: 28px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    box-shadow: 0 10px 40px rgba(9, 79, 163, 0.15);
+  }
+
+  .gallery-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, var(--bright-blue), var(--bright-gold), var(--supporting-red));
+  }
+  
+  .gallery-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(9, 79, 163, 0.25);
+  }
+  
+  .gc-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .gc-year {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--primary-blue);
+    padding: 8px 18px;
+    background: var(--light-gold);
+    border-radius: 100px;
+    border: 2px solid var(--bright-gold);
+  }
+
+  .gc-icon {
+    font-size: 40px;
+  }
+  
+  .gc-rank {
+    font-family: var(--serif);
+    font-size: 6.5rem;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--primary-blue);
+  }
+
+  .gc-rank span {
+    font-size: 2.5rem;
+    color: var(--supporting-red);
+    font-style: italic;
+  }
+  
+  .gc-bottom {
+    border-top: 2px solid var(--light-gold);
+    padding-top: 24px;
+  }
+
+  .gc-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--primary-blue);
+  }
+
+  .gc-scope {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* --- Footer --- */
+  footer {
+    border-top: 3px solid var(--bright-gold);
+    padding: 100px 0 40px;
+    background: linear-gradient(180deg, var(--surface-alt) 0%, var(--light-gold) 100%);
+  }
+
+  .footer-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 80px;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .footer-brand img {
+    height: 70px;
+    width: auto;
+  }
+
+  .footer-brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-brand-text .uni-name {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    color: var(--primary-blue);
+  }
+
+  .footer-brand-text .tagline {
+    font-size: 0.9rem;
+    color: var(--primary-gold);
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  .footer-title {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--primary-blue);
+  }
+
+  .footer-title em {
+    font-style: italic;
+    color: var(--supporting-red);
+  }
+  
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    border-top: 2px solid rgba(9, 79, 163, 0.1);
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 500;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    .bento-card.large { grid-column: span 2; grid-row: span 1; }
+    .bento-card.wide { grid-column: span 2; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-item.large { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
+    .nav-container { padding: 16px 24px; }
+    .nav-links { gap: 20px; }
+  }
+
+  @media (max-width: 768px) {
+    .bento-grid { grid-template-columns: 1fr; }
+    .bento-card.large, .bento-card.wide { grid-column: span 1; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery-item.large { grid-column: span 1; }
+    .nav-links { display: none; }
+    .cursor-dot, .cursor-ring { display: none; }
+    body { cursor: auto; }
+    .gallery-card { width: 320px; height: 440px; padding: 28px; }
+    .gc-rank { font-size: 4.5rem; }
+    .container { padding: 0 24px; }
+    .hero { padding: 160px 24px 100px; }
+  }
 </style>
 </head>
 <body>
 
-<div id="cur"></div>
-<div id="cur-ring"></div>
-<div class="p-out" id="pOut"></div>
-
-<!-- NAV -->
-<nav id="mainNav">
-  <a class="nav-logo" href="#">
-    <div class="header-logo">
-    <div class="logo-fb"><img src="assets/image/UOB-new-logo.png" style="height:68px;width:auto;object-fit:contain;"></div>
-  </div>
-      <span class="logo-name">University of Bahrain</span>
-      <span class="logo-tag">Rankings Portal</span>
-    </div>
-  </a>
-  <div class="nav-gap"></div>
-  <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#qs-wur">QS WUR</a>
-    <a href="#qs-sus">QS Sustainability</a>
-    <a href="#the-wur">THE WUR</a>
-    <a href="#the-impact">THE Impact</a>
-    <a href="#greenmetric">GreenMetric</a>
-  </div>
-  <button class="btn-signin" onclick="goLogin()">Sign In →</button>
-</nav>
-
-<div class="rk-wrap">
-<div class="rk-container">
-
-<!-- HERO -->
-<section class="rk-hero" id="top">
-  <div class="rk-hero-overlay"></div>
-  <div class="rk-hero-grid"></div>
-  <div class="hero-orb orb-gold"></div>
-  <div class="hero-orb orb-blue"></div>
-  <div class="hero-orb orb-mid"></div>
-  <div class="hsh hsh1"></div><div class="hsh hsh2"></div>
-  <div class="hsh hsh3"></div><div class="hsh hsh4"></div>
-  <div class="rk-hero-inner">
-    <div class="hero-eyebrow"><span class="hero-dot"></span>UoB Rankings &amp; Requirements</div>
-    <h1>Rankings &amp;<em>Requirements</em></h1>
-    <p class="rk-hero-sub">A practical guide to what each ranking requires — and how to write a qualifying initiative or news item that actually counts.</p>
-    <div class="rk-pills">
-      <span class="rk-pill">QS World University Rankings</span>
-      <span class="rk-pill">QS Sustainability</span>
-      <span class="rk-pill">THE World University Rankings</span>
-      <span class="rk-pill">THE Impact Rankings</span>
-      <span class="rk-pill">UI GreenMetric</span>
-    </div>
-    <div class="rk-hero-actions">
-      <button class="btn-gold" onclick="goLogin()">Access the Portal →</button>
-      <a class="btn-ghost" href="#qs-wur">QS WUR ↓</a>
-      <a class="btn-ghost" href="#the-wur">THE ↓</a>
-      <a class="btn-ghost" href="#greenmetric">GreenMetric ↓</a>
-    </div>
-  </div>
-</section>
-
-<!-- STATS -->
-<div class="stats-strip rv" id="statsStrip">
-  <div class="stat"><div class="stat-n" id="s1">0</div><div class="stat-l">Rankings Covered</div></div>
-  <div class="stat"><div class="stat-n" id="s2">0</div><div class="stat-l">Departments</div></div>
-  <div class="stat"><div class="stat-n" id="s3">0</div><div class="stat-l">Data Points Collected</div></div>
-  <div class="stat"><div class="stat-n" id="s4">0</div><div class="stat-l">Universities Benchmarked</div></div>
+<!-- Loader -->
+<div class="loader" id="loader">
+  <img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="loader-logo">
+  <div class="loader-text">Rankings Portal</div>
 </div>
 
+<!-- Custom Cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-<!-- ABOUT -->
-<section class="rk-section" id="about">
-  <div class="rk-split">
-    <div class="rk-vis rv">
-      <div class="rk-photo">
-        <img src="assets/image/about.jpg" alt="UoB Rankings" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=&quot;rk-photo-ph&quot;><span class=&quot;ph-ico&quot;>&#127963;</span><span>About the Portal</span></div>'"/>
+<!-- Regular Navigation Header -->
+<nav>
+  <div class="nav-container">
+    <div class="nav-left">
+      <div class="nav-logo">
+        <img src="assets/image/UOB-new-logo.png" alt="University of Bahrain">
+        <div class="nav-brand-text">
+          <span class="uni-name">University of Bahrain</span>
+          <span class="portal-name">Rankings Portal</span>
+        </div>
       </div>
     </div>
-    <div class="rk-txt rv d1">
-      <div class="rk-kicker">About the Portal</div>
-      <h2 class="rk-h2">Why This System Exists</h2>
-      <p class="rk-lead">University rankings don't evaluate themselves. Behind every QS or THE score is a year of data collection — hundreds of answers, documents, URLs, and evidence parcels gathered from across 12 departments. Without a coordinated system, critical data gets lost in email threads, submitted late, or never collected at all. This portal solves that.</p>
-      <div class="steps-card">
-        <div class="step"><div class="step-n">1</div><div><div class="step-title">Admins Assign, Departments Deliver</div><div class="step-desc">Each ranking question is routed to the right department with a deadline. No guesswork, no duplicate effort.</div></div></div>
-        <div class="step"><div class="step-n">2</div><div><div class="step-title">One Audited Record</div><div class="step-desc">Every submission is logged with timestamps and status — accepted, queried, or returned for revision. Nothing disappears.</div></div></div>
-        <div class="step"><div class="step-n">3</div><div><div class="step-title">Five Rankings, One Workflow</div><div class="step-desc">QS WUR, QS Sustainability, THE WUR, THE Impact, and UI GreenMetric are all managed here, each with its own cycle and indicator set.</div></div></div>
+    <div class="nav-links">
+      <a href="#rankings">Metrics</a>
+      <a href="#standing">Standing</a>
+      <a href="#campus">Campus</a>
+      <button class="nav-cta" onclick="window.location.href='login.html'">Sign In</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-image-bg">
+    <video autoplay muted loop playsinline>
+      <source src="assets/video/uob-campus.webm" type="video/webm">
+    </video>
+  </div>
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <div class="hero-tag"><span class="dot"></span> Institutional Data 2026</div>
+    <h1 class="hero-title">
+      <span class="line"><span>University of</span></span>
+      <span class="line"><span>Bahrain.</span></span>
+    </h1>
+    <p class="hero-desc">A centralized hub for global rankings, institutional metrics, and sustainability impact. Discover where UoB stands on the world stage.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="window.location.href='login.html'">Enter Portal</button>
+      <a href="#rankings" class="btn btn-secondary">Explore Metrics</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- Campus Gallery -->
+<section id="campus" class="campus-gallery">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="kicker">Our Campus</div>
+      <h2 class="sec-title">Experience <em>excellence</em> in education</h2>
+      <p class="sec-desc">State-of-the-art facilities, beautiful grounds, and a vibrant learning community that prepares students for global success.</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item large reveal">
+        <img src="assets/image/employer-login-bg.png" alt="Campus Architecture">
+        <div class="gallery-overlay">
+          <div class="gallery-caption">Modern Architecture</div>
+        </div>
       </div>
+      <div class="gallery-item reveal">
+        <img src="assets/image/uni-entrance.png" alt="University Entrance">
+        <div class="gallery-overlay">
+          <div class="gallery-caption">Main Entrance</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/image/green.png" alt="Green Campus">
+        <div class="gallery-overlay">
+          <div class="gallery-caption">Sustainable Campus</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/image/students-collab.png" alt="Student Collaboration">
+        <div class="gallery-overlay">
+          <div class="gallery-caption">Collaborative Learning</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="assets/image/library.jpg" alt="University Library">
+        <div class="gallery-overlay">
+          <div class="gallery-caption">Library Resources</div>
+        </div>
     </div>
   </div>
 </section>
 
-<!-- QS WUR -->
-<section class="rk-section" id="qs-wur">
-  <div class="rk-split rev">
-    <div class="rk-txt rv">
-      <div class="rk-kicker">QS &middot; World University Rankings</div>
-      <h2 class="rk-h2">QS World University Rankings</h2>
-      <div class="rk-card">
-        <div class="rk-badges">
-          <span class="rk-badge"><span class="bd"></span>Published June</span>
-          <span class="rk-badge"><span class="bd"></span>Since 2004</span>
-          <span class="rk-badge"><span class="bd"></span>1,500+ Universities</span>
-        </div>
-        <p class="rk-lead">The world's most widely consulted university ranking. Evaluates institutions across 9 indicators combining global reputation surveys, Elsevier Scopus citation data, and internationalisation metrics.</p>
-        <div class="acc">
-          <div class="acc-item">
-            <button class="acc-btn open" onclick="toggleAcc(this)"><span>&#128202; Indicators &amp; Weights</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body open"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li><strong>Academic Reputation</strong> &mdash; 30% &middot; Global survey of 140,000+ academics</li>
-                <li><strong>Citations per Faculty</strong> &mdash; 20% &middot; Research impact via Elsevier Scopus</li>
-                <li><strong>Employer Reputation</strong> &mdash; 15% &middot; Survey of 100,000+ employers worldwide</li>
-                <li><strong>Faculty / Student Ratio</strong> &mdash; 10% &middot; Teaching capacity proxy</li>
-                <li><strong>International Faculty &amp; Students</strong> &mdash; 10% &middot; Diversity and openness signal</li>
-                <li><strong>Sustainability</strong> &mdash; 5% &middot; ESG performance score</li>
-                <li><strong>Employment Outcomes</strong> &mdash; 5% &middot; Graduate employability index</li>
-                <li><strong>International Research Network</strong> &mdash; 5% &middot; Breadth of global research partnerships</li>
-              </ul>
-            </div></div>
-          </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#127970; Key UoB Departments</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li>Human Resources &mdash; faculty headcount and ratios</li>
-                <li>Registrar &mdash; student enrolment and demographic data</li>
-                <li>Research &amp; Graduate Studies &mdash; citations and publications</li>
-                <li>International Affairs &mdash; international faculty and student figures</li>
-                <li>Career Services &mdash; graduate employment outcome data</li>
-              </ul>
-            </div></div>
-          </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#128161; What Makes a Strong Submission</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <div class="template-box">
-                <div class="template-label">Focus on verifiable, publicly traceable evidence</div>
-                <div class="template-text">Scopus-indexed publications, documented employer partnerships with measurable outcomes, official enrolment statistics, and joint research projects with named international partners all carry direct weight in this ranking.</div>
-              </div>
-              <button class="btn-sm" onclick="goLogin()">Submit QS WUR Data &rarr;</button>
-            </div></div>
-          </div>
-        </div>
-      </div>
+<!-- Rankings Bento Grid -->
+<section id="rankings" class="section-pad">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="kicker">What We Measure</div>
+      <h2 class="sec-title">Five rankings. <em>Five yardsticks.</em></h2>
+      <p class="sec-desc">Every ranking values something different. Here is what each framework evaluates, the departments driving the data, and what moves the needle.</p>
     </div>
-    <div class="rk-vis rv d1">
-      <div class="rk-photo">
-        <img src="assets/image/QS.jpg" alt="QS WUR" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=&quot;rk-photo-ph&quot;><span class=&quot;ph-ico&quot;>&#127757;</span><span>QS World University Rankings</span></div>'"/>
-      </div>
-      <div class="mini-stats mini-grid-2">
-        <div class="mini-tile mt-blue"><div class="mn">9</div><div class="ml">Indicators</div></div>
-        <div class="mini-tile mt-amber"><div class="mn">30%</div><div class="ml">Academic Rep.</div></div>
-        <div class="mini-tile mt-navy"><div class="mn">1,500+</div><div class="ml">Universities</div></div>
-        <div class="mini-tile mt-green"><div class="mn">2004</div><div class="ml">Since</div></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- QS SUSTAINABILITY -->
-<section class="rk-section" id="qs-sus">
-  <div class="rk-split">
-    <div class="rk-vis rv">
-      <div class="rk-photo">
-        <img src="assets/image/QS.jpg" alt="QS Sustainability" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=&quot;rk-photo-ph&quot;><span class=&quot;ph-ico&quot;>&#127807;</span><span>QS Sustainability Rankings</span></div>'"/>
-      </div>
-      <div class="mini-stats mini-grid-2">
-        <div class="mini-tile mt-forest"><div class="mn">8</div><div class="ml">ESG Categories</div></div>
-        <div class="mini-tile mt-green"><div class="mn">35+</div><div class="ml">Question Groups</div></div>
-        <div class="mini-tile mt-amber"><div class="mn">100+</div><div class="ml">Sub-indicators</div></div>
-        <div class="mini-tile mt-navy"><div class="mn">700+</div><div class="ml">Universities</div></div>
-      </div>
-    </div>
-    <div class="rk-txt rv d1">
-      <div class="rk-kicker">QS &middot; Sustainability Rankings</div>
-      <h2 class="rk-h2">QS Sustainability Rankings</h2>
-      <div class="rk-card">
-        <div class="rk-badges">
-          <span class="rk-badge"><span class="bd"></span>Published November</span>
-          <span class="rk-badge"><span class="bd"></span>Since 2023</span>
-          <span class="rk-badge"><span class="bd"></span>700+ Universities</span>
-        </div>
-        <p class="rk-lead">The first major ranking dedicated entirely to ESG impact. Launched in 2023, it evaluates universities across 8 categories. UoB's most data-intensive submission &mdash; 35+ question groups and 100+ sub-indicators covering environmental, social, and governance performance.</p>
-        <div class="acc">
-          <div class="acc-item">
-            <button class="acc-btn open" onclick="toggleAcc(this)"><span>&#128202; Eight ESG Categories</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body open"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li><strong>Environmental Impact</strong> &mdash; carbon footprint, green infrastructure</li>
-                <li><strong>Social Impact</strong> &mdash; community outreach, inclusion initiatives</li>
-                <li><strong>Governance</strong> &mdash; ethics policies, institutional transparency</li>
-                <li><strong>Knowledge Exchange</strong> &mdash; research-to-society transfer</li>
-                <li><strong>Health &amp; Wellbeing</strong> &mdash; campus wellness programmes</li>
-                <li><strong>Equality</strong> &mdash; gender equity and diversity metrics</li>
-                <li><strong>Education</strong> &mdash; sustainability embedded in curriculum</li>
-                <li><strong>Employability &amp; Outcomes</strong> &mdash; green job placements</li>
-              </ul>
-            </div></div>
+    <div class="bento-grid">
+      <!-- QS WUR (Large) -->
+      <div class="bento-card large reveal">
+        <div class="card-glow"></div>
+        <div class="card-icon">🌍</div>
+        <h3 class="card-title">QS World University Rankings</h3>
+        <p class="card-org">Quacquarelli Symonds · Est. 2004</p>
+        <p class="card-desc">The world's most consulted ranking. It combines reputation surveys and research citations into a single global score, evaluating academic and employer prestige.</p>
+        <div class="card-metrics">
+          <div>
+            <div class="metric-row"><span class="metric-name">Academic Reputation</span><span class="metric-val">30%</span></div>
+            <div class="metric-bar"><div class="metric-fill" style="--w: 100%"></div></div>
           </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#127970; Key UoB Departments</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li>Sustainability Office &mdash; environmental metrics and monitoring</li>
-                <li>Human Resources &mdash; diversity, equality, and wellbeing data</li>
-                <li>Finance &mdash; ESG expenditure and sustainability budget</li>
-                <li>Quality Assurance &mdash; governance documentation and policies</li>
-                <li>Student Affairs &mdash; social outreach evidence and impact</li>
-              </ul>
-            </div></div>
+          <div>
+            <div class="metric-row"><span class="metric-name">Citations per Faculty</span><span class="metric-val">20%</span></div>
+            <div class="metric-bar"><div class="metric-fill" style="--w: 66%"></div></div>
           </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#128161; What Makes a Strong Submission</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <div class="template-box">
-                <div class="template-label">ESG evidence must be specific and permanent</div>
-                <div class="template-text">Published sustainability reports, policy documents on the UoB website, measurable outcomes (kWh reduced / tonnes diverted / people reached), and named community partners with executed projects &mdash; not just signed agreements.</div>
-              </div>
-              <button class="btn-sm" onclick="goLogin()">Submit QS Sustainability Data &rarr;</button>
-            </div></div>
+          <div>
+            <div class="metric-row"><span class="metric-name">Employer Reputation</span><span class="metric-val">15%</span></div>
+            <div class="metric-bar"><div class="metric-fill" style="--w: 50%"></div></div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- THE WUR -->
-<section class="rk-section" id="the-wur">
-  <div class="rk-split rev">
-    <div class="rk-txt rv">
-      <div class="rk-kicker">THE &middot; World University Rankings</div>
-      <h2 class="rk-h2">THE World University Rankings</h2>
-      <div class="rk-card">
-        <div class="rk-badges">
-          <span class="rk-badge"><span class="bd"></span>Published October</span>
-          <span class="rk-badge"><span class="bd"></span>Since 2010</span>
-          <span class="rk-badge"><span class="bd"></span>2,000+ Universities</span>
-        </div>
-        <p class="rk-lead">Times Higher Education's flagship ranking evaluates research-intensive universities across 5 pillars and 18 indicators. Research quality is measured using Field-Weighted Citation Impact (FWCI) from Elsevier Scopus &mdash; one of the most rigorous citation methodologies in global rankings.</p>
-        <div class="acc">
-          <div class="acc-item">
-            <button class="acc-btn open" onclick="toggleAcc(this)"><span>&#128202; Five Pillars &amp; Weights</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body open"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li><strong>Research Quality</strong> &mdash; 30% &middot; FWCI, research strength and excellence</li>
-                <li><strong>Teaching</strong> &mdash; 29.5% &middot; Reputation survey, staff/student ratio, PhDs awarded</li>
-                <li><strong>Research Environment</strong> &mdash; 29% &middot; Research income, productivity, and reputation</li>
-                <li><strong>International Outlook</strong> &mdash; 7.5% &middot; International staff, students, and co-authorship</li>
-                <li><strong>Industry Income</strong> &mdash; 4% &middot; Knowledge transfer and commercial research income</li>
-              </ul>
-            </div></div>
-          </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#127970; Key UoB Departments</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li>Research &amp; Graduate Studies &mdash; research income, publications, PhDs awarded</li>
-                <li>Human Resources &mdash; staff headcount and international faculty ratio</li>
-                <li>Finance &mdash; research income documentation by source</li>
-                <li>International Affairs &mdash; international co-authorship and student data</li>
-                <li>Industry Partnerships &mdash; technology transfer and contract research records</li>
-              </ul>
-            </div></div>
-          </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#128161; What Makes a Strong Submission</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <div class="template-box">
-                <div class="template-label">Research data is the backbone here</div>
-                <div class="template-text">Scopus-indexed publications with FWCI above field average, documented research grant income with source, named industry partners with signed contracts and delivered outputs, and PhD completion figures by faculty.</div>
-              </div>
-              <button class="btn-sm" onclick="goLogin()">Submit THE WUR Data &rarr;</button>
-            </div></div>
-          </div>
+      <!-- QS Sustainability -->
+      <div class="bento-card reveal">
+        <div class="card-glow"></div>
+        <div class="card-icon">🌱</div>
+        <h3 class="card-title">QS Sustainability</h3>
+        <p class="card-org">Est. 2023</p>
+        <p class="card-desc">Built entirely around ESG impact — environment, social outcomes and governance.</p>
+        <div class="card-metrics">
+          <div class="metric-row"><span class="metric-name">Environmental</span><span class="metric-val">High</span></div>
+          <div class="metric-bar"><div class="metric-fill" style="--w: 80%"></div></div>
         </div>
       </div>
-    </div>
-    <div class="rk-vis rv d1">
-      <div class="rk-photo">
-        <img src="assets/image/THE-impact.jpg" alt="THE WUR" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=&quot;rk-photo-ph&quot;><span class=&quot;ph-ico&quot;>&#127891;</span><span>THE World University Rankings</span></div>'"/>
-      </div>
-      <div class="mini-stats mini-grid-2">
-        <div class="mini-tile mt-amber"><div class="mn">18</div><div class="ml">Indicators</div></div>
-        <div class="mini-tile mt-navy"><div class="mn">30%</div><div class="ml">Research Quality</div></div>
-        <div class="mini-tile mt-blue"><div class="mn">2,000+</div><div class="ml">Universities</div></div>
-        <div class="mini-tile mt-green"><div class="mn">2010</div><div class="ml">Since</div></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- THE IMPACT -->
-<section class="rk-section" id="the-impact">
-  <div class="rk-split">
-    <div class="rk-vis rv">
-      <div class="rk-photo">
-        <img src="assets/image/THE-impact.jpg" alt="THE Impact" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=&quot;rk-photo-ph&quot;><span class=&quot;ph-ico&quot;>&#127919;</span><span>THE Impact Rankings</span></div>'"/>
-      </div>
-    </div>
-    <div class="rk-txt rv d1">
-      <div class="rk-kicker">THE &middot; Impact Rankings</div>
-      <h2 class="rk-h2">THE Impact Rankings</h2>
-      <div class="rk-card">
-        <div class="rk-badges">
-          <span class="rk-badge"><span class="bd"></span>Published April / May</span>
-          <span class="rk-badge"><span class="bd"></span>Since 2019</span>
-          <span class="rk-badge"><span class="bd"></span>1,900+ Universities</span>
+      <!-- THE WUR -->
+      <div class="bento-card reveal">
+        <div class="card-glow"></div>
+        <div class="card-icon"></div>
+        <h3 class="card-title">THE World Rankings</h3>
+        <p class="card-org">Times Higher Ed · Est. 2010</p>
+        <p class="card-desc">A research-intensive ranking using Field-Weighted Citation Impact as its core measure.</p>
+        <div class="card-metrics">
+          <div class="metric-row"><span class="metric-name">Research Quality</span><span class="metric-val">30%</span></div>
+          <div class="metric-bar"><div class="metric-fill" style="--w: 100%"></div></div>
         </div>
-        <p class="rk-lead">The only global ranking measuring universities against all 17 UN SDGs. Score = SDG 17 Partnerships (22%, mandatory) + best 3 of the remaining 16 SDGs (78%). Open to any university &mdash; no minimum research requirement.</p>
-        <div class="acc">
-          <div class="acc-item">
-            <button class="acc-btn open" onclick="toggleAcc(this)"><span>&#128202; How Scoring Works</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body open"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li><strong>SDG 17 &mdash; Partnerships (22%)</strong> &middot; Mandatory. Cross-sector collaboration, data sharing, policy engagement.</li>
-                <li><strong>Best 3 remaining SDGs (78%)</strong> &middot; UoB selects the 3 SDGs with strongest evidence to maximise score.</li>
-                <li>Each SDG scored on: research output + stewardship (policy/practice) + outreach (community engagement)</li>
-                <li>All evidence must have a permanent, publicly accessible URL</li>
-              </ul>
-            </div></div>
-          </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#10003; Accepted vs &#10007; Rejected</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li>&#10003; External community impact with measurable, numbered outcomes</li>
-                <li>&#10003; Published policy or official institutional strategy document</li>
-                <li>&#10003; Executed partnership with named partner and delivered results</li>
-                <li>&#10007; Internal activity with no community-facing impact</li>
-                <li>&#10007; MoU signed but not yet implemented with results</li>
-                <li>&#10007; News item without numbers or traceable evidence link</li>
-              </ul>
-            </div></div>
-          </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#128161; Submission Template</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <div class="template-box">
-                <div class="template-label">Structure every entry like this:</div>
-                <div class="template-text">Community problem &rarr; UoB's role &rarr; Target group &rarr; Number of participants / beneficiaries &rarr; Executing partner &rarr; Measurable outcome &rarr; SDG reference &rarr; Permanent URL</div>
-              </div>
-              <button class="btn-sm" onclick="goLogin()">Submit THE Impact Data &rarr;</button>
-            </div></div>
-          </div>
+      </div>
+
+      <!-- THE Impact (Wide) -->
+      <div class="bento-card wide reveal">
+        <div class="card-glow"></div>
+        <div class="card-icon">🎯</div>
+        <h3 class="card-title">THE Impact Rankings</h3>
+        <p class="card-org">Times Higher Ed · Est. 2019</p>
+        <p class="card-desc">The only global ranking measured against all 17 UN Sustainable Development Goals. Open to any university, with no research minimum required.</p>
+        <div class="card-metrics">
+          <div class="metric-row"><span class="metric-name">SDG 17 Partnerships</span><span class="metric-val">Mandatory</span></div>
+          <div class="metric-bar"><div class="metric-fill" style="--w: 100%"></div></div>
+        </div>
+      </div>
+
+      <!-- GreenMetric (Wide) -->
+      <div class="bento-card wide reveal">
+        <div class="card-glow"></div>
+        <div class="card-icon">♻️</div>
+        <h3 class="card-title">UI GreenMetric</h3>
+        <p class="card-org">Universitas Indonesia · Est. 2010</p>
+        <p class="card-desc">The world's first campus-sustainability ranking. Purely operational — every indicator must be measurable and physically present on campus.</p>
+        <div class="card-metrics">
+          <div class="metric-row"><span class="metric-name">Energy & Climate</span><span class="metric-val">21%</span></div>
+          <div class="metric-bar"><div class="metric-fill" style="--w: 100%"></div></div>
+          <div class="metric-row"><span class="metric-name">Waste & Water</span><span class="metric-val">28%</span></div>
+          <div class="metric-bar"><div class="metric-fill" style="--w: 86%"></div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- GREENMETRIC -->
-<section class="rk-section" id="greenmetric">
-  <div class="rk-split rev">
-    <div class="rk-txt rv">
-      <div class="rk-kicker">UI GreenMetric &middot; Campus Sustainability</div>
-      <h2 class="rk-h2">UI GreenMetric World University Rankings</h2>
-      <div class="rk-card">
-        <div class="rk-badges">
-          <span class="rk-badge"><span class="bd"></span>Published December</span>
-          <span class="rk-badge"><span class="bd"></span>Since 2010</span>
-          <span class="rk-badge"><span class="bd"></span>1,477+ Universities &middot; 95 Countries</span>
-        </div>
-        <p class="rk-lead">The world's first campus sustainability ranking by Universitas Indonesia. Evaluates physical campus operations across 6 categories and 61 indicators. Everything must be measurable and campus-based. 2025 theme: "Doing SDGs in Higher Education."</p>
-        <div class="acc">
-          <div class="acc-item">
-            <button class="acc-btn open" onclick="toggleAcc(this)"><span>&#128202; Six Categories &amp; Weights</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body open"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li><strong>Setting &amp; Infrastructure</strong> &mdash; 15% &middot; Green space, open land, forest area on campus</li>
-                <li><strong>Energy &amp; Climate Change</strong> &mdash; 21% &middot; Renewable energy use, smart buildings, GHG emissions</li>
-                <li><strong>Waste</strong> &mdash; 18% &middot; Waste reduction policy, recycling programmes, sewage treatment</li>
-                <li><strong>Water</strong> &mdash; 10% &middot; Conservation, recycling, consumption monitoring</li>
-                <li><strong>Transportation</strong> &mdash; 18% &middot; Shuttle buses, bicycle lanes, EV infrastructure, car-free zones</li>
-                <li><strong>Education &amp; Research</strong> &mdash; 18% &middot; Sustainability courses, campus budget, student organisations</li>
-              </ul>
-            </div></div>
-          </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#10003; Accepted vs &#10007; Rejected</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li>&#10003; Actual implemented campus project with a clear implementation date</li>
-                <li>&#10003; Quantified consumption or reduction data &mdash; kWh, m&sup3;, tonnes</li>
-                <li>&#10003; Monitoring reports with baseline comparisons showing progress</li>
-                <li>&#10003; Documented sustainable infrastructure (solar panels, water recycling, EV chargers)</li>
-                <li>&#10007; Awareness workshop or campaign without physical implementation</li>
-                <li>&#10007; Photos only &mdash; no operational data or monitoring reports</li>
-              </ul>
-            </div></div>
-          </div>
-          <div class="acc-item">
-            <button class="acc-btn" onclick="toggleAcc(this)"><span>&#127970; Key UoB Departments</span><span class="acc-ico">&#9662;</span></button>
-            <div class="acc-body"><div class="acc-body-inner">
-              <ul class="rk-list">
-                <li>Facilities Management &mdash; energy, water, waste operational data</li>
-                <li>Sustainability Office &mdash; policy documents and monitoring reports</li>
-                <li>IT &amp; Digital Services &mdash; smart building and energy management systems</li>
-                <li>Transport &amp; Campus Services &mdash; shuttle routes and EV infrastructure</li>
-                <li>Academic Affairs &mdash; sustainability-linked courses and research budget</li>
-              </ul>
-              <button class="btn-sm" onclick="goLogin()">Submit GreenMetric Data &rarr;</button>
-            </div></div>
-          </div>
-        </div>
-      </div>
+<!-- Horizontal Scroll Gallery -->
+<section class="gallery-section" id="standing">
+  <div class="gallery-wrapper">
+    <div class="gallery-header reveal">
+      <div class="kicker">Current Standing</div>
+      <h2 class="sec-title">Where we stand, <em>ranking by ranking.</em></h2>
     </div>
-    <div class="rk-vis rv d1">
-      <div class="rk-photo">
-        <img src="assets/image/GreenMetric.jpg" alt="UI GreenMetric" onerror="this.style.display='none';this.parentNode.innerHTML='<div class=&quot;rk-photo-ph&quot;><span class=&quot;ph-ico&quot;>&#9851;</span><span>UI GreenMetric</span></div>'"/>
+    
+    <div class="gallery-track" id="galleryTrack">
+      <div class="gallery-card">
+        <div class="gc-top">
+          <span class="gc-year">QS WUR · 2026</span>
+          <div class="gc-icon">🌍</div>
+        </div>
+        <div class="gc-rank">601<span>–650</span></div>
+        <div class="gc-bottom">
+          <div class="gc-name">QS World University Rankings</div>
+          <div class="gc-scope">Global · All Indicators</div>
+        </div>
       </div>
-      <div class="mini-stats mini-grid-3">
-        <div class="mini-tile mt-forest"><div class="mn">61</div><div class="ml">Indicators</div></div>
-        <div class="mini-tile mt-green"><div class="mn">6</div><div class="ml">Categories</div></div>
-        <div class="mini-tile mt-navy"><div class="mn">95</div><div class="ml">Countries</div></div>
+
+      <div class="gallery-card">
+        <div class="gc-top">
+          <span class="gc-year">THE WUR · 2026</span>
+          <div class="gc-icon"></div>
+        </div>
+        <div class="gc-rank">801<span>–1000</span></div>
+        <div class="gc-bottom">
+          <div class="gc-name">THE World University Rankings</div>
+          <div class="gc-scope">Global · Research-Intensive</div>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gc-top">
+          <span class="gc-year">QS Sust. · 2026</span>
+          <div class="gc-icon">🌱</div>
+        </div>
+        <div class="gc-rank">301<span>–350</span></div>
+        <div class="gc-bottom">
+          <div class="gc-name">QS Sustainability Rankings</div>
+          <div class="gc-scope">Global · ESG Impact</div>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gc-top">
+          <span class="gc-year">THE Impact · 2026</span>
+          <div class="gc-icon">🎯</div>
+        </div>
+        <div class="gc-rank">201<span>–300</span></div>
+        <div class="gc-bottom">
+          <div class="gc-name">THE Impact Rankings</div>
+          <div class="gc-scope">Global · UN SDGs</div>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gc-top">
+          <span class="gc-year">GreenMetric · 2025</span>
+          <div class="gc-icon">♻️</div>
+        </div>
+        <div class="gc-rank">#146</div>
+        <div class="gc-bottom">
+          <div class="gc-name">UI GreenMetric</div>
+          <div class="gc-scope">MENA #4 · Campus Sustainability</div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="rk-cta rv" id="cta">
-  <div class="cta-glow cta-g1"></div>
-  <div class="cta-glow cta-g2"></div>
-  <div class="cta-inner">
-    <div>
-      <h2>Five Rankings. One Coordinated System.</h2>
-      <p>QS WUR, QS Sustainability, THE WUR, THE Impact, and UI GreenMetric each demand different data from different departments &mdash; on different deadlines. This portal ensures every indicator is assigned to the right team, tracked in real time, and submitted on time. Log in to view your department's current tasks.</p>
-    </div>
-    <div class="cta-actions">
-      <button class="btn-gold" onclick="goLogin()">Sign In to the Portal &rarr;</button>
-      <a class="btn-ghost" href="#about">How It Works &uarr;</a>
-    </div>
-  </div>
-</section>
-
-</div></div>
-
+<!-- Footer -->
 <footer>
-  <div><span class="ft-brand">University of Bahrain</span><span class="ft-note" style="margin-left:10px;">Rankings Data Collection System</span></div>
-  <div class="ft-note">© 2026 University of Bahrain · All rights reserved</div>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand reveal">
+        <img src="assets/image/UOB-new-logo.png" alt="University of Bahrain">
+        <div class="footer-brand-text">
+          <span class="uni-name">University of Bahrain</span>
+          <span class="tagline">Excellence in Education Since 1986</span>
+        </div>
+      </div>
+      <h2 class="footer-title reveal">Shaping the <em>future</em> of education.</h2>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 University of Bahrain. All rights reserved.</div>
+      <div>Rankings Data Collection System</div>
+    </div>
+  </div>
 </footer>
 
 <script>
-/* CURSOR */
-const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
-(function af(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(af);})();
-document.addEventListener('mouseover',e=>{
-  if(e.target.closest('button,a,.rk-pill,.acc-btn,.step,.stat,.mini-tile,.rk-badge')){
-    cur.style.width='16px';cur.style.height='16px';cur.style.background='#0b1f3a';
-    ring.style.width='46px';ring.style.height='46px';ring.style.borderColor='rgba(201,162,39,.7)';
-  }else{
-    cur.style.width='10px';cur.style.height='10px';cur.style.background='#c9a227';
-    ring.style.width='32px';ring.style.height='32px';ring.style.borderColor='rgba(201,162,39,.45)';
+  // --- Loader ---
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 1500);
+  });
+
+  // --- Custom Cursor ---
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+    requestAnimationFrame(animateRing);
   }
-});
+  animateRing();
 
-/* ACCORDION */
-function toggleAcc(btn){
-  const acc=btn.closest('.acc');
-  const isOpen=btn.classList.contains('open');
-  acc.querySelectorAll('.acc-btn').forEach(b=>{b.classList.remove('open');b.nextElementSibling.classList.remove('open');});
-  if(!isOpen){btn.classList.add('open');btn.nextElementSibling.classList.add('open');}
-}
+  // Cursor hover effects
+  const hoverables = document.querySelectorAll('a, button, .bento-card, .gallery-card, .gallery-item');
+  hoverables.forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+  });
 
-/* REVEAL */
-const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});},{threshold:.1});
-document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+  // --- Scroll Reveal ---
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        if(entry.target.classList.contains('bento-card')) {
+           entry.target.classList.add('active');
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => revealObserver.observe(el));
 
-/* COUNTERS */
-function cnt(id,target,sfx=''){
-  const el=document.getElementById(id);if(!el)return;
-  let n=0;const step=target/52;
-  const ti=setInterval(()=>{
-    n=Math.min(n+step,target);
-    el.textContent=target>=100?Math.floor(n).toLocaleString()+sfx:Math.floor(n)+sfx;
-    if(n>=target)clearInterval(ti);
-  },26);
-}
-const cio=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){cnt('s1',5);cnt('s2',12);cnt('s3',200,'+');cnt('s4',2000,'+');cio.disconnect();}});},{threshold:.3});
-const strip=document.getElementById('statsStrip');if(strip)cio.observe(strip);
+  // --- Horizontal Scroll Logic ---
+  const gallerySection = document.querySelector('.gallery-section');
+  const galleryTrack = document.getElementById('galleryTrack');
 
-/* NAV */
-const sections=['about','qs-wur','qs-sus','the-wur','the-impact','greenmetric'];
-const navAs=document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll',()=>{
-  document.getElementById('mainNav').style.boxShadow=scrollY>60?'0 4px 28px rgba(11,31,58,.09)':'none';
-  let cur2='';
-  sections.forEach(id=>{const el=document.getElementById(id);if(el&&scrollY>=el.offsetTop-130)cur2=id;});
-  navAs.forEach(a=>{const act=a.getAttribute('href')==='#'+cur2;a.classList.toggle('active',act);});
-},{passive:true});
+  function updateHorizontalScroll() {
+    const rect = gallerySection.getBoundingClientRect();
+    const sectionHeight = gallerySection.offsetHeight;
+    const viewportHeight = window.innerHeight;
+    const scrollableDistance = sectionHeight - viewportHeight;
 
-/* TRANSITION */
-function goLogin(){const o=document.getElementById('pOut');o.classList.add('go');setTimeout(()=>location.href='login.html',380);}
+    if (rect.top <= 0 && rect.bottom >= viewportHeight) {
+      const progress = Math.abs(rect.top) / scrollableDistance;
+      const trackWidth = galleryTrack.scrollWidth;
+      const viewWidth = window.innerWidth;
+      const maxTranslate = trackWidth - viewWidth + 100;
+      
+      galleryTrack.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
+    }
+  }
+
+  window.addEventListener('scroll', updateHorizontalScroll);
+  window.addEventListener('resize', updateHorizontalScroll);
+
+  // --- Bento Card Glow Follow ---
+  const cards = document.querySelectorAll('.bento-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--x', `${x}px`);
+      card.style.setProperty('--y', `${y}px`);
+    });
+  });
 </script>
 </body>
 </html>
