@@ -353,4 +353,32 @@ router.patch('/cycles/:id/close', adminOnly, async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+// GET all users with their department names
+router.get('/users', adminOnly, async (req, res) => {
+    try {
+        const result = await db.execute({
+            sql: `SELECT u.name, u.email, d.name as department_name 
+                  FROM users u 
+                  LEFT JOIN departments d ON u.department_id = d.id`,
+            args: []
+        });
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch users' });
+    }
+});
+
+// POST add new department
+router.post('/add-department', adminOnly, async (req, res) => {
+    const { name } = req.body;
+    try {
+        await db.execute({
+            sql: `INSERT INTO departments (name) VALUES (?)`,
+            args: [name]
+        });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to create department' });
+    }
+});
 module.exports = router;

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Departments – UoB Rankings Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --navy: #0d1b3e;
+      --gold: #c9a227;
+      --teal: #0d9488;
+      --dark-teal: #085f58;
+      --sidebar-w: 265px;
+      --header-h: 66px;
+      --light-bg: #f0f2f7;
+      --border: #e2e8f4;
+      --text: #1e2d50;
+      --subtext: #6b7c9e;
+      --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
+      --green: #16a34a;
+      --red: #dc2626;
+      --amber: #f59e0b;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--light-bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ══ HEADER ══ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-h);
+      z-index: 200;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem 0 0;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0 1.2rem;
+      height: 100%;
+      gap: .85rem;
+      text-decoration: none;
+    }
+
+    .header-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .header-logo svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: .95rem;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .bell-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.1rem;
+      position: relative;
+    }
+
+    .bell-dot {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--amber);
+      border: 2px solid var(--navy);
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+    }
+
+    .user-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-name {
+      font-size: .86rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .user-role {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .6);
+    }
+
+    /* ══ LAYOUT ══ */
+    .layout {
+      display: flex;
+      margin-top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+    }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .nav-section-label {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      padding: .9rem 1.4rem .5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .72rem 1.4rem;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: .86rem;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      transition: background .16s, color .16s;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-weight: 600;
+      border-left-color: var(--gold);
+    }
+
+    .nav-icon {
+      font-size: 1rem;
+      width: 22px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .nav-spacer {
+      flex: 1;
+    }
+
+    .nav-logout {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .72rem 1.4rem;
+      cursor: pointer;
+      color: #f87171;
+      font-size: .86rem;
+      font-weight: 600;
+      border-left: 3px solid transparent;
+      text-decoration: none;
+      transition: background .16s;
+    }
+
+    .nav-logout:hover {
+      background: rgba(248, 113, 113, 0.1);
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .15);
+      border-radius: 4px;
+    }
+
+    /* ══ MAIN ══ */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+
+    .main::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .main::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, .1);
+      border-radius: 4px;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: .3rem;
+    }
+
+    .page-sub {
+      font-size: .88rem;
+      color: var(--subtext);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ══ ACTION BAR & BUTTONS ══ */
+    .action-bar {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    .btn-primary:hover {
+      background: #b8931f;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--light-bg);
+    }
+
+    /* ══ DATA CARD & TABLE ══ */
+    .data-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .history-table th {
+      text-align: left;
+      padding: 1rem 1.5rem;
+      background: #f8fafc;
+      color: var(--subtext);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .history-table td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .history-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .history-table tr:hover td {
+      background: #f8fafc;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-admin {
+      background: rgba(13, 27, 62, 0.08);
+      color: var(--navy);
+    }
+
+    .badge-dept {
+      background: rgba(13, 148, 136, 0.1);
+      color: var(--dark-teal);
+    }
+
+    /* ══ MODALS ══ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 27, 62, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(13, 27, 62, 0.15);
+      animation: modalSlide 0.2s ease-out;
+    }
+
+    @keyframes modalSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--navy);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-actions .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* ══ TOAST NOTIFICATION ══ */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #fff;
+      border-left: 4px solid var(--green);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(13, 27, 62, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 2000;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 400px;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast.error {
+      border-left-color: var(--red);
+    }
+
+    .toast-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .toast-message {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a class="header-brand" href="dashboard-admin.html">
+      <div class="header-logo">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="#c9a227" stroke-width="1.6" />
+          <polygon points="20,6 23,15 32,15 25,20 28,29 20,24 12,29 15,20 8,15 17,15" fill="#c9a227" />
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">Rankings Tracker</div>
+        <div class="brand-sub">Admin Portal</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <button class="bell-btn">🔔<span class="bell-dot"></span></button>
+      <div class="user-pill">
+        <div class="user-avatar" id="userAvatar">AD</div>
+        <div>
+          <div class="user-name" id="userName">Admin</div>
+          <div class="user-role">Administrator</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="nav-section-label">Administration</div>
+      <a class="nav-item" href="dashboard-admin.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-item" href="admin-cycles.html"><span class="nav-icon">🏆</span> Ranking Cycles</a>
+      <a class="nav-item" href="admin-progress.html"><span class="nav-icon">📈</span> Progress</a>
+      <a class="nav-item" href="reminders.html"><span class="nav-icon">🔔</span> Reminders</a>
+      <a class="nav-item active" href="departments.html"><span class="nav-icon">🏢</span> Departments</a>
+      <div class="nav-spacer"></div>
+      <a class="nav-logout" href="login.html" id="logoutBtn"><span class="nav-icon">🚪</span> Logout</a>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+        <div>
+          <div class="page-title">Departments</div>
+          <div class="page-sub">Manage university departments and their assigned users</div>
+        </div>
+        <div class="action-bar">
+          <button class="btn btn-secondary" onclick="openModal('deptModal')">+ Add Department</button>
+          <button class="btn btn-primary" onclick="openModal('userModal')">+ Add User</button>
+        </div>
+      </div>
+
+      <div class="data-card">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody id="userTable">
+            <tr>
+              <td colspan="4" style="text-align: center; padding: 3rem; color: var(--subtext);">Loading data...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add User Modal -->
+  <div id="userModal" class="modal-overlay">
+    <div class="modal">
+      <h3>Add New User</h3>
+      <form onsubmit="submitUser(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" placeholder="e.g. John Doe" required class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" name="email" placeholder="e.g. john.doe@uob.edu.bh" required class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Department</label>
+          <select name="department_id" id="deptSelect" class="form-control" required>
+            <option value="">-- Select Department --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" placeholder="Minimum 6 characters" required class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select name="role" class="form-control">
+            <option value="department">Department User</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('userModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Add Department Modal -->
+  <div id="deptModal" class="modal-overlay">
+    <div class="modal">
+      <h3>Add New Department</h3>
+      <form onsubmit="submitDept(event)">
+        <div class="form-group">
+          <label class="form-label">Department Name</label>
+          <input type="text" name="name" placeholder="e.g. College of Information Technology" required class="form-control">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('deptModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Department</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <span id="toastIcon" class="toast-icon">✅</span>
+    <span id="toastMessage" class="toast-message">Action completed successfully</span>
+  </div>
+
+  <script>
+    const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3002'
+      : 'https://uob-rankings.onrender.com';
+
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    if (!token) window.location.href = 'login.html';
+
+    // Display user info in header
+    document.getElementById('userName').textContent = user.name || 'Admin';
+    document.querySelector('.user-role').textContent = user.role === 'admin' ? 'Administrator' : 'Department User';
+    const initials = (user.name || 'Admin').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    document.getElementById('userAvatar').textContent = initials;
+
+    // Modal helpers
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Close modal on outside click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+        }
+      });
+    });
+
+    // Toast notification helper
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+      
+      toastMessage.textContent = message;
+      
+      if (type === 'error') {
+        toast.classList.add('error');
+        toastIcon.textContent = '⚠️';
+      } else {
+        toast.classList.remove('error');
+        toastIcon.textContent = '✅';
+      }
+      
+      // Trigger animation
+      requestAnimationFrame(() => {
+        toast.classList.add('show');
+      });
+      
+      // Auto-hide after 3.5 seconds
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    // Load data
+    async function loadData() {
+      try {
+        const uRes = await fetch(`${API_BASE}/api/admin/users`, { 
+          headers: {'Authorization': `Bearer ${token}`}
+        });
+        const users = await uRes.json();
+        
+        const tbody = document.getElementById('userTable');
+        if (!users || users.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 3rem; color: var(--subtext);">No users found.</td></tr>`;
+        } else {
+          tbody.innerHTML = users.map(u => {
+            const roleBadge = u.role === 'admin' 
+              ? `<span class="badge badge-admin">Admin</span>` 
+              : `<span class="badge badge-dept">Department</span>`;
+              
+            return `
+              <tr>
+                <td style="font-weight: 600;">${u.name}</td>
+                <td>${u.email}</td>
+                <td>${u.department_name || '<span style="color:var(--subtext)">N/A</span>'}</td>
+                <td>${roleBadge}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        const dRes = await fetch(`${API_BASE}/api/admin/departments`, { 
+          headers: {'Authorization': `Bearer ${token}`}
+        });
+        const depts = await dRes.json();
+        const select = document.getElementById('deptSelect');
+        select.innerHTML = '<option value="">-- Select Department --</option>' + 
+          (depts || []).map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+          
+      } catch (e) {
+        console.error(e);
+        document.getElementById('userTable').innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 3rem; color: var(--red);">Failed to load data. Please try again.</td></tr>`;
+      }
+    }
+
+    // Form submissions
+    async function submitUser(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/add-user`, { 
+          method: 'POST', 
+          headers: {
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${token}`
+          }, 
+          body: JSON.stringify(data)
+        });
+        
+        if (res.ok) {
+          closeModal('userModal');
+          e.target.reset();
+          loadData();
+          showToast('User created successfully!', 'success');
+        } else {
+          showToast('Failed to create user. Please check the details.', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('An error occurred while creating the user.', 'error');
+      }
+    }
+
+    async function submitDept(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/add-department`, { 
+          method: 'POST', 
+          headers: {
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${token}`
+          }, 
+          body: JSON.stringify(data)
+        });
+        
+        if (res.ok) {
+          // 1. Close the modal
+          closeModal('deptModal');
+          // 2. Clear the form
+          e.target.reset();
+          // 3. Refresh the data table
+          loadData();
+          // 4. Show success popup
+          showToast('Department created successfully!', 'success');
+        } else {
+          showToast('Failed to create department. Please try again.', 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('An error occurred while creating the department.', 'error');
+      }
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        await fetch(`${API_BASE}/api/auth/logout`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    });
+
+    // Initialize
+    loadData();
+  </script>
+</body>
+</html>
