@@ -682,7 +682,8 @@
                     <span class="nav-text">Reminders</span>
                     <span class="nav-badge" id="reminderBadge">0</span>
                 </a>
-                <a class="nav-item" href="departments.html">
+                <!-- FIXED: Changed from departments.html to department.html to match your dashboard template -->
+                <a class="nav-item" href="department.html">
                     <i class="fas fa-building nav-icon"></i>
                     <span class="nav-text">Departments</span>
                 </a>
@@ -742,7 +743,11 @@
                         <div class="form-group">
                             <label class="form-label">Message</label>
                             <textarea class="form-control" id="emailMessage" style="min-height:140px">
-This is a reminder that your data submission for the current ranking cycle is due soon. Please log in to the portal and complete your assigned tasks.</textarea>
+This is a reminder that your data submission for the current ranking cycle is due soon. Please log in to the portal and complete your assigned tasks.
+
+Best regards,
+Office of Institutional Research
+University of Bahrain</textarea>
                         </div>
                         
                         <button class="btn-primary" id="sendBtn" onclick="sendReminderEmails()">
@@ -871,7 +876,6 @@ This is a reminder that your data submission for the current ranking cycle is du
             }
         }
 
-        // Initialize sidebar state
         const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
         if (sidebarCollapsed && window.innerWidth > 768) {
             document.getElementById('sidebar').classList.add('collapsed');
