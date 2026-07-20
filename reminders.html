@@ -4,166 +4,694 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Email Reminders – UoB Rankings Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --navy: #0d1b3e; --gold: #c9a227; --teal: #0d9488;
-            --sidebar-w: 265px; --header-h: 66px;
-            --light-bg: #f0f2f7; --border: #e2e8f4;
-            --text: #1e2d50; --subtext: #6b7c9e;
-            --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
-            --green: #16a34a; --red: #dc2626; --amber: #f59e0b; --blue: #0891b2;
+            --primary-blue: #094FA3;
+            --bright-blue: #4B95FA;
+            --light-blue: #91BDFC;
+            --primary-gold: #B99B68;
+            --bright-gold: #E4C082;
+            --light-gold: #F6EBD9;
+            --supporting-red: #ED1C24;
+            --sidebar-w: 260px;
+            --sidebar-w-collapsed: 70px;
+            --header-h: 70px;
+            --bg: #F5F7FA;
+            --surface: #FFFFFF;
+            --surface-alt: #F5F7FA;
+            --border: rgba(9, 79, 163, 0.15);
+            --text-primary: #032E64;
+            --text-secondary: #595F61;
+            --text-light: #7B8285;
+            --card-shadow: 0 2px 12px rgba(9, 79, 163, 0.08);
+            --green: #16a34a;
+            --amber: #f59e0b;
+            --icon-color: #094FA3;
         }
-        html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--light-bg); color: var(--text); overflow: hidden; }
 
-        .header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 200; background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem 0 0; border-bottom: 2px solid var(--gold); }
-        .header-brand { display: flex; align-items: center; width: var(--sidebar-w); flex-shrink: 0; border-right: 1px solid rgba(255, 255, 255, 0.1); padding: 0 1.2rem; height: 100%; gap: .75rem; text-decoration: none; }
-        .brand-logo { width: 44px; height: 44px; background: var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1rem; color: var(--navy); flex-shrink: 0; }
-        .brand-title { font-weight: 700; font-size: .9rem; color: #fff; line-height: 1.2; }
-        .brand-sub { font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); opacity: .8; }
-        .header-right { display: flex; align-items: center; gap: 1rem; }
-        .notif-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; position: relative; }
-        .notif-dot { position: absolute; top: 5px; right: 5px; width: 9px; height: 9px; border-radius: 50%; background: var(--amber); border: 2px solid var(--navy); }
-        .user-pill { display: flex; align-items: center; gap: .7rem; }
-        .user-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--teal); color: #fff; font-size: .82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-        .user-name { font-size: .86rem; font-weight: 700; color: #fff; line-height: 1.2; }
-        .user-role-txt { font-size: .68rem; color: rgba(255, 255, 255, .55); }
+        html, body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
 
+        /* HEADER */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-h);
+            z-index: 200;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            box-shadow: 0 2px 8px rgba(9, 79, 163, 0.1);
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .header-left { display: flex; align-items: center; gap: 1rem; }
+
+        .menu-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--surface-alt);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .menu-toggle:hover { background: var(--light-blue); color: #fff; }
+
+        .header-brand { text-decoration: none; display: flex; align-items: center; gap: 0.75rem; }
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--bright-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .brand-text { white-space: nowrap; }
+        .brand-title {
+            font-family: 'Instrument Serif', serif;
+            font-weight: 400;
+            font-size: 1rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        .brand-sub {
+            font-size: .62rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--primary-blue);
+            margin-top: 2px;
+        }
+
+        .header-right { display: flex; align-items: center; gap: 1.5rem; }
+        .header-logo { height: 50px; width: auto; object-fit: contain; }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            background: var(--surface-alt);
+            padding: 0.5rem 1.2rem;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+            color: #fff;
+            font-size: .8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .user-info { text-align: left; }
+        .user-name { font-size: .85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+        .user-role { font-size: .68rem; color: var(--text-secondary); }
+
+        /* SIDEBAR */
         .layout { display: flex; margin-top: var(--header-h); height: calc(100vh - var(--header-h)); }
-        .sidebar { width: var(--sidebar-w); flex-shrink: 0; background: var(--navy); display: flex; flex-direction: column; overflow-y: auto; border-right: 1px solid rgba(255, 255, 255, 0.06); }
-        .nav-label { font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.3); padding: .9rem 1.4rem .4rem; }
-        .nav-item { display: flex; align-items: center; gap: .85rem; padding: .7rem 1.4rem; color: rgba(255, 255, 255, 0.55); font-size: .84rem; font-weight: 500; border-left: 3px solid transparent; text-decoration: none; transition: all .16s; cursor: pointer; }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, .85); }
-        .nav-item.active { background: rgba(255, 255, 255, 0.08); color: #fff; font-weight: 600; border-left-color: var(--gold); }
-        .nav-icon { font-size: .95rem; width: 20px; text-align: center; flex-shrink: 0; }
-        .nav-badge { margin-left: auto; background: var(--amber); color: var(--navy); font-size: .65rem; font-weight: 700; padding: .15rem .5rem; border-radius: 999px; }
+
+        .sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            background: linear-gradient(180deg, var(--primary-blue) 0%, var(--bright-blue) 100%);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+
+        .nav-section { margin-top: 1.2rem; }
+        .nav-label {
+            font-size: .62rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 0.6rem 1.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .sidebar.collapsed .nav-label { padding: 0.6rem 0.5rem; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .75rem 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: .85rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            transition: all .2s;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--bright-gold);
+        }
+
+        .nav-icon { font-size: 1.05rem; width: 22px; text-align: center; flex-shrink: 0; color: #fff; }
+        .nav-text { opacity: 1; transition: opacity 0.2s; }
+        .sidebar.collapsed .nav-text { opacity: 0; width: 0; }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--bright-gold);
+            color: var(--text-primary);
+            font-size: .65rem;
+            font-weight: 700;
+            padding: .15rem .5rem;
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+        .sidebar.collapsed .nav-badge { display: none; }
+
         .nav-spacer { flex: 1; }
-        .nav-logout { display: flex; align-items: center; gap: .85rem; padding: .7rem 1.4rem; color: #f87171; font-size: .84rem; font-weight: 600; border-left: 3px solid transparent; cursor: pointer; transition: background .16s; }
-        .nav-logout:hover { background: rgba(248, 113, 113, 0.08); }
-        .nav-children { overflow: hidden; max-height: 0; transition: max-height .25s ease; }
-        .nav-children.open { max-height: 300px; }
-        .nav-child { display: flex; align-items: center; gap: .85rem; padding: .72rem 1.4rem .72rem 2.6rem; color: rgba(255, 255, 255, 0.5); font-size: .82rem; font-weight: 500; border-left: 3px solid transparent; text-decoration: none; transition: background .16s, color .16s; }
-        .nav-child:hover { background: rgba(255, 255, 255, 0.04); color: rgba(255, 255, 255, .75); }
+
+        .nav-logout {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .75rem 1.2rem;
+            color: #fecaca;
+            font-size: .85rem;
+            font-weight: 600;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all .2s;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .nav-logout:hover { background: rgba(248, 113, 113, 0.15); color: #fff; }
+
+        .nav-children { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+        .nav-children.open { max-height: 400px; }
+        .nav-child {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+            padding: .7rem 1.2rem .7rem 3rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: .82rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            transition: all .16s;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .nav-child:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+        .nav-child.active {
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--bright-gold);
+            background: rgba(255, 255, 255, .15);
+        }
+
         .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .1); border-radius: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .25); border-radius: 4px; }
 
-        .main { flex: 1; overflow-y: auto; padding: 1.5rem 1.8rem 4rem; }
-        .main::-webkit-scrollbar { width: 5px; }
-        .main::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, .1); border-radius: 4px; }
-        .page-hdr { margin-bottom: 1.5rem; }
-        .page-title { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--navy); }
-        .page-sub { font-size: .84rem; color: var(--subtext); margin-top: .2rem; }
+        /* MAIN */
+        .main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        .main::-webkit-scrollbar { width: 6px; }
+        .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
 
-        .reminders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
-        .card { background: #fff; border-radius: 14px; box-shadow: var(--card-shadow); border: 1px solid var(--border); overflow: hidden; margin-bottom: 1.5rem; }
-        .card-hdr { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.4rem; border-bottom: 1px solid var(--border); }
-        .card-hdr-title { font-size: .9rem; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: .5rem; }
+        /* PAGE HEADER */
+        .page-hdr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        .page-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+        .page-sub { font-size: .9rem; color: var(--text-secondary); margin-top: .25rem; }
+
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            border: 1.5px solid var(--border);
+            overflow: hidden;
+        }
+        .card-hdr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1.5px solid var(--border);
+            background: var(--surface-alt);
+        }
+        .card-hdr-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+        }
         .card-body { padding: 1.4rem; }
 
+        /* FORMS */
         .form-group { margin-bottom: 1.2rem; }
-        .form-label { display: block; font-size: .75rem; font-weight: 700; color: var(--navy); margin-bottom: .5rem; text-transform: uppercase; letter-spacing: .05em; }
-        .req { color: var(--red); }
-        .form-control { width: 100%; padding: .65rem .85rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: .85rem; font-family: 'DM Sans', sans-serif; color: var(--text); outline: none; transition: border-color .2s; }
-        .form-control:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
+        .form-label {
+            display: block;
+            font-size: .75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: .5rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+        .req { color: var(--supporting-red); }
+        .form-control {
+            width: 100%;
+            padding: .65rem .85rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: .85rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: var(--surface);
+            outline: none;
+            transition: all .2s;
+        }
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(9, 79, 163, 0.1);
+        }
         textarea.form-control { resize: vertical; line-height: 1.5; }
-        
-        .btn-gold { display: flex; align-items: center; justify-content: center; gap: .4rem; background: var(--gold); color: var(--navy); border: none; font-size: .85rem; font-weight: 700; padding: .75rem 1.1rem; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; width: 100%; transition: background .15s; }
-        .btn-gold:hover { background: #b8911f; }
-        .btn-outline { display: inline-flex; align-items: center; gap: 0.4rem; border: 1.5px solid var(--border); background: #fff; color: var(--text); font-size: 0.8rem; font-weight: 600; padding: 0.45rem 1rem; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.14s; }
-        .btn-outline:hover { background: #f0f2f7; }
 
-        .rm-card { display: flex; align-items: center; gap: .8rem; padding: 1rem; border-radius: 10px; border: 1px solid; margin-bottom: .75rem; font-size: .8rem; background: #fff; }
+        /* BUTTONS */
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .55rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+            color: #fff;
+            border: none;
+            font-size: .85rem;
+            font-weight: 600;
+            padding: .75rem 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 3px 10px rgba(9, 79, 163, 0.25);
+            transition: all .2s;
+            width: 100%;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(9, 79, 163, 0.35); }
+        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.14s;
+        }
+        .btn-outline:hover { background: var(--surface-alt); border-color: var(--primary-blue); color: var(--primary-blue); }
+
+        .btn-sm-danger {
+            background: #fff;
+            border: 1.5px solid #fecaca;
+            color: var(--supporting-red);
+            padding: .35rem .7rem;
+            border-radius: 6px;
+            font-size: .75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .btn-sm-danger:hover { background: var(--supporting-red); color: #fff; border-color: var(--supporting-red); }
+
+        .btn-sm-primary {
+            background: #fff;
+            border: 1.5px solid var(--light-blue);
+            color: var(--primary-blue);
+            padding: .35rem .7rem;
+            border-radius: 6px;
+            font-size: .75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .btn-sm-primary:hover { background: var(--primary-blue); color: #fff; border-color: var(--primary-blue); }
+
+        .btn-sm-outline {
+            background: #fff;
+            border: 1.5px solid var(--border);
+            color: var(--text-secondary);
+            padding: .35rem .7rem;
+            border-radius: 6px;
+            font-size: .75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .btn-sm-outline:hover { background: var(--surface-alt); color: var(--primary-blue); border-color: var(--primary-blue); }
+
+        /* REMINDER CARDS */
+        .reminders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+        .rm-card {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1.5px solid;
+            margin-bottom: .75rem;
+            font-size: .8rem;
+            background: var(--surface);
+        }
         .rm-card:last-child { margin-bottom: 0; }
         .rm-urgent { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
         .rm-warning { background: #fefce8; border-color: #fef08a; color: #854d0e; }
         .rm-info { background: #eff6ff; border-color: #bfdbfe; color: #1e3a8a; }
-        .rm-icon { font-size: 1.2rem; flex-shrink: 0; }
+        
+        .rm-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.7);
+        }
+        .rm-urgent .rm-icon { color: #dc2626; }
+        .rm-warning .rm-icon { color: #b45309; }
+        .rm-info .rm-icon { color: #1d4ed8; }
+        
         .rm-text { flex: 1; line-height: 1.4; }
         .rm-text strong { display: block; margin-bottom: .2rem; color: inherit; font-size: .85rem; }
-        
-        .btn-sm-danger { background: #fff; border: 1px solid #fecaca; color: var(--red); padding: .35rem .7rem; border-radius: 6px; font-size: .75rem; font-weight: 600; cursor: pointer; transition: all .15s; }
-        .btn-sm-danger:hover { background: var(--red); color: #fff; }
-        .btn-sm-gold { background: #fff; border: 1px solid #fde047; color: #ca8a04; padding: .35rem .7rem; border-radius: 6px; font-size: .75rem; font-weight: 600; cursor: pointer; transition: all .15s; }
-        .btn-sm-gold:hover { background: #ca8a04; color: #fff; border-color: #ca8a04; }
-        .btn-sm-outline { background: #fff; border: 1px solid var(--border); color: var(--subtext); padding: .35rem .7rem; border-radius: 6px; font-size: .75rem; font-weight: 600; cursor: pointer; transition: all .15s; }
-        .btn-sm-outline:hover { background: #f8fafc; color: var(--navy); border-color: var(--subtext); }
 
+        /* TABLES */
         .history-table { width: 100%; border-collapse: collapse; }
-        .history-table th { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--subtext); padding: .65rem 1.3rem; text-align: left; border-bottom: 1px solid var(--border); background: #fafbfe; }
-        .history-table td { padding: .8rem 1.3rem; border-bottom: 1px solid #f3f4f8; font-size: .82rem; color: var(--text); vertical-align: middle; }
+        .history-table th {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            padding: .85rem 1.4rem;
+            text-align: left;
+            border-bottom: 1.5px solid var(--border);
+            background: var(--surface-alt);
+        }
+        .history-table td {
+            padding: .95rem 1.4rem;
+            border-bottom: 1px solid #f0f4f8;
+            font-size: .85rem;
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
         .history-table tr:last-child td { border-bottom: none; }
-        .badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .6rem; border-radius: 999px; font-size: .7rem; font-weight: 700; }
+        .history-table tr:hover td { background: var(--surface-alt); }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .3rem;
+            padding: .2rem .6rem;
+            border-radius: 999px;
+            font-size: .7rem;
+            font-weight: 700;
+        }
         .badge::before { content: '●'; font-size: .5rem; }
         .b-overdue { background: #fef2f2; color: #dc2626; }
-        .b-pending { background: #fefce8; color: #d97706; }
-        .b-upcoming { background: #eff6ff; color: #2563eb; }
+        .b-pending { background: #fefce8; color: #b45309; }
+        .b-upcoming { background: #eff6ff; color: #1d4ed8; }
 
-        .tag-container { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem; min-height: 42px; border: 1.5px solid var(--border); border-radius: 8px; padding: 0.5rem; background: #fff; align-items: center; }
-        .tag-pill { display: inline-flex; align-items: center; gap: 0.4rem; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
-        .tag-pill.tag-all { background: #fefce8; color: #854d0e; border-color: #fef08a; }
-        .tag-pill button { background: none; border: none; color: inherit; opacity: 0.6; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; padding: 0; }
-        .tag-pill button:hover { opacity: 1; color: var(--red); }
-        .empty-tags { color: var(--subtext); font-size: 0.8rem; font-style: italic; }
+        /* TAGS */
+        .tag-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.6rem;
+            min-height: 42px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem;
+            background: var(--surface);
+            align-items: center;
+        }
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border: 1px solid rgba(9, 79, 163, 0.2);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .tag-pill.tag-all { background: var(--light-gold); color: #854d0e; border-color: var(--bright-gold); }
+        .tag-pill button {
+            background: none;
+            border: none;
+            color: inherit;
+            opacity: 0.6;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+        .tag-pill button:hover { opacity: 1; color: var(--supporting-red); }
+        .empty-tags { color: var(--text-light); font-size: 0.8rem; font-style: italic; }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(13, 27, 62, 0.45); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 46, 100, 0.45);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
         .modal-overlay.active { display: flex; }
-        .modal { background: #fff; border-radius: 14px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(13, 27, 62, 0.25); overflow: hidden; animation: mIn 0.25s ease-out; }
+        .modal {
+            background: var(--surface);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 60px rgba(9, 79, 163, 0.25);
+            overflow: hidden;
+            animation: mIn 0.25s ease-out;
+            border: 1.5px solid var(--border);
+        }
         @keyframes mIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal-header {
+            background: var(--surface-alt);
+            color: var(--text-primary);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid var(--border);
+        }
+        .modal-header-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 1.1rem; }
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: var(--supporting-red); }
 
-        .toast { position: fixed; bottom: 2rem; right: 2rem; background: #fff; border-left: 4px solid var(--green); padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 8px 24px rgba(13, 27, 62, 0.15); display: flex; align-items: center; gap: 0.75rem; z-index: 2000; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); max-width: 400px; }
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--surface);
+            border-left: 4px solid var(--green);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(9, 79, 163, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 400px;
+            border: 1.5px solid var(--border);
+        }
         .toast.show { transform: translateX(0); }
-        .toast.error { border-left-color: var(--red); }
+        .toast.error { border-left-color: var(--supporting-red); }
         .toast-icon { font-size: 1.2rem; flex-shrink: 0; }
-        .toast-message { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+        .toast-message { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
 
-        @media(max-width: 1024px) { .reminders-grid { grid-template-columns: 1fr; } }
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .reminders-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: var(--header-h);
+                height: calc(100vh - var(--header-h));
+                z-index: 150;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .page-title { font-size: 1.6rem; }
+            .header-logo { height: 42px; }
+        }
     </style>
 </head>
 <body>
     <header class="header">
-        <a class="header-brand" href="dashboard-admin.html">
-            <div class="brand-logo">UoB</div>
-            <div>
-                <div class="brand-title">QS Rankings Tracker</div>
-                <div class="brand-sub">Admin — University of Bahrain</div>
-            </div>
-        </a>
-        <div class="header-right">
-            <button class="notif-btn">🔔<span class="notif-dot"></span></button>
-            <div class="user-pill">
-                <div style="text-align:right">
-                    <div class="user-name" id="adminName">Admin</div>
-                    <div class="user-role-txt">Administrator</div>
+        <div class="header-left">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="header-brand" href="dashboard-admin.html">
+                <div class="brand-logo">
+                    <span style="font-family:'Instrument Serif',serif; font-weight:400; color:var(--text-primary); font-size:1.1rem;">UoB</span>
                 </div>
+                <div class="brand-text">
+                    <div class="brand-title">QS Rankings Tracker</div>
+                    <div class="brand-sub">Admin Portal</div>
+                </div>
+            </a>
+        </div>
+        <div class="header-right">
+            <img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="header-logo" onerror="this.style.display='none'">
+            <div class="user-pill">
                 <div class="user-avatar" id="adminAvatar">AD</div>
+                <div class="user-info">
+                    <div class="user-name" id="adminName">Admin</div>
+                    <div class="user-role">Administrator</div>
+                </div>
             </div>
         </div>
     </header>
 
     <div class="layout">
-        <aside class="sidebar">
-            <div class="nav-label">Main</div>
-            <a class="nav-item" href="dashboard-admin.html"><span class="nav-icon">📊</span> Dashboard</a>
-            <div class="nav-item" style="padding-right:.8rem">
-                <a href="admin-cycles.html" style="display:flex;align-items:center;gap:.85rem;flex:1;color:inherit;text-decoration:none">
-                    <span class="nav-icon">🏆</span> Ranking Cycles
+        <aside class="sidebar" id="sidebar">
+            <div class="nav-section">
+                <div class="nav-label">Main</div>
+                <a class="nav-item" href="dashboard-admin.html">
+                    <i class="fas fa-chart-line nav-icon"></i>
+                    <span class="nav-text">Dashboard</span>
                 </a>
-                <span onclick="toggleCycles()" style="cursor:pointer;font-size:.7rem;padding:.2rem .3rem" id="cyclesArrow">▾</span>
             </div>
-            <div class="nav-children" id="navCycles">
-                <a class="nav-child" href="admin-cycles.html?type=qs-sustainability"><span class="nav-icon">🌿</span> QS Sustainability</a>
-                <a class="nav-child" href="admin-cycles.html?type=qs-wur"><span class="nav-icon">🏆</span> QS WUR</a>
-                <a class="nav-child" href="admin-cycles.html?type=the-wur"><span class="nav-icon">📊</span> THE WUR</a>
-                <a class="nav-child" href="admin-cycles.html?type=the-impact"><span class="nav-icon">🎯</span> THE Impact</a>
-                <a class="nav-child" href="admin-cycles.html?type=greenmetric"><span class="nav-icon">🌱</span> GreenMetric</a>
+            <div class="nav-section">
+                <div class="nav-label">Ranking Cycles</div>
+                <div class="nav-item" style="padding-right:.5rem" onclick="toggleCycles()">
+                    <i class="fas fa-trophy nav-icon"></i>
+                    <span class="nav-text">All Cycles</span>
+                    <i class="fas fa-chevron-down" style="margin-left:auto;font-size:.65rem;transition:transform 0.3s" id="cyclesArrow"></i>
+                </div>
+                <div class="nav-children" id="navCycles">
+                    <a class="nav-child" href="admin-cycles.html?type=qs-sustainability">
+                        <i class="fas fa-leaf nav-icon" style="font-size:.9rem"></i>
+                        <span class="nav-text">QS Sustainability</span>
+                    </a>
+                    <a class="nav-child" href="admin-cycles.html?type=qs-wur">
+                        <i class="fas fa-award nav-icon" style="font-size:.9rem"></i>
+                        <span class="nav-text">QS WUR</span>
+                    </a>
+                    <a class="nav-child" href="admin-cycles.html?type=the-wur">
+                        <i class="fas fa-chart-bar nav-icon" style="font-size:.9rem"></i>
+                        <span class="nav-text">THE WUR</span>
+                    </a>
+                    <a class="nav-child" href="admin-cycles.html?type=the-impact">
+                        <i class="fas fa-bullseye nav-icon" style="font-size:.9rem"></i>
+                        <span class="nav-text">THE Impact</span>
+                    </a>
+                    <a class="nav-child" href="admin-cycles.html?type=greenmetric">
+                        <i class="fas fa-seedling nav-icon" style="font-size:.9rem"></i>
+                        <span class="nav-text">GreenMetric</span>
+                    </a>
+                </div>
             </div>
-            <div class="nav-label">Monitoring</div>
-            <a class="nav-item" href="admin-progress.html"><span class="nav-icon">📈</span> Progress</a>
-            <a class="nav-item active" href="reminders.html"><span class="nav-icon">🔔</span> Reminders <span class="nav-badge" id="reminderBadge">0</span></a>
-            <a class="nav-item" href="departments.html"><span class="nav-icon">🏛️</span> Departments</a>
+            <div class="nav-section">
+                <div class="nav-label">Monitoring</div>
+                <a class="nav-item" href="admin-progress.html">
+                    <i class="fas fa-chart-area nav-icon"></i>
+                    <span class="nav-text">Progress</span>
+                </a>
+                <a class="nav-item active" href="reminders.html">
+                    <i class="fas fa-envelope nav-icon"></i>
+                    <span class="nav-text">Reminders</span>
+                    <span class="nav-badge" id="reminderBadge">0</span>
+                </a>
+                <a class="nav-item" href="departments.html">
+                    <i class="fas fa-building nav-icon"></i>
+                    <span class="nav-text">Departments</span>
+                </a>
+            </div>
             <div class="nav-spacer"></div>
-            <div class="nav-logout" onclick="logout()"><span class="nav-icon">🚪</span> Logout</div>
+            <div class="nav-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt nav-icon"></i>
+                <span class="nav-text">Logout</span>
+            </div>
         </aside>
 
         <main class="main">
@@ -176,7 +704,9 @@
 
             <div class="reminders-grid">
                 <div class="card">
-                    <div class="card-hdr"><div class="card-hdr-title">📧 Compose Reminder</div></div>
+                    <div class="card-hdr">
+                        <div class="card-hdr-title"><i class="fas fa-envelope"></i> Compose Reminder</div>
+                    </div>
                     <div class="card-body">
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                             <div class="form-group">
@@ -201,7 +731,7 @@
                             <div class="tag-container" id="recipientTags">
                                 <span class="empty-tags">No recipients selected</span>
                             </div>
-                            <button class="btn-sm-outline" onclick="openRecipientModal()">+ Add Recipients</button>
+                            <button class="btn-outline" onclick="openRecipientModal()"><i class="fas fa-plus"></i> Add Recipients</button>
                         </div>
 
                         <div class="form-group">
@@ -212,27 +742,31 @@
                         <div class="form-group">
                             <label class="form-label">Message</label>
                             <textarea class="form-control" id="emailMessage" style="min-height:140px">
-This is a reminder that your data submission for the current ranking cycle is due soon. Please log in to the portal and complete your assigned tasks.
-
-Best regards,
-Office of Institutional Research
-University of Bahrain</textarea>
+This is a reminder that your data submission for the current ranking cycle is due soon. Please log in to the portal and complete your assigned tasks.</textarea>
                         </div>
                         
-                        <button class="btn-gold" id="sendBtn" onclick="sendReminderEmails()">📧 Send Reminder Emails</button>
+                        <button class="btn-primary" id="sendBtn" onclick="sendReminderEmails()">
+                            <i class="fas fa-paper-plane"></i> Send Reminder Emails
+                        </button>
                     </div>
                 </div>
 
                 <div>
                     <div class="card">
-                        <div class="card-hdr"><div class="card-hdr-title">⚠️ Needs Attention</div></div>
+                        <div class="card-hdr">
+                            <div class="card-hdr-title"><i class="fas fa-exclamation-triangle"></i> Needs Attention</div>
+                        </div>
                         <div class="card-body" id="needsAttentionContainer">
-                            <div style="padding:1rem; text-align:center; color:var(--subtext)">Loading data...</div>
+                            <div style="padding:1rem; text-align:center; color:var(--text-secondary)">
+                                <i class="fas fa-spinner fa-spin"></i> Loading data...
+                            </div>
                         </div>
                     </div>
 
                     <div class="card">
-                        <div class="card-hdr"><div class="card-hdr-title">📜 Reminder History</div></div>
+                        <div class="card-hdr">
+                            <div class="card-hdr-title"><i class="fas fa-history"></i> Reminder History</div>
+                        </div>
                         <div style="overflow-x: auto;">
                             <table class="history-table">
                                 <thead>
@@ -243,7 +777,7 @@ University of Bahrain</textarea>
                                     </tr>
                                 </thead>
                                 <tbody id="historyTableBody">
-                                    <tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--subtext);">Loading history...</td></tr>
+                                    <tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--text-secondary);">Loading history...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -256,18 +790,18 @@ University of Bahrain</textarea>
     <!-- Recipient Modal -->
     <div class="modal-overlay" id="recipientModal" onclick="if(event.target===this)closeModal('recipientModal')">
         <div class="modal">
-            <div style="background: var(--navy); color: #fff; padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-                <div style="font-weight: 700; font-size: 1.05rem;">Select Recipients</div>
-                <button style="background:none;border:none;color:var(--subtext);font-size:1.2rem;cursor:pointer;" onclick="closeModal('recipientModal')">✕</button>
+            <div class="modal-header">
+                <div class="modal-header-title">Select Recipients</div>
+                <button class="modal-close" onclick="closeModal('recipientModal')"><i class="fas fa-times"></i></button>
             </div>
             <div style="padding: 1.5rem;">
-                <label style="display:flex; align-items:center; gap:0.6rem; font-weight:700; font-size: 0.9rem; color: var(--navy); margin-bottom:1.5rem; cursor:pointer; background: #fefce8; padding: 0.8rem; border: 1px solid #fde68a; border-radius: 8px;">
-                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleAllRecipients(this)" style="width: 16px; height: 16px; accent-color: var(--teal);"> 
+                <label style="display:flex; align-items:center; gap:0.6rem; font-weight:700; font-size: 0.9rem; color: var(--text-primary); margin-bottom:1.5rem; cursor:pointer; background: var(--light-gold); padding: 0.8rem; border: 1px solid var(--bright-gold); border-radius: 8px;">
+                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleAllRecipients(this)" style="width: 16px; height: 16px; accent-color: var(--primary-blue);"> 
                     Send to ALL Departments & Users
                 </label>
 
                 <div id="specificSelectionDiv">
-                    <div style="font-size: 0.75rem; font-weight: 700; color: var(--subtext); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem;">Or select specific targets:</div>
+                    <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem;">Or select specific targets:</div>
                     
                     <div class="form-group">
                         <label class="form-label">Department</label>
@@ -277,13 +811,15 @@ University of Bahrain</textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Specific User <span style="font-weight:400; text-transform:none; color:var(--subtext)">(Optional)</span></label>
+                        <label class="form-label">Specific User <span style="font-weight:400; text-transform:none; color:var(--text-light)">(Optional)</span></label>
                         <select class="form-control" id="modalUserSelect" disabled>
                             <option value="">— All Users in Department —</option>
                         </select>
                     </div>
                     
-                    <button class="btn-outline" style="width:100%; justify-content:center; border-color: var(--teal); color: var(--teal); margin-top: 0.5rem;" onclick="addRecipientTag()">+ Add to Selection</button>
+                    <button class="btn-outline" style="width:100%; justify-content:center; border-color: var(--primary-blue); color: var(--primary-blue); margin-top: 0.5rem;" onclick="addRecipientTag()">
+                        <i class="fas fa-plus"></i> Add to Selection
+                    </button>
                 </div>
             </div>
         </div>
@@ -291,7 +827,7 @@ University of Bahrain</textarea>
 
     <!-- Toast Notification -->
     <div id="toast" class="toast">
-        <span id="toastIcon" class="toast-icon">✅</span>
+        <span id="toastIcon" class="toast-icon"><i class="fas fa-check-circle"></i></span>
         <span id="toastMessage" class="toast-message">Action completed successfully</span>
     </div>
 
@@ -325,16 +861,37 @@ University of Bahrain</textarea>
         // ═══════════════════════════════════════════════════════════
         // 2. UI & MODAL FUNCTIONS
         // ═══════════════════════════════════════════════════════════
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('mobile-open');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+            }
+        }
+
+        // Initialize sidebar state
+        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        if (sidebarCollapsed && window.innerWidth > 768) {
+            document.getElementById('sidebar').classList.add('collapsed');
+        }
+
         function toggleCycles() {
             const el = document.getElementById('navCycles');
-            const ar = document.getElementById('cyclesArrow');
+            const arrow = document.getElementById('cyclesArrow');
             el.classList.toggle('open');
-            ar.textContent = el.classList.contains('open') ? '▴' : '▾';
+            arrow.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
         }
 
         function logout() {
-            fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } })
-                .finally(() => { localStorage.clear(); window.location.href = 'login.html'; });
+            fetch(`${API_BASE}/api/auth/logout`, { 
+                method: 'POST', 
+                headers: { 'Authorization': `Bearer ${token}` } 
+            }).finally(() => { 
+                localStorage.clear(); 
+                window.location.href = 'login.html'; 
+            });
         }
 
         function openRecipientModal() {
@@ -449,7 +1006,7 @@ University of Bahrain</textarea>
             }
             container.innerHTML = selectedTags.map((tag, index) => {
                 const extraClass = tag.type === 'all' ? 'tag-all' : '';
-                return `<div class="tag-pill ${extraClass}">${tag.label}<button onclick="removeTag(${index})">✕</button></div>`;
+                return `<div class="tag-pill ${extraClass}">${tag.label}<button onclick="removeTag(${index})"><i class="fas fa-times"></i></button></div>`;
             }).join('');
         }
 
@@ -461,10 +1018,10 @@ University of Bahrain</textarea>
             toastMessage.textContent = message;
             if (type === 'error') {
                 toast.classList.add('error');
-                toastIcon.textContent = '⚠️';
+                toastIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
             } else {
                 toast.classList.remove('error');
-                toastIcon.textContent = '✅';
+                toastIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
             }
             
             requestAnimationFrame(() => toast.classList.add('show'));
@@ -491,7 +1048,7 @@ University of Bahrain</textarea>
                 document.getElementById('reminderBadge').textContent = data.length;
 
                 if (!data || data.length === 0) {
-                    container.innerHTML = '<div style="padding:1rem; text-align:center; color:var(--subtext)">🎉 All departments are up to date!</div>';
+                    container.innerHTML = '<div style="padding:1rem; text-align:center; color:var(--text-secondary)"><i class="fas fa-check-circle" style="color:var(--green); font-size:1.5rem; margin-bottom:0.5rem; display:block;"></i> All departments are up to date!</div>';
                     return;
                 }
 
@@ -499,7 +1056,7 @@ University of Bahrain</textarea>
                     const isOverdue = item.overdue_count > 0;
                     const isWarning = item.pending_count > 0 && !isOverdue;
                     const cardClass = isOverdue ? 'rm-urgent' : (isWarning ? 'rm-warning' : 'rm-info');
-                    const icon = isOverdue ? '🔴' : (isWarning ? '🏹' : '🔵');
+                    const icon = isOverdue ? '<i class="fas fa-exclamation-circle"></i>' : (isWarning ? '<i class="fas fa-clock"></i>' : '<i class="fas fa-info-circle"></i>');
                     const typeText = isOverdue ? `${item.overdue_count} tasks overdue` : `${item.pending_count} pending`;
                     const daysText = item.days_left < 0 ? `Deadline passed ${Math.abs(item.days_left)} days ago.` : `${item.days_left} days left until deadline.`;
                     
@@ -510,17 +1067,17 @@ University of Bahrain</textarea>
                             <strong>${item.department_name} — ${typeText}</strong>
                             ${daysText}
                         </div>
-                        <button class="${isOverdue ? 'btn-sm-danger' : 'btn-sm-gold'}" onclick="quickRemind('${item.department_name}', '${item.department_id}')">Remind</button>
+                        <button class="${isOverdue ? 'btn-sm-danger' : 'btn-sm-primary'}" onclick="quickRemind('${item.department_name}', '${item.department_id}')">Remind</button>
                     </div>`;
                 }).join('');
             } catch (e) {
-                container.innerHTML = '<div style="padding:1rem; text-align:center; color:var(--red)">Failed to load data.</div>';
+                container.innerHTML = '<div style="padding:1rem; text-align:center; color:var(--supporting-red)">Failed to load data.</div>';
             }
         }
 
         async function loadHistory() {
             const tbody = document.getElementById('historyTableBody');
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--subtext);">Loading history...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--text-secondary);"><i class="fas fa-spinner fa-spin"></i> Loading history...</td></tr>';
             try {
                 const res = await fetch(`${API_BASE}/api/admin/reminders/history`, { headers: { 'Authorization': `Bearer ${token}` } });
                 const history = await res.json();
@@ -531,16 +1088,16 @@ University of Bahrain</textarea>
                         const badgeClass = h.reminder_type.includes('Overdue') ? 'b-overdue' : (h.reminder_type.includes('Urgent') ? 'b-pending' : 'b-upcoming');
                         return `
                         <tr>
-                            <td style="font-size: .75rem; color: var(--subtext);">${date}</td>
+                            <td style="font-size: .75rem; color: var(--text-secondary);">${date}</td>
                             <td style="font-weight: 600;">${h.recipients_count} Recipient(s)</td>
                             <td><span class="badge ${badgeClass}">${h.reminder_type}</span></td>
                         </tr>`;
                     }).join('');
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--subtext);">No reminder history found.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--text-secondary);">No reminder history found.</td></tr>`;
                 }
             } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--red);">Failed to load history.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--supporting-red);">Failed to load history.</td></tr>`;
             }
         }
 
@@ -579,7 +1136,7 @@ University of Bahrain</textarea>
                 return;
             }
 
-            btn.textContent = 'Sending...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             btn.disabled = true;
 
             let successCount = 0;
@@ -594,7 +1151,6 @@ University of Bahrain</textarea>
                             await sendSingleEmail(u.email, u.name, subject, message);
                             successCount++;
                         }
-                        // Get all dept IDs for logging
                         const deptRes = await fetch(`${API_BASE}/api/admin/departments`, { headers: { 'Authorization': `Bearer ${token}` } });
                         const depts = await deptRes.json();
                         notifiedDeptIds = depts.map(d => d.id);
@@ -608,13 +1164,12 @@ University of Bahrain</textarea>
                     }
                 }
 
-                // Log to backend
                 await fetch(`${API_BASE}/api/admin/reminders/log`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                     body: JSON.stringify({ 
                         ranking_cycle_id: cycleId || null,
-                        department_ids: [...new Set(notifiedDeptIds)], // unique IDs
+                        department_ids: [...new Set(notifiedDeptIds)],
                         reminder_type: type, 
                         message_sent: message 
                     })
@@ -630,7 +1185,7 @@ University of Bahrain</textarea>
                 console.error('Failed to send reminders:', error);
                 showToast('Failed to send some or all reminders.', 'error');
             } finally {
-                btn.textContent = '📧 Send Reminder Emails';
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reminder Emails';
                 btn.disabled = false;
             }
         }
