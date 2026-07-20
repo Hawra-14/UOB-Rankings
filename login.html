@@ -5,64 +5,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In – UoB Rankings Portal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     *,
     *::before,
     *::after {
       box-sizing: border-box;
       margin: 0;
-      padding: 0
+      padding: 0;
     }
 
     :root {
-      --navy: #0d1b3e;
-      --navy-mid: #183065;
-      --gold: #c9a227;
-      --light-bg: #f4f6fb;
-      --border: #dde3f0;
-      --input-bg: #eef1f9;
-      --text: #1e2d50;
-      --subtext: #6b7c9e;
+      --primary-blue: #094FA3;
+      --bright-blue: #4B95FA;
+      --light-blue: #91BDFC;
+      --primary-gold: #B99B68;
+      --bright-gold: #E4C082;
+      --light-gold: #F6EBD9;
+      --supporting-red: #ED1C24;
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --surface-alt: #F5F7FA;
+      --border: rgba(9, 79, 163, 0.15);
+      --text-primary: #032E64;
+      --text-secondary: #595F61;
+      --text-light: #7B8285;
+      --card-shadow: 0 2px 12px rgba(9, 79, 163, 0.08);
     }
 
     html,
     body {
       height: 100%;
-      font-family: 'DM Sans', sans-serif;
-      overflow: hidden
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      overflow: hidden;
     }
 
     .page {
       display: flex;
       height: 100vh;
-      width: 100vw
+      width: 100vw;
     }
 
+    /* LEFT PANEL */
     .left {
       flex: 0 0 60%;
       position: relative;
-      background: #1a2a1a;
+      background: var(--primary-blue);
       overflow: hidden;
     }
 
     .left-bg {
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.1) 40%, rgba(13, 20, 10, 0.65) 100%),
-        url( 'assets/image/uob.jpg') center/cover no-repeat ;
+      background: linear-gradient(to bottom, rgba(3, 47, 100, 0.733) 0%, rgba(9, 78, 163, 0.36) 100%),
+        url('assets/image/uob.jpg') center/cover no-repeat;
     }
 
     .left-bg-fallback {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, #1a2e1a 0%, #2d4a1e 30%, #3d5a28 55%, #c9a227 100%);
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--bright-blue) 100%);
       opacity: 0;
+      transition: opacity 0.5s;
     }
 
     .back-link {
@@ -72,22 +79,18 @@
       display: inline-flex;
       align-items: center;
       gap: .5rem;
-      color: rgba(255, 255, 255, 0.75);
+      color: rgba(255, 255, 255, 0.8);
       font-size: .78rem;
       font-weight: 600;
       letter-spacing: .08em;
       text-transform: uppercase;
       text-decoration: none;
       transition: color .18s;
+      z-index: 10;
     }
 
     .back-link:hover {
-      color: #fff
-    }
-
-    .back-link::before {
-      content: '←';
-      font-size: .9rem
+      color: #fff;
     }
 
     .left-content {
@@ -95,6 +98,7 @@
       bottom: 3rem;
       left: 2.5rem;
       right: 2.5rem;
+      z-index: 10;
     }
 
     .left-label {
@@ -102,13 +106,13 @@
       font-weight: 700;
       letter-spacing: .14em;
       text-transform: uppercase;
-      color: var(--gold);
+      color: var(--bright-gold);
       margin-bottom: .9rem;
     }
 
     .left-title {
-      font-family: 'Playfair Display', serif;
-      font-weight: 900;
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
       font-size: clamp(2rem, 3.5vw, 3rem);
       line-height: 1.1;
       color: #fff;
@@ -117,14 +121,15 @@
 
     .left-desc {
       font-size: .9rem;
-      color: rgba(255, 255, 255, 0.72);
+      color: rgba(255, 255, 255, 0.85);
       line-height: 1.65;
       max-width: 440px;
     }
 
+    /* RIGHT PANEL */
     .right {
       flex: 1;
-      background: #fff;
+      background: var(--bg);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -136,97 +141,81 @@
 
     .collapse-btn {
       position: absolute;
-      right: 0;
+      left: 0;
       top: 50%;
       transform: translateY(-50%);
       width: 22px;
       height: 50px;
-      background: #e8ecf4;
+      background: var(--surface-alt);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 6px 0 0 6px;
+      border-radius: 0 6px 6px 0;
       cursor: pointer;
-      color: #6b7c9e;
+      color: var(--text-secondary);
       font-size: .8rem;
-      border: 1px solid var(--border);
-      border-right: none;
+      border: 1.5px solid var(--border);
+      border-left: none;
+      transition: background 0.2s;
+    }
+
+    .collapse-btn:hover {
+      background: var(--light-blue);
+      color: #fff;
     }
 
     .form-wrap {
       width: 100%;
-      max-width: 360px
+      max-width: 380px;
     }
 
     .logo-area {
       text-align: center;
-      margin-bottom: 1.6rem
-    }
-
-    .logo-circle {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: var(--navy);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: .75rem;
-    }
-
-    .logo-circle svg {
-      width: 46px;
-      height: 46px
-    }
-
-    .logo-name {
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--navy);
+      margin-bottom: 1.6rem;
     }
 
     .form-title {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Instrument Serif', serif;
       font-size: 2rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: .35rem
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      text-align: center;
     }
 
     .field {
-      margin-bottom: 1.1rem
+      margin-bottom: 1.1rem;
     }
 
     .field label {
       display: block;
       font-size: .83rem;
       font-weight: 600;
-      color: var(--text);
-      margin-bottom: .45rem
+      color: var(--text-primary);
+      margin-bottom: .45rem;
     }
 
     .field-input-wrap {
-      position: relative
+      position: relative;
     }
 
     .field input {
       width: 100%;
-      background: var(--input-bg);
-      border: 1.5px solid transparent;
-      border-radius: 10px;
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
       padding: .75rem 1rem;
       font-size: .9rem;
-      font-family: 'DM Sans', sans-serif;
-      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
       outline: none;
-      transition: border-color .18s, background .18s;
+      transition: all 0.2s;
     }
 
     .field input:focus {
-      border-color: var(--navy-mid);
-      background: #fff
+      border-color: var(--primary-blue);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(9, 79, 163, 0.1);
     }
 
     .eye-btn {
@@ -237,56 +226,74 @@
       background: none;
       border: none;
       cursor: pointer;
-      color: var(--subtext);
+      color: var(--text-light);
       font-size: 1rem;
       padding: .25rem;
       transition: color .16s;
     }
 
     .eye-btn:hover {
-      color: var(--navy)
+      color: var(--primary-blue);
     }
 
-    .btn-signin {
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: .82rem;
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: -0.5rem;
+      margin-bottom: 1.2rem;
+      transition: color 0.2s;
+    }
+
+    .forgot-link:hover {
+      color: var(--bright-blue);
+      text-decoration: underline;
+    }
+
+    .btn-primary {
       width: 100%;
-      background: var(--navy);
+      background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
       color: #fff;
       border: none;
       padding: .85rem;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: .95rem;
-      font-weight: 700;
-      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: .5rem;
-      transition: background .18s, transform .12s;
-      margin-bottom: 1.4rem;
+      box-shadow: 0 3px 10px rgba(9, 79, 163, 0.25);
+      transition: all .2s;
+      margin-bottom: 1.5rem;
     }
 
-    .btn-signin:hover {
-      background: #1a2f5a;
-      transform: translateY(-1px)
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(9, 79, 163, 0.35);
     }
 
     .demo-box {
-      background: #f8f9fc;
-      border: 1px solid var(--border);
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
       border-radius: 12px;
       padding: 1rem;
-      max-height: 220px;
+      max-height: 240px;
       overflow-y: auto;
     }
 
     .demo-box::-webkit-scrollbar {
-      width: 4px
+      width: 4px;
     }
 
     .demo-box::-webkit-scrollbar-thumb {
       background: var(--border);
-      border-radius: 4px
+      border-radius: 4px;
     }
 
     .demo-label {
@@ -294,7 +301,7 @@
       font-weight: 700;
       letter-spacing: .1em;
       text-transform: uppercase;
-      color: var(--subtext);
+      color: var(--text-secondary);
       margin-bottom: .75rem;
     }
 
@@ -302,35 +309,37 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: .55rem .65rem;
+      padding: .6rem .75rem;
       border-radius: 8px;
       cursor: pointer;
-      transition: background .16s;
+      transition: all .16s;
       border: 1px solid transparent;
       margin-bottom: .4rem;
+      background: #fff;
     }
 
     .demo-row:last-child {
-      margin-bottom: 0
+      margin-bottom: 0;
     }
 
     .demo-row:hover {
-      background: #eef1f9;
-      border-color: var(--border)
+      background: #fff;
+      border-color: var(--primary-blue);
+      box-shadow: 0 2px 8px rgba(9, 79, 163, 0.08);
     }
 
     .demo-name {
       font-size: .83rem;
       font-weight: 600;
-      color: var(--navy)
+      color: var(--text-primary);
     }
 
     .demo-creds {
       font-size: .72rem;
-      color: var(--subtext);
-      font-family: monospace;
-      margin-left: .5rem;
+      color: var(--text-secondary);
+      font-family: 'Inter', monospace;
       display: block;
+      margin-top: 2px;
     }
 
     .demo-badge {
@@ -344,13 +353,13 @@
     }
 
     .badge-admin {
-      background: #fdf0c8;
-      color: #8a6a00
+      background: var(--light-gold);
+      color: #8a6a00;
     }
 
     .badge-dept {
-      background: #e0f0ff;
-      color: #1a5a9a
+      background: #eff6ff;
+      color: var(--primary-blue);
     }
 
     /* SUCCESS SCREEN */
@@ -358,7 +367,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: #183065;
+      background: var(--primary-blue);
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -366,20 +375,20 @@
     }
 
     .success-screen.show {
-      display: flex
+      display: flex;
     }
 
     .success-check {
       font-size: 3rem;
-      color: var(--navy);
+      color: var(--bright-gold);
       margin-bottom: 1.4rem;
       animation: popIn .4s cubic-bezier(.34, 1.56, .64, 1) both;
     }
 
     .success-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      font-weight: 700;
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
       color: #fff;
       margin-bottom: .5rem;
       animation: fadeUp .4s .2s ease both;
@@ -387,67 +396,151 @@
 
     .success-bar {
       width: 80px;
-      height: 2.5px;
-      background: var(--gold);
+      height: 3px;
+      background: var(--bright-gold);
       border-radius: 2px;
       animation: fadeUp .4s .3s ease both;
     }
 
-    @keyframes popIn {
-      from {
-        opacity: 0;
-        transform: scale(.4)
-      }
+    /* FORGOT PASSWORD MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 46, 100, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
 
-      to {
-        opacity: 1;
-        transform: scale(1)
-      }
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(9, 79, 163, 0.15);
+      border: 1.5px solid var(--border);
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      transform: translateY(20px) scale(0.95);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: var(--supporting-red);
+    }
+
+    .modal-desc {
+      font-size: .88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      background: var(--surface-alt);
+      color: var(--text-primary);
+      border: 1.5px solid var(--border);
+      padding: .75rem;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.75rem;
+    }
+
+    .btn-secondary:hover {
+      background: #e8ecf4;
+    }
+
+    /* UTILS */
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.4); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(16px)
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0)
-      }
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes shake {
-
-      0%,
-      100% {
-        transform: translateX(0)
-      }
-
-      20%,
-      60% {
-        transform: translateX(-6px)
-      }
-
-      40%,
-      80% {
-        transform: translateX(6px)
-      }
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
     }
 
     .shake {
-      animation: shake .35s ease
+      animation: shake .35s ease;
     }
 
     .error-msg {
       font-size: .78rem;
-      color: #dc2626;
+      color: var(--supporting-red);
       margin-top: .5rem;
-      display: none
+      display: none;
     }
 
     .error-msg.show {
-      display: block
+      display: block;
+    }
+
+    .success-msg {
+      font-size: .78rem;
+      color: var(--primary-blue);
+      font-weight: 600;
+      margin-top: .5rem;
+      display: none;
+    }
+
+    .success-msg.show {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .left { display: none; }
+      .right { padding: 2rem 1.5rem; }
+      .collapse-btn { display: none; }
     }
   </style>
 </head>
@@ -456,53 +549,82 @@
 
   <!-- SUCCESS SCREEN -->
   <div class="success-screen" id="successScreen">
-    <div class="success-check">✓</div>
-    <div class="success-name" id="successName">Welcome, Admin</div>
+    <div class="success-check"><i class="fas fa-check-circle"></i></div>
+    <div class="success-name" id="successName">Welcome</div>
     <div class="success-bar"></div>
+  </div>
+
+  <!-- FORGOT PASSWORD MODAL -->
+  <div class="modal-overlay" id="forgotPasswordModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Reset Password</h3>
+        <button class="modal-close" onclick="closeForgotPassword()">&times;</button>
+      </div>
+      <p class="modal-desc">Enter the email address associated with your account, and we'll send you a link to reset your password.</p>
+      
+      <div class="field">
+        <label for="resetEmail">Email Address</label>
+        <div class="field-input-wrap">
+          <input type="email" id="resetEmail" placeholder="name@uob.edu.bh" autocomplete="email" />
+        </div>
+        <div class="error-msg" id="resetError">Please enter a valid email address.</div>
+        <div class="success-msg" id="resetSuccess">Reset link sent! Please check your inbox.</div>
+      </div>
+
+      <button class="btn-primary" onclick="handleForgotPassword()">
+        <i class="fas fa-paper-plane"></i> Send Reset Link
+      </button>
+      <button class="btn-secondary" onclick="closeForgotPassword()">
+        Back to Sign In
+      </button>
+    </div>
   </div>
 
   <!-- MAIN PAGE -->
   <div class="page">
-
     <!-- LEFT: Campus photo -->
     <div class="left">
       <div class="left-bg"></div>
       <div class="left-bg-fallback"></div>
-      <a href="index.html" class="back-link">Back to Rankings Info</a>
+      <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Rankings Info
+      </a>
       <div class="left-content">
         <div class="left-label">Welcome to University of Bahrain</div>
         <h1 class="left-title">Rankings Data<br>Collection Portal</h1>
-        <p class="left-desc">The road to excellence starts at UoB. One centralised system for QS, THE, and GreenMetric
-          ranking submissions across all departments.</p>
+        <p class="left-desc">The road to excellence starts at UoB. One centralised system for QS, THE, and GreenMetric ranking submissions across all departments.</p>
       </div>
     </div>
 
     <!-- RIGHT: Sign in form -->
     <div class="right">
-      <div class="collapse-btn">›</div>
+      <div class="collapse-btn" onclick="window.location.href='index.html'">
+        <i class="fas fa-chevron-left"></i>
+      </div>
 
       <div class="form-wrap">
-
         <!-- Logo -->
-         <div style="text-align:center;margin-bottom:22px;animation:fadeUp 0.7s 0.85s ease both;opacity:0;">
+        <div class="logo-area">
           <img src="assets/image/UOB-new-logo.png" alt="University of Bahrain"
             onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
-            style="height:68px;width:auto;object-fit:contain;"/>
+            style="height:68px;width:auto;object-fit:contain;" />
           <div style="display:none;">
-            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--uob-blue),var(--uob-blue2));display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 6px 20px rgba(13,59,102,0.25);">
-              <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:#fff;">UoB</span>
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary-blue),var(--bright-blue));display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:0 6px 20px rgba(9,79,163,0.25);">
+              <span style="font-family:'Instrument Serif',serif;font-size:17px;font-weight:400;color:#fff;">UoB</span>
             </div>
           </div>
-          <div style="font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:var(--uob-blue);letter-spacing:0.8px;margin-top:7px;">UNIVERSITY OF BAHRAIN</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:13px;font-weight:400;color:var(--primary-blue);letter-spacing:0.5px;margin-top:8px;">UNIVERSITY OF BAHRAIN</div>
         </div>
 
         <!-- Title -->
-        <div class="form-title">Sign in</div>
+        <div class="form-title">Sign in to your account</div>
+
         <!-- Fields -->
         <div class="field">
           <label for="email">Email</label>
           <div class="field-input-wrap">
-            <input type="email" id="email" placeholder="Enter email" autocomplete="email" />
+            <input type="email" id="email" placeholder="Enter your email" autocomplete="email" />
           </div>
           <div class="error-msg" id="userError">Please enter your email.</div>
         </div>
@@ -511,19 +633,25 @@
           <label for="password">Password</label>
           <div class="field-input-wrap">
             <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
-            <button class="eye-btn" onclick="togglePwd()" type="button" id="eyeBtn">👁</button>
+            <button class="eye-btn" onclick="togglePwd()" type="button" id="eyeBtn">
+              <i class="fas fa-eye"></i>
+            </button>
           </div>
-          <div class="error-msg" id="passError">Incorrect username or password.</div>
+          <div class="error-msg" id="passError">Incorrect email or password.</div>
         </div>
 
+        <a href="#" class="forgot-link" onclick="openForgotPassword(); return false;">Forgot Password?</a>
+
         <!-- Sign In button -->
-        <button class="btn-signin" onclick="doSignIn()">Sign In &nbsp;</button>
+        <button class="btn-primary" onclick="doSignIn()">
+          Sign In <i class="fas fa-arrow-right"></i>
+        </button>
 
         <!-- Demo accounts -->
         <div class="demo-box">
           <div class="demo-label">Demo Accounts — Click to Fill</div>
 
-          <div class="demo-row" onclick="fillDemo('admin@uob.edu.bh','admin123','Dr. Esra Wali','admin')">
+          <div class="demo-row" onclick="fillDemo('admin@uob.edu.bh','admin123')">
             <div>
               <span class="demo-name">Dr. Esra Wali</span>
               <span class="demo-creds">admin@uob.edu.bh / admin123</span>
@@ -531,7 +659,7 @@
             <span class="demo-badge badge-admin">Admin</span>
           </div>
 
-          <div class="demo-row" onclick="fillDemo('uobfinancial72@gmail.com','financial123','Financial Resources','dept')">
+          <div class="demo-row" onclick="fillDemo('uobfinancial72@gmail.com','financial123')">
             <div>
               <span class="demo-name">Financial Resources</span>
               <span class="demo-creds">uobfinancial72@gmail.com / financial123</span>
@@ -539,8 +667,7 @@
             <span class="demo-badge badge-dept">Dept</span>
           </div>
 
-          <div class="demo-row"
-            onclick="fillDemo('communication@uob.edu.bh','communication123','Communication Directorate','dept')">
+          <div class="demo-row" onclick="fillDemo('communication@uob.edu.bh','communication123')">
             <div>
               <span class="demo-name">Communication Directorate</span>
               <span class="demo-creds">communication@uob.edu.bh / communication123</span>
@@ -548,8 +675,7 @@
             <span class="demo-badge badge-dept">Dept</span>
           </div>
 
-          <div class="demo-row"
-            onclick="fillDemo('admission@uob.edu.bh','admission123','Admission & Registration','dept')">
+          <div class="demo-row" onclick="fillDemo('admission@uob.edu.bh','admission123')">
             <div>
               <span class="demo-name">Admission &amp; Registration</span>
               <span class="demo-creds">admission@uob.edu.bh / admission123</span>
@@ -557,7 +683,7 @@
             <span class="demo-badge badge-dept">Dept</span>
           </div>
 
-          <div class="demo-row" onclick="fillDemo('alumni@uob.edu.bh','alumni123','Alumni Affairs Directorate','dept')">
+          <div class="demo-row" onclick="fillDemo('alumni@uob.edu.bh','alumni123')">
             <div>
               <span class="demo-name">Alumni Affairs Directorate</span>
               <span class="demo-creds">alumni@uob.edu.bh / alumni123</span>
@@ -565,16 +691,14 @@
             <span class="demo-badge badge-dept">Dept</span>
           </div>
 
-          <div class="demo-row" onclick="fillDemo('hr@uob.edu.bh','hr123','Human Resources Directorate','dept')">
+          <div class="demo-row" onclick="fillDemo('hr@uob.edu.bh','hr123')">
             <div>
               <span class="demo-name">Human Resources Directorate</span>
               <span class="demo-creds">hr@uob.edu.bh / hr123</span>
             </div>
             <span class="demo-badge badge-dept">Dept</span>
           </div>
-
         </div>
-
       </div>
     </div>
   </div>
@@ -584,23 +708,80 @@
       ? 'http://localhost:3002'
       : 'https://uob-rankings.onrender.com';
 
-    function selectRole(role) {
-      document.getElementById('roleAdmin').classList.toggle('active', role === 'admin');
-      document.getElementById('roleDept').classList.toggle('active', role === 'dept');
-    }
-
     function togglePwd() {
       const pwd = document.getElementById('password');
-      const btn = document.getElementById('eyeBtn');
-      if (pwd.type === 'password') { pwd.type = 'text'; btn.textContent = '🙈'; }
-      else { pwd.type = 'password'; btn.textContent = '👁'; }
+      const btnIcon = document.querySelector('#eyeBtn i');
+      if (pwd.type === 'password') { 
+        pwd.type = 'text'; 
+        btnIcon.classList.remove('fa-eye');
+        btnIcon.classList.add('fa-eye-slash');
+      } else { 
+        pwd.type = 'password'; 
+        btnIcon.classList.remove('fa-eye-slash');
+        btnIcon.classList.add('fa-eye');
+      }
     }
 
-    function fillDemo(email, password, name, role) {
+    function fillDemo(email, password) {
       document.getElementById('email').value = email;
       document.getElementById('password').value = password;
-      selectRole(role);
+      document.getElementById('userError').classList.remove('show');
+      document.getElementById('passError').classList.remove('show');
     }
+
+    // --- FORGOT PASSWORD MODAL LOGIC ---
+    function openForgotPassword() {
+      const modal = document.getElementById('forgotPasswordModal');
+      modal.classList.add('show');
+      document.getElementById('resetEmail').value = document.getElementById('email').value; // Pre-fill if exists
+      document.getElementById('resetError').classList.remove('show');
+      document.getElementById('resetSuccess').classList.remove('show');
+    }
+
+    function closeForgotPassword() {
+      document.getElementById('forgotPasswordModal').classList.remove('show');
+    }
+
+    async function handleForgotPassword() {
+      const email = document.getElementById('resetEmail').value.trim();
+      const errorEl = document.getElementById('resetError');
+      const successEl = document.getElementById('resetSuccess');
+
+      errorEl.classList.remove('show');
+      successEl.classList.remove('show');
+
+      if (!email || !email.includes('@')) {
+        errorEl.textContent = 'Please enter a valid email address.';
+        errorEl.classList.add('show');
+        return;
+      }
+
+      try {
+        // Replace with your actual forgot password endpoint
+        const res = await fetch(`${API_BASE}/api/auth/forgot-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        if (res.ok) {
+          successEl.textContent = 'If an account exists, a reset link has been sent.';
+          successEl.classList.add('show');
+          setTimeout(() => closeForgotPassword(), 2500);
+        } else {
+          const data = await res.json();
+          errorEl.textContent = data.error || 'Failed to send reset link. Please try again.';
+          errorEl.classList.add('show');
+        }
+      } catch (err) {
+        // Fallback for demo purposes if endpoint doesn't exist yet
+        console.warn('Forgot password API not reachable, showing mock success:', err);
+        successEl.textContent = 'Mock: Reset link sent! (Connect API endpoint)';
+        successEl.classList.add('show');
+        setTimeout(() => closeForgotPassword(), 2500);
+      }
+    }
+    // -------------------------------------
 
     async function doSignIn() {
       const email = document.getElementById('email').value.trim();
@@ -609,8 +790,14 @@
       document.getElementById('userError').classList.remove('show');
       document.getElementById('passError').classList.remove('show');
 
-      if (!email) { document.getElementById('userError').classList.add('show'); return; }
-      if (!password) { document.getElementById('passError').classList.add('show'); return; }
+      if (!email) { 
+        document.getElementById('userError').classList.add('show'); 
+        return; 
+      }
+      if (!password) { 
+        document.getElementById('passError').classList.add('show'); 
+        return; 
+      }
 
       try {
         const res = await fetch(`${API_BASE}/api/auth/login`, {
@@ -648,7 +835,13 @@
         document.getElementById('passError').classList.add('show');
       }
     }
+
+    // Close modal if clicking outside
+    document.getElementById('forgotPasswordModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeForgotPassword();
+      }
+    });
   </script>
 </body>
-
 </html>
