@@ -30,7 +30,7 @@ app.use('/api/questions', require('./routes/questions'));
 app.use('/api/submissions', require('./routes/submissions'));
 
 // New Reminder Route
-app.use('/api/reminders', reminderRoutes);
+app.use('/api/admin/reminders', reminderRoutes);
 
 // Error Handling (Must be last)
 app.use(notFoundHandler);
