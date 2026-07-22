@@ -1,1331 +1,518 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ranking Form – UoB Rankings Tracker</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
-    <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0
-        }
-
-        :root {
-            --navy: #0d1b3e;
-            --gold: #c9a227;
-            --teal: #0d9488;
-            --sidebar-w: 265px;
-            --header-h: 66px;
-            --light-bg: #f0f2f7;
-            --border: #e2e8f4;
-            --text: #1e2d50;
-            --subtext: #6b7c9e;
-            --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
-            --orange-bg: #fdf0d5;
-            --orange-text: #8a6000;
-            --orange-border: #f0c070;
-            --green: #16a34a;
-            --red: #dc2626;
-            --amber: #f59e0b;
-            --blue: #0891b2;
-        }
-
-        html,
-        body {
-            height: 100%;
-            font-family: 'DM Sans', sans-serif;
-            background: var(--light-bg);
-            color: var(--text);
-            overflow: hidden
-        }
-
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--header-h);
-            z-index: 200;
-            background: var(--navy);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem 0 0;
-            border-bottom: 2px solid var(--gold)
-        }
-
-        .header-brand {
-            display: flex;
-            align-items: center;
-            width: var(--sidebar-w);
-            flex-shrink: 0;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0 1.2rem;
-            height: 100%;
-            gap: .85rem;
-            text-decoration: none
-        }
-
-        .header-logo {
-            width: 52px;
-            height: 52px;
-            border-radius: 10px;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0
-        }
-
-        .header-logo svg {
-            width: 40px;
-            height: 40px
-        }
-
-        .brand-title {
-            font-weight: 700;
-            font-size: .95rem;
-            color: #fff;
-            line-height: 1.2
-        }
-
-        .brand-sub {
-            font-size: .62rem;
-            font-weight: 700;
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            color: var(--gold)
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem
-        }
-
-        .bell-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 1.1rem;
-            position: relative
-        }
-
-        .bell-dot {
-            position: absolute;
-            top: 6px;
-            right: 7px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #f59e0b;
-            border: 2px solid var(--navy)
-        }
-
-        .user-pill {
-            display: flex;
-            align-items: center;
-            gap: .7rem
-        }
-
-        .user-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #16a34a;
-            color: #fff;
-            font-size: .82rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0
-        }
-
-        .user-name {
-            font-size: .86rem;
-            font-weight: 700;
-            color: #fff;
-            line-height: 1.2
-        }
-
-        .user-role {
-            font-size: .72rem;
-            color: rgba(255, 255, 255, .6)
-        }
-
-        .layout {
-            display: flex;
-            margin-top: var(--header-h);
-            height: calc(100vh - var(--header-h))
-        }
-
-        .sidebar {
-            width: var(--sidebar-w);
-            flex-shrink: 0;
-            background: var(--navy);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            border-right: 1px solid rgba(255, 255, 255, 0.07)
-        }
-
-        .nav-section-label {
-            font-size: .62rem;
-            font-weight: 700;
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.35);
-            padding: .9rem 1.4rem .5rem
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: .85rem;
-            padding: .72rem 1.4rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: .86rem;
-            font-weight: 500;
-            border-left: 3px solid transparent;
-            text-decoration: none;
-            transition: background .16s, color .16s
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, .85)
-        }
-
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            font-weight: 600;
-            border-left-color: var(--gold)
-        }
-
-        .nav-sub {
-            padding-left: 2.6rem;
-            font-size: .82rem;
-            color: rgba(255, 255, 255, 0.5)
-        }
-
-        .nav-sub:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: rgba(255, 255, 255, .75)
-        }
-
-        .nav-sub.active {
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            font-weight: 600;
-            border-left-color: var(--gold)
-        }
-
-        .nav-icon {
-            font-size: 1rem;
-            width: 22px;
-            text-align: center;
-            flex-shrink: 0
-        }
-
-        .nav-spacer {
-            flex: 1
-        }
-
-        .nav-logout {
-            display: flex;
-            align-items: center;
-            gap: .85rem;
-            padding: .72rem 1.4rem;
-            color: #f87171;
-            font-size: .86rem;
-            font-weight: 600;
-            border-left: 3px solid transparent;
-            text-decoration: none;
-            transition: background .16s;
-            cursor: pointer
-        }
-
-        .nav-logout:hover {
-            background: rgba(248, 113, 113, 0.1)
-        }
-
-        .sidebar::-webkit-scrollbar {
-            width: 4px
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, .15);
-            border-radius: 4px
-        }
-
-        .main-wrap {
-            flex: 1;
-            display: flex;
-            overflow: hidden
-        }
-
-        .center {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.4rem 1.5rem 2rem;
-            overflow-x: hidden;
-        }
-
-        .questions-panel-wrap {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start
-        }
-
-        .sections-area {
-            flex: 1;
-            min-width: 0
-        }
-
-        .center::-webkit-scrollbar {
-            width: 5px
-        }
-
-        .center::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, .1);
-            border-radius: 4px
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: .4rem;
-            border: 1.5px solid var(--border);
-            background: #fff;
-            color: var(--text);
-            font-size: .8rem;
-            font-weight: 600;
-            padding: .45rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            margin-bottom: 1.1rem;
-            transition: background .14s;
-            font-family: 'DM Sans', sans-serif
-        }
-
-        .back-btn:hover {
-            background: #f5f7fc
-        }
-
-        .page-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--navy);
-            margin-bottom: .25rem
-        }
-
-        .page-sub {
-            font-size: .84rem;
-            color: var(--subtext);
-            margin-bottom: 1rem
-        }
-
-        .banner {
-            border-radius: 9px;
-            padding: .65rem 1rem;
-            font-size: .8rem;
-            line-height: 1.55;
-            margin-bottom: .65rem;
-            display: flex;
-            align-items: flex-start;
-            gap: .5rem
-        }
-
-        .banner-green {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #065f46
-        }
-
-        .banner-yellow {
-            background: #fefce8;
-            border: 1px solid #fde68a;
-            color: #713f12
-        }
-
-        .banner strong {
-            font-weight: 700
-        }
-
-        .subject-tabs {
-            display: none
-        }
-
-        .sec-block {
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            margin-bottom: 1.1rem
-        }
-
-        .sec-hdr {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: .85rem 1.3rem;
-            cursor: pointer;
-            transition: background .14s;
-            background: var(--sec-hdr-bg, #f8f8f8);
-            border-bottom: 1px solid var(--sec-hdr-border, var(--border));
-        }
-
-        .sec-hdr:hover {
-            background: var(--sec-hdr-bg, #f0f2f7);
-        }
-
-        .sec-hdr-title {
-            font-size: .95rem;
-            font-weight: 700;
-            color: var(--navy)
-        }
-
-        .sec-tog {
-            font-size: .78rem;
-            color: var(--subtext)
-        }
-
-        .subsec-hdr {
-            display: grid;
-            gap: 1.2rem;
-            background: var(--cycle-hdr-bg, var(--orange-bg));
-            padding: .55rem 1.3rem;
-            border-bottom: 1px solid var(--cycle-hdr-border, var(--orange-border));
-            align-items: center;
-            font-size: .72rem;
-            font-weight: 700;
-            color: var(--cycle-hdr-text, var(--orange-text))
-        }
-
-        .subsec-hdr div:not(:first-child) {
-            text-align: center;
-        }
-
-        .g-main {
-            grid-template-columns: 2fr 1.8fr .5fr .9fr .8fr
-        }
-
-        .g-wur {
-            grid-template-columns: 2.5fr 1.4fr .5fr .9fr .8fr
-        }
-
-        .g-eq {
-            grid-template-columns: 2fr .7fr .7fr .7fr .7fr .5fr .9fr .8fr
-        }
-
-        .eq-input {
-            width: 100%;
-            background: #f5f7fc;
-            border: 1.5px solid transparent;
-            border-radius: 6px;
-            padding: .3rem .4rem;
-            font-size: .78rem;
-            font-family: 'DM Sans', sans-serif;
-            color: var(--navy);
-            outline: none;
-            text-align: center;
-            transition: border-color .14s
-        }
-
-        .eq-input:focus {
-            border-color: var(--teal);
-            background: #fff
-        }
-
-        .q-row {
-            display: grid;
-            gap: 1.2rem;
-            padding: 1rem 1.3rem;
-            border-bottom: 1px solid #f0f2f8;
-            align-items: start;
-            cursor: pointer;
-            transition: background .12s;
-            min-width: 0;
-            overflow: hidden
-        }
-
-        .q-row:last-child {
-            border-bottom: none
-        }
-
-        .q-row:hover {
-            background: #fafbff
-        }
-
-        .q-row.selected {
-            background: #f0fdf4
-        }
-
-        .q-row.g-main {
-            grid-template-columns: 2fr 1.8fr .5fr .9fr .8fr
-        }
-
-        .q-row.g-wur {
-            grid-template-columns: 2.5fr 1.4fr .5fr .9fr .8fr
-        }
-
-        .q-row.g-eq {
-            grid-template-columns: 2fr .7fr .7fr .7fr .7fr .5fr .9fr .8fr
-        }
-
-        .q-row.g-eq div:not(:first-child) {
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .q-row.g-eq .status-cell.status-cell {
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .q-row.g-main>div:not(:first-child):not(:nth-child(2)),
-        .q-row.g-wur>div:not(:first-child):not(:nth-child(2)),
-        .q-row.g-gm>div:not(:first-child):not(:nth-child(2)) {
-            text-align: center;
-            justify-self: center;
-        }
-
-        .q-text {
-            font-size: .83rem;
-            color: var(--text);
-            line-height: 1.5;
-            word-break: break-word
-        }
-
-        .kpi-num {
-            flex-shrink: 0;
-            display: inline-block;
-            font-size: .9rem;
-            font-weight: 700;
-            padding: .12rem .42rem;
-            border-radius: 4px;
-            margin-right: .4rem;
-        }
-
-        .date-cell {
-            font-size: .74rem;
-            color: var(--subtext);
-            white-space: nowrap;
-            padding-top: .15rem
-        }
-
-        .status-cell {
-            text-align: center;
-            font-size: .95rem;
-            padding-top: .1rem
-        }
-
-        /* div-based rows (standard, equality, WUR) */
-        div.status-cell {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        td.status-cell {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .txt-input {
-            width: 100%;
-            background: #f5f7fc;
-            border: 1.5px solid transparent;
-            border-radius: 7px;
-            padding: .35rem .6rem;
-            font-size: .79rem;
-            font-family: 'DM Sans', sans-serif;
-            color: var(--navy);
-            outline: none;
-            transition: border-color .14s, background .14s
-        }
-
-        .txt-input:focus {
-            border-color: var(--teal);
-            background: #fff
-        }
-
-        .url-wrap {
-            display: flex;
-            gap: .4rem;
-            align-items: center;
-            margin-top: .35rem
-        }
-
-        .url-input {
-            flex: 1;
-            background: #f5f7fc;
-            border: 1.5px solid transparent;
-            border-radius: 7px;
-            padding: .35rem .55rem;
-            font-size: .76rem;
-            font-family: 'DM Sans', sans-serif;
-            color: var(--navy);
-            outline: none;
-            min-width: 0
-        }
-
-        .url-input:focus {
-            border-color: var(--teal);
-            background: #fff
-        }
-
-        .btn-open-link {
-            background: #e2e8f4;
-            color: var(--navy);
-            border: none;
-            padding: .3rem .65rem;
-            border-radius: 6px;
-            font-size: .72rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            font-family: 'DM Sans', sans-serif
-        }
-
-        .btn-open-link:hover {
-            background: #d0d8ec
-        }
-
-        .check-item {
-            display: flex;
-            align-items: flex-start;
-            gap: .45rem;
-            font-size: .8rem;
-            color: var(--text);
-            margin: .3rem 0;
-            line-height: 1.4
-        }
-
-        .check-item input {
-            accent-color: var(--teal);
-            width: 13px;
-            height: 13px;
-            margin-top: .15rem;
-            flex-shrink: 0;
-            cursor: pointer
-        }
-
-        .evidence-label {
-            font-size: .75rem;
-            color: var(--subtext);
-            margin: .4rem 0 .2rem
-        }
-
-        .legend {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.8rem;
-            margin-left: .55rem;
-            flex-wrap: wrap
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: .35rem;
-            font-size: .75rem;
-            color: var(--subtext);
-            font-weight: 500
-        }
-
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            border: 1.5px solid #d1d5db;
-            background: #fff
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-            border: 1.5px solid #d1d5db;
-            background: #fff;
-            vertical-align: middle;
-            flex-shrink: 0
-        }
-
-        .status-dot.submitted {
-            background: var(--blue);
-            border-color: var(--blue)
-        }
-
-        .status-dot.accepted {
-            background: var(--green);
-            border-color: var(--green)
-        }
-
-        .status-dot.pending {
-            background: var(--amber);
-            border-color: var(--amber)
-        }
-
-        .status-dot.rejected {
-            background: var(--red);
-            border-color: var(--red)
-        }
-
-        .status-dot.queried {
-            background: var(--blue);
-            border-color: var(--blue)
-        }
-
-        .btn-edit {
-            display: inline-flex;
-            align-items: center;
-            gap: .3rem;
-            border: 1.5px solid var(--teal);
-            background: #fff;
-            color: var(--teal);
-            font-size: .74rem;
-            font-weight: 600;
-            padding: .3rem .75rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
-            white-space: nowrap;
-            transition: all .12s
-        }
-
-        .btn-edit:hover {
-            background: var(--teal);
-            color: #fff
-        }
-
-        .btn-submit-row {
-            background: var(--teal);
-            color: #fff;
-            border: 1.5px solid var(--teal);
-            padding: .32rem .75rem;
-            border-radius: 6px;
-            font-size: .74rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
-            white-space: nowrap;
-            transition: background .14s
-        }
-
-        .btn-submit-row:hover {
-            background: #0f7a72
-        }
-
-        .action-cell {
-            display: flex;
-            align-items: flex-start;
-            padding-top: .05rem
-        }
-
-        .def-panel {
-            width: 268px;
-            flex-shrink: 0;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            box-shadow: var(--card-shadow);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: sticky;
-            top: 0;
-            max-height: calc(100vh - var(--header-h) - 2rem);
-            align-self: flex-start
-        }
-
-        .def-panel-hdr {
-            background: var(--teal);
-            color: #fff;
-            padding: .85rem 1rem;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: .5rem;
-            flex-shrink: 0
-        }
-
-        .def-panel-title {
-            font-size: .82rem;
-            font-weight: 700;
-            line-height: 1.4;
-            flex: 1
-        }
-
-        .def-close {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, .25);
-            border: none;
-            color: #fff;
-            font-size: .78rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0
-        }
-
-        .def-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0
-        }
-
-        .def-tab {
-            flex: 1;
-            text-align: center;
-            padding: .52rem;
-            font-size: .78rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--subtext);
-            border-bottom: 2.5px solid transparent;
-            transition: color .14s, border-color .14s
-        }
-
-        .def-tab.active {
-            color: var(--teal);
-            border-bottom-color: var(--teal)
-        }
-
-        .def-body {
-            padding: 1rem;
-            font-size: .79rem;
-            color: #3a4a6b;
-            line-height: 1.62;
-            overflow-y: auto;
-            flex: 1
-        }
-
-        .def-body p {
-            margin-bottom: .6rem
-        }
-
-        .def-body::-webkit-scrollbar {
-            width: 4px
-        }
-
-        .def-body::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, .1);
-            border-radius: 4px
-        }
-
-        .bottom-bar {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            left: var(--sidebar-w);
-            padding: .8rem 1.5rem;
-            display: flex;
-            justify-content: flex-end;
-            gap: .7rem;
-            background: linear-gradient(to top, #f0f2f7 55%, transparent);
-            pointer-events: none;
-            z-index: 100
-        }
-
-        .bottom-bar>* {
-            pointer-events: all
-        }
-
-        .btn-submit-all {
-            background: #16a34a;
-            color: #fff;
-            border: none;
-            padding: .6rem 1.6rem;
-            border-radius: 9px;
-            font-size: .86rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
-            transition: background .14s
-        }
-
-        .btn-submit-all:hover {
-            background: #15803d
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(13, 27, 62, .45);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(2px)
-        }
-
-        .modal-overlay.show {
-            display: flex
-        }
-
-        .modal {
-            background: #fff;
-            border-radius: 18px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 20px 60px rgba(13, 27, 62, .25);
-            overflow: hidden;
-            animation: mIn .25s cubic-bezier(.34, 1.56, .64, 1) both
-        }
-
-        @keyframes mIn {
-            from {
-                opacity: 0;
-                transform: scale(.92) translateY(16px)
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0)
-            }
-        }
-
-        .modal-hdr {
-            background: #0d9488;
-            color: #fff;
-            padding: 1.2rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: .75rem
-        }
-
-        .modal-hdr-title {
-            font-size: 1.05rem;
-            font-weight: 700
-        }
-
-        .modal-body {
-            padding: 1.5rem 1.6rem
-        }
-
-        .modal-desc {
-            font-size: .88rem;
-            color: #3a4a6b;
-            line-height: 1.65;
-            margin-bottom: 1.2rem
-        }
-
-        .modal-checks {
-            display: flex;
-            flex-direction: column;
-            gap: .65rem;
-            margin-bottom: 1rem
-        }
-
-        .modal-check-item {
-            background: #f0fdf9;
-            border: 1px solid #a7f3d0;
-            border-radius: 10px;
-            padding: .75rem 1rem;
-            display: flex;
-            align-items: flex-start;
-            gap: .75rem;
-            font-size: .84rem;
-            color: #065f46;
-            line-height: 1.5
-        }
-
-        .modal-check-tick {
-            color: #10b981;
-            font-weight: 700;
-            font-size: 1rem;
-            flex-shrink: 0
-        }
-
-        .modal-warning {
-            background: #fefce8;
-            border: 1px solid #fde68a;
-            border-radius: 10px;
-            padding: .75rem 1rem;
-            display: flex;
-            align-items: flex-start;
-            gap: .65rem;
-            font-size: .82rem;
-            color: #713f12;
-            line-height: 1.55;
-            margin-bottom: 1.4rem
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: .75rem;
-            justify-content: flex-end
-        }
-
-        .btn-cancel {
-            background: #fff;
-            color: #1e2d50;
-            border: 1.5px solid #e2e8f4;
-            padding: .65rem 1.5rem;
-            border-radius: 10px;
-            font-size: .88rem;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif
-        }
-
-        .btn-cancel:hover {
-            background: #f5f7fc
-        }
-
-        .btn-yes-submit {
-            background: #0d9488;
-            color: #fff;
-            border: none;
-            padding: .65rem 1.7rem;
-            border-radius: 10px;
-            font-size: .88rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif
-        }
-
-        .btn-yes-submit:hover {
-            background: #0f7a72
-        }
-
-        .num-inline-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: .5rem 1rem;
-            margin-top: .5rem
-        }
-
-        .num-inline-cell {
-            display: flex;
-            flex-direction: column;
-            min-width: 100px;
-            flex: 1
-        }
-
-        .num-inline-cell .evidence-label {
-            margin: 0 0 .2rem
-        }
-
-        .num-inline-cell .txt-input {
-            width: 100%
-        }
-
-        .gm-tab {
-            padding: .7rem .5rem;
-            text-align: center;
-            font-size: .78rem;
-            font-weight: 500;
-            color: var(--subtext);
-            background: #e8eaf0;
-            cursor: pointer;
-            border-right: 1px solid var(--border);
-            transition: background .14s, color .14s;
-            line-height: 1.4;
-        }
-
-        .gm-tab:last-child {
-            border-right: none;
-        }
-
-        .gm-tab span {
-            display: block;
-            font-size: .72rem;
-            font-weight: 600;
-            color: #9aa3b8;
-            margin-top: .15rem;
-        }
-
-        .gm-tab:hover {
-            background: #f0f2f7;
-            color: var(--text);
-        }
-
-        #impactTabsWrap .gm-tab.active {
-            background: #fff;
-            color: var(--tab-active-color, #c2410c);
-            font-weight: 700;
-            box-shadow: inset 0 -3px 0 var(--tab-active-color, #c2410c);
-        }
-
-        #impactTabsWrap .gm-tab.active span {
-            color: var(--tab-active-color, #c2410c);
-        }
-
-        #gmTabsWrap .gm-tab.active {
-            background: #fff;
-            color: var(--tab-active-color, #00695c);
-            font-weight: 700;
-            box-shadow: inset 0 -3px 0 var(--tab-active-color, #00695c);
-        }
-
-        #gmTabsWrap .gm-tab.active span {
-            color: var(--tab-active-color, #00695c);
-        }
-
-        .g-gm {
-            grid-template-columns: 2fr 1.6fr 1.2fr .5fr .9fr .8fr
-        }
-
-        .table-wrap {
-            overflow-x: hidden;
-        }
-
-        .table-wrap table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        .table-wrap table td {
-            padding: .72rem 1rem;
-            border-bottom: 2px solid #e2e8f4;
-            font-size: .82rem;
-            color: var(--text);
-            vertical-align: top;
-        }
-
-        .table-wrap table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table-wrap table tr:hover td {
-            background: #fafbff;
-            cursor: pointer;
-        }
-
-        .table-wrap table th {
-            font-size: .68rem;
-            font-weight: 700;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            padding: .5rem 1rem;
-            white-space: nowrap;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranking Form – UoB Rankings Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      /* =========================================
+         1. UNIFIED DESIGN SYSTEM PALETTE
+         ========================================= */
+      --primary-blue: #094FA3;
+      --bright-blue: #4B95FA;
+      --light-blue: #91BDFC;
+      --primary-gold: #B99B68;
+      --bright-gold: #E4C082;
+      --light-gold: #F6EBD9;
+      --supporting-red: #ED1C24;
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --surface-alt: #F5F7FA;
+      --border: rgba(9, 79, 163, 0.15);
+      --text-primary: #032E64;
+      --text-secondary: #595F61;
+      --text-light: #7B8285;
+      --card-shadow: 0 2px 12px rgba(9, 79, 163, 0.08);
+      --green: #16a34a;
+      --amber: #f59e0b;
+      --sidebar-w: 260px;
+      --header-h: 70px;
+      --font-serif: 'Instrument Serif', serif;
+      --font-sans: 'Inter', sans-serif;
+
+      /* =========================================
+         2. ALIASES FOR BACKWARD COMPATIBILITY
+         (Maps old variables to new palette so JS doesn't break)
+         ========================================= */
+      --navy: var(--text-primary);
+      --gold: var(--primary-gold);
+      --teal: var(--primary-blue);
+      --light-bg: var(--surface-alt);
+      --text: var(--text-primary);
+      --subtext: var(--text-secondary);
+      --blue: var(--bright-blue);
+      --red: var(--supporting-red);
+      --orange-bg: var(--light-gold);
+      --orange-text: #8a6a00;
+      --orange-border: var(--bright-gold);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font-sans);
+      background: var(--surface-alt);
+      color: var(--text-primary);
+      overflow: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+
+    /* =========================================
+       3. LAYOUT (Header, Sidebar, Main)
+       ========================================= */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 200;
+      background: var(--surface); display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; box-shadow: 0 2px 8px rgba(9, 79, 163, 0.1); border-bottom: 2px solid var(--primary-blue);
+    }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .header-right { display: flex; align-items: center; gap: 1.5rem; }
+    .header-logo { height: 50px; width: auto; object-fit: contain; }
+    
+    .menu-toggle {
+      width: 40px; height: 40px; border-radius: 8px; background: var(--surface-alt); border: none;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary-blue); font-size: 1.1rem; cursor: pointer; transition: all 0.2s;
+    }
+    .menu-toggle:hover { background: var(--light-blue); color: #fff; }
+
+    .user-pill {
+      display: flex; align-items: center; gap: .7rem; background: var(--surface-alt);
+      padding: 0.5rem 1.2rem; border-radius: 999px; border: 1.5px solid var(--border);
+    }
+    .user-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+      color: #fff; font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    .user-name { font-size: .85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+    .user-role { font-size: .68rem; color: var(--text-secondary); }
+
+    .layout { display: flex; margin-top: var(--header-h); height: calc(100vh - var(--header-h)); }
+
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: linear-gradient(180deg, var(--primary-blue) 0%, var(--bright-blue) 100%);
+      display: flex; flex-direction: column; overflow-y: auto;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .sidebar.collapsed { width: 70px; }
+
+    .nav-section { margin-top: 1.2rem; }
+    .nav-label {
+      font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5); padding: 0.6rem 1.2rem; white-space: nowrap; overflow: hidden;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: rgba(255, 255, 255, 0.8);
+      font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; 
+      transition: all .2s; cursor: pointer; white-space: nowrap; overflow: hidden;
+    }
+    .nav-item:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .nav-item.active { background: rgba(255, 255, 255, 0.18); color: #fff; font-weight: 600; border-left-color: var(--bright-gold); }
+    .nav-icon { font-size: 1.05rem; width: 22px; text-align: center; flex-shrink: 0; color: #fff; }
+    .nav-text { opacity: 1; transition: opacity 0.2s; }
+    .sidebar.collapsed .nav-text, .sidebar.collapsed .nav-label { opacity: 0; width: 0; display: none; }
+
+    .nav-spacer { flex: 1; }
+    .nav-logout {
+      display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: #fecaca;
+      font-size: .85rem; font-weight: 600; border-left: 3px solid transparent; 
+      cursor: pointer; transition: all .2s; white-space: nowrap; overflow: hidden;
+    }
+    .nav-logout:hover { background: rgba(248, 113, 113, 0.15); color: #fff; }
+    
+    .nav-children { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+    .nav-children.open { max-height: 500px; }
+    .nav-child {
+      display: flex; align-items: center; gap: .85rem; padding: .7rem 1.2rem .7rem 3rem; color: rgba(255, 255, 255, 0.7);
+      font-size: .82rem; font-weight: 500; border-left: 3px solid transparent; 
+      transition: all .16s; white-space: nowrap; overflow: hidden; text-decoration: none;
+    }
+    .nav-child:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .nav-child.active { color: #fff; font-weight: 600; border-left-color: var(--bright-gold); background: rgba(255, 255, 255, .15); }
+
+    .main-wrap { flex: 1; display: flex; overflow: hidden; }
+    .center { flex: 1; overflow-y: auto; padding: 1.5rem 2rem 2rem; overflow-x: hidden; }
+    
+    /* =========================================
+       4. FORM SPECIFIC COMPONENTS
+       ========================================= */
+    .back-btn {
+      display: inline-flex; align-items: center; gap: .4rem; border: 1.5px solid var(--border);
+      background: #fff; color: var(--text-primary); font-size: .8rem; font-weight: 600;
+      padding: .45rem 1rem; border-radius: 8px; cursor: pointer; text-decoration: none;
+      margin-bottom: 1.1rem; transition: background .14s;
+    }
+    .back-btn:hover { background: var(--surface-alt); }
+
+    .page-title { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 400; color: var(--text-primary); margin-bottom: .25rem; }
+    .page-sub { font-size: .85rem; color: var(--text-secondary); margin-bottom: 1rem; }
+
+    .banner {
+      border-radius: 9px; padding: .65rem 1rem; font-size: .8rem; line-height: 1.55;
+      margin-bottom: .65rem; display: flex; align-items: flex-start; gap: .5rem;
+    }
+    .banner-green { background: #f0fdf4; border: 1px solid #bbf7d0; color: #065f46; }
+    .banner-yellow { background: #fefce8; border: 1px solid #fde68a; color: #713f12; }
+    .banner strong { font-weight: 700; }
+
+    .legend {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; margin-left: .55rem; flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: .35rem; font-size: .75rem; color: var(--text-secondary); font-weight: 500;
+    }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid #d1d5db; background: #fff;
+    }
+
+    .questions-panel-wrap { display: flex; gap: 1rem; align-items: flex-start; }
+    .sections-area { flex: 1; min-width: 0; }
+
+    .sec-block {
+      background: #fff; border-radius: 12px; box-shadow: var(--card-shadow);
+      border: 1.5px solid var(--border); overflow: hidden; margin-bottom: 1.1rem;
+    }
+    .sec-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .85rem 1.3rem; cursor: pointer; transition: background .14s;
+      background: var(--surface-alt); border-bottom: 1.5px solid var(--border);
+    }
+    .sec-hdr:hover { background: #eef2f7; }
+    .sec-hdr-title { font-size: .95rem; font-weight: 700; color: var(--text-primary); }
+    .sec-tog { font-size: .78rem; color: var(--text-secondary); }
+
+    .subsec-hdr {
+      display: grid; gap: 1.2rem; background: var(--orange-bg);
+      padding: .55rem 1.3rem; border-bottom: 1.5px solid var(--orange-border);
+      align-items: center; font-size: .72rem; font-weight: 700; color: var(--orange-text);
+    }
+    .subsec-hdr div:not(:first-child) { text-align: center; }
+
+    .q-row {
+      display: grid; gap: 1.2rem; padding: 1rem 1.3rem; border-bottom: 1px solid #f0f2f8;
+      align-items: start; cursor: pointer; transition: background .12s; min-width: 0; overflow: hidden;
+    }
+    .q-row:last-child { border-bottom: none; }
+    .q-row:hover { background: #fafbff; }
+    .q-row.selected { background: #f0fdf4; }
+    
+    .q-text { font-size: .83rem; color: var(--text-primary); line-height: 1.5; word-break: break-word; }
+    .kpi-num {
+      flex-shrink: 0; display: inline-block; font-size: .9rem; font-weight: 700;
+      padding: .12rem .42rem; border-radius: 4px; margin-right: .4rem; background: var(--light-gold); color: var(--orange-text);
+    }
+    .date-cell { font-size: .74rem; color: var(--text-secondary); white-space: nowrap; padding-top: .15rem; }
+    .status-cell { text-align: center; font-size: .95rem; padding-top: .1rem; display: flex; flex-direction: column; align-items: center; }
+    
+    .status-dot {
+      width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+      border: 1.5px solid #d1d5db; background: #fff; vertical-align: middle; flex-shrink: 0;
+    }
+    .status-dot.submitted { background: var(--blue); border-color: var(--blue); }
+    .status-dot.accepted { background: var(--green); border-color: var(--green); }
+    .status-dot.pending { background: var(--amber); border-color: var(--amber); }
+    .status-dot.rejected { background: var(--red); border-color: var(--red); }
+    .status-dot.queried { background: var(--blue); border-color: var(--blue); }
+
+    .txt-input, .url-input, .eq-input {
+      width: 100%; background: var(--surface-alt); border: 1.5px solid transparent;
+      border-radius: 7px; padding: .35rem .6rem; font-size: .79rem; font-family: var(--font-sans);
+      color: var(--text-primary); outline: none; transition: border-color .14s, background .14s;
+    }
+    .txt-input:focus, .url-input:focus, .eq-input:focus { border-color: var(--primary-blue); background: #fff; }
+    .eq-input { text-align: center; padding: .3rem .4rem; font-size: .78rem; }
+
+    .evidence-label { font-size: .75rem; color: var(--text-secondary); margin: .4rem 0 .2rem; }
+    .check-item { display: flex; align-items: flex-start; gap: .45rem; font-size: .8rem; color: var(--text-primary); margin: .3rem 0; line-height: 1.4; }
+    .check-item input { accent-color: var(--primary-blue); width: 13px; height: 13px; margin-top: .15rem; flex-shrink: 0; cursor: pointer; }
+
+    .btn-edit {
+      display: inline-flex; align-items: center; gap: .3rem; border: 1.5px solid var(--primary-blue);
+      background: #fff; color: var(--primary-blue); font-size: .74rem; font-weight: 600;
+      padding: .3rem .75rem; border-radius: 6px; cursor: pointer; white-space: nowrap; transition: all .12s;
+    }
+    .btn-edit:hover { background: var(--primary-blue); color: #fff; }
+    .btn-submit-row {
+      background: var(--green); color: #fff; border: 1.5px solid var(--green);
+      padding: .32rem .75rem; border-radius: 6px; font-size: .74rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap; transition: background .14s;
+    }
+    .btn-submit-row:hover { background: #15803d; }
+    .action-cell { display: flex; align-items: flex-start; padding-top: .05rem; }
+
+    /* Definition Panel */
+    .def-panel {
+      width: 280px; flex-shrink: 0; background: #fff; border: 1.5px solid var(--border);
+      border-radius: 12px; box-shadow: var(--card-shadow); display: flex; flex-direction: column;
+      overflow: hidden; position: sticky; top: 0; max-height: calc(100vh - var(--header-h) - 2rem); align-self: flex-start;
+    }
+    .def-panel-hdr {
+      background: var(--primary-blue); color: #fff; padding: .85rem 1rem;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; flex-shrink: 0;
+    }
+    .def-panel-title { font-size: .82rem; font-weight: 700; line-height: 1.4; flex: 1; }
+    .def-close {
+      width: 22px; height: 22px; border-radius: 50%; background: rgba(255, 255, 255, .25);
+      border: none; color: #fff; font-size: .78rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .def-tabs { display: flex; border-bottom: 1.5px solid var(--border); flex-shrink: 0; }
+    .def-tab {
+      flex: 1; text-align: center; padding: .52rem; font-size: .78rem; font-weight: 600;
+      cursor: pointer; color: var(--text-secondary); border-bottom: 2.5px solid transparent; transition: color .14s, border-color .14s;
+    }
+    .def-tab.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+    .def-body { padding: 1rem; font-size: .79rem; color: #3a4a6b; line-height: 1.62; overflow-y: auto; flex: 1; }
+    .def-body p { margin-bottom: .6rem; }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      position: fixed; bottom: 0; right: 0; left: var(--sidebar-w); padding: .8rem 1.5rem;
+      display: flex; justify-content: flex-end; gap: .7rem;
+      background: linear-gradient(to top, var(--surface-alt) 55%, transparent); pointer-events: none; z-index: 100;
+    }
+    .bottom-bar > * { pointer-events: all; }
+    .btn-submit-all {
+      background: var(--green); color: #fff; border: none; padding: .6rem 1.6rem;
+      border-radius: 9px; font-size: .86rem; font-weight: 700; cursor: pointer; transition: background .14s;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+    .btn-submit-all:hover { background: #15803d; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(3, 46, 100, .45); z-index: 1000;
+      display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px);
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: #fff; border-radius: 12px; width: 100%; max-width: 480px;
+      box-shadow: 0 20px 60px rgba(9, 79, 163, .25); overflow: hidden; border: 1.5px solid var(--border);
+    }
+    
+    /* Tabs for GM / Impact */
+    .gm-tab {
+      padding: .7rem .5rem; text-align: center; font-size: .78rem; font-weight: 500;
+      color: var(--text-secondary); background: #e8eaf0; cursor: pointer;
+      border-right: 1px solid var(--border); transition: background .14s, color .14s; line-height: 1.4;
+    }
+    .gm-tab:last-child { border-right: none; }
+    .gm-tab span { display: block; font-size: .72rem; font-weight: 600; color: #9aa3b8; margin-top: .15rem; }
+    .gm-tab:hover { background: #f0f2f7; color: var(--text-primary); }
+    #impactTabsWrap .gm-tab.active, #gmTabsWrap .gm-tab.active {
+      background: #fff; color: var(--tab-active-color, var(--primary-blue)); font-weight: 700;
+      box-shadow: inset 0 -3px 0 var(--tab-active-color, var(--primary-blue));
+    }
+    #impactTabsWrap .gm-tab.active span, #gmTabsWrap .gm-tab.active span { color: var(--tab-active-color, var(--primary-blue)); }
+
+    /* Grid Layouts (Preserved for JS) */
+    .g-main { grid-template-columns: 2fr 1.8fr .5fr .9fr .8fr; }
+    .g-wur { grid-template-columns: 2.5fr 1.4fr .5fr .9fr .8fr; }
+    .g-eq { grid-template-columns: 2fr .7fr .7fr .7fr .7fr .5fr .9fr .8fr; }
+    .g-gm { grid-template-columns: 2fr 1.6fr 1.2fr .5fr .9fr .8fr; }
+    
+    .q-row.g-main > div:not(:first-child):not(:nth-child(2)),
+    .q-row.g-wur > div:not(:first-child):not(:nth-child(2)),
+    .q-row.g-gm > div:not(:first-child):not(:nth-child(2)) { text-align: center; justify-self: center; }
+    .q-row.g-eq div:not(:first-child) { text-align: center; display: flex; justify-content: center; align-items: flex-start; }
+
+    .table-wrap { overflow-x: hidden; }
+    .table-wrap table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .table-wrap table td { padding: .72rem 1rem; border-bottom: 2px solid #e2e8f4; font-size: .82rem; color: var(--text-primary); vertical-align: top; }
+    .table-wrap table tr:last-child td { border-bottom: none; }
+    .table-wrap table tr:hover td { background: #fafbff; cursor: pointer; }
+    .table-wrap table th { font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: .5rem 1rem; white-space: nowrap; }
+
+    @media (max-width: 1024px) {
+      .def-panel { display: none !important; }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed; left: 0; top: var(--header-h); height: calc(100vh - var(--header-h));
+        z-index: 150; transform: translateX(-100%); transition: transform 0.3s;
+      }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .bottom-bar { left: 0; }
+    }
+  </style>
 </head>
-
 <body>
 
-    <header class="header">
-        <a class="header-brand" href="dashboard-dept.html">
-            <div class="header-logo">
-                <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="20" cy="20" r="18" fill="none" stroke="#c9a227" stroke-width="1.6" />
-                    <polygon points="20,6 23,15 32,15 25,20 28,29 20,24 12,29 15,20 8,15 17,15" fill="#c9a227" />
-                </svg>
-            </div>
-            <div>
-                <div class="brand-title">Rankings Tracker</div>
-                <div class="brand-sub">Department Portal</div>
-            </div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="header-right">
+      <img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="header-logo">
+      <div class="user-pill">
+        <div class="user-avatar" id="userAvatar">IT</div>
+        <div class="user-info">
+          <div class="user-name" id="userName">Department User</div>
+          <div class="user-role">Department</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-section">
+        <div class="nav-label">Main</div>
+        <a class="nav-item" href="dashboard-dept.html">
+          <i class="fas fa-chart-line nav-icon"></i><span class="nav-text">Dashboard</span>
         </a>
-        <div class="header-right">
-            <button class="bell-btn">🔔<span class="bell-dot"></span></button>
-            <div class="user-pill">
-                <div class="user-avatar" id="userAvatar">IT</div>
-                <div>
-                    <div class="user-name" id="userName">User</div>
-                    <div class="user-role">Department User</div>
-                </div>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-label">Ranking Cycles</div>
+        <div class="nav-item" style="padding-right:.5rem" onclick="toggleCycles()">
+          <i class="fas fa-trophy nav-icon"></i><span class="nav-text">My Forms</span>
+          <i class="fas fa-chevron-down" style="margin-left:auto;font-size:.65rem;transition:transform 0.3s" id="cyclesArrow"></i>
+        </div>
+        <div class="nav-children open" id="navCycles">
+          <a class="nav-child" href="ranking-forms.html">
+            <i class="fas fa-clipboard-list nav-icon" style="font-size:.9rem"></i><span class="nav-text">All Assigned Forms</span>
+          </a>
+          <a class="nav-child" id="nav-sustainability" href="ranking-forms.html">
+            <i class="fas fa-leaf nav-icon" style="font-size:.9rem"></i><span class="nav-text">QS Sustainability</span>
+          </a>
+          <a class="nav-child" id="nav-qs-wur" href="ranking-forms.html">
+            <i class="fas fa-award nav-icon" style="font-size:.9rem"></i><span class="nav-text">QS WUR</span>
+          </a>
+          <a class="nav-child" id="nav-the-wur" href="ranking-forms.html">
+            <i class="fas fa-chart-bar nav-icon" style="font-size:.9rem"></i><span class="nav-text">THE WUR</span>
+          </a>
+          <a class="nav-child" id="nav-the-impact" href="ranking-forms.html">
+            <i class="fas fa-bullseye nav-icon" style="font-size:.9rem"></i><span class="nav-text">THE Impact</span>
+          </a>
+          <a class="nav-child" id="nav-greenmetric" href="ranking-forms.html">
+            <i class="fas fa-seedling nav-icon" style="font-size:.9rem"></i><span class="nav-text">GreenMetric</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-label">Monitoring</div>
+        <a class="nav-item" href="progress.html">
+          <i class="fas fa-chart-area nav-icon"></i><span class="nav-text">Progress</span>
+        </a>
+      </div>
+
+      <div class="nav-spacer"></div>
+      <a class="nav-logout" href="login.html" id="logoutBtn">
+        <i class="fas fa-sign-out-alt nav-icon"></i><span class="nav-text">Logout</span>
+      </a>
+    </aside>
+
+    <!-- MAIN WRAP -->
+    <div class="main-wrap">
+      <div class="center">
+        <a href="ranking-forms.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to My Ranking Forms</a>
+        <div class="page-title" id="pageTitle">Loading...</div>
+        <div class="page-sub" id="pageSub"></div>
+        
+        <div class="banner banner-green" id="deadlineBanner"></div>
+        <div class="banner banner-yellow">✦ All submissions are taken to be a true confirmation of that data point by the university. Indicators marked ↔ will automatically update if they also appear in other ranking forms.</div>
+        
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--blue);border-color:var(--blue)"></span> Submitted <span id="count-submitted" style="font-weight:700;color:var(--blue)"></span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--green);border-color:var(--green)"></span> Accepted <span id="count-accepted" style="font-weight:700;color:var(--green)"></span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--amber);border-color:var(--amber)"></span> Pending <span id="count-pending" style="font-weight:700;color:var(--amber)"></span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--red);border-color:var(--red)"></span> Rejected <span id="count-rejected" style="font-weight:700;color:var(--red)"></span></div>
+          <div class="legend-item"><span class="legend-dot"></span> No Status <span id="count-nostatus" style="font-weight:700;color:var(--subtext)"></span></div>
+        </div>
+
+        <!-- GreenMetric Category Tabs -->
+        <div id="gmTabsWrap" style="display:none;margin-bottom:1.1rem">
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:#e8eaf0">
+            <div class="gm-tab active" onclick="switchGMTab(this,'SI')" data-cat="SI">Setting & Infrastructure <span>(SI)</span></div>
+            <div class="gm-tab" onclick="switchGMTab(this,'EC')" data-cat="EC">Energy & Climate Change <span>(EC)</span></div>
+            <div class="gm-tab" onclick="switchGMTab(this,'WS')" data-cat="WS">Waste <span>(WS)</span></div>
+            <div class="gm-tab" onclick="switchGMTab(this,'WR')" data-cat="WR">Water <span>(WR)</span></div>
+            <div class="gm-tab" onclick="switchGMTab(this,'TR')" data-cat="TR">Transportation <span>(TR)</span></div>
+            <div class="gm-tab" onclick="switchGMTab(this,'ED')" data-cat="ED">Education & Research <span>(ED)</span></div>
+            <div class="gm-tab" onclick="switchGMTab(this,'GD')" data-cat="GD">Governance & Digitalization <span>(GD)</span></div>
+          </div>
+        </div>
+
+        <!-- THE Impact SDG Tabs -->
+        <div id="impactTabsWrap" style="display:none;margin-bottom:1.1rem">
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:#e8eaf0">
+            <div class="gm-tab active" onclick="switchImpactTab(this,'SDG3: Good Health and Wellbeing')">SDG 3<span>Good Health</span></div>
+            <div class="gm-tab" onclick="switchImpactTab(this,'SDG4: Quality Education')">SDG 4<span>Quality Education</span></div>
+            <div class="gm-tab" onclick="switchImpactTab(this,'SDG5: Gender Equality')">SDG 5<span>Gender Equality</span></div>
+            <div class="gm-tab" onclick="switchImpactTab(this,'SDG7: Affordable and Clean Energy')">SDG 7<span>Clean Energy</span></div>
+            <div class="gm-tab" onclick="switchImpactTab(this,'SDG8: Decent Work and Economic Growth')">SDG 8<span>Decent Work</span></div>
+            <div class="gm-tab" onclick="switchImpactTab(this,'SDG13: Climate Action')">SDG 13<span>Climate Action</span></div>
+            <div class="gm-tab" onclick="switchImpactTab(this,'SDG17: Partnerships for the Goals')">SDG 17<span>Partnerships</span></div>
+          </div>
+        </div>
+
+        <div class="questions-panel-wrap">
+          <div id="sectionsContainer" class="sections-area">
+            <div style="text-align:center;padding:3rem;color:var(--subtext)">Loading your assigned questions...</div>
+          </div>
+          
+          <div class="def-panel" style="display:none">
+            <div class="def-panel-hdr">
+              <div class="def-panel-title" id="defTitle">Click any question to see its definition</div>
+              <button class="def-close" onclick="this.closest('.def-panel').style.display='none'">✕</button>
             </div>
-        </div>
-    </header>
-
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="nav-section-label">Navigation</div>
-            <a class="nav-item" href="dashboard-dept.html"><span class="nav-icon">🏠</span> Home</a>
-            <a class="nav-item" href="ranking-forms.html"><span class="nav-icon">📋</span> My Ranking Forms</a>
-            <a class="nav-item nav-sub" id="nav-sustainability" href="ranking-forms.html"><span
-                    class="nav-icon">🌿</span>
-                QS Sustainability</a>
-            <a class="nav-item nav-sub" id="nav-qs-wur" href="ranking-forms.html"><span class="nav-icon">🏆</span> QS
-                WUR</a>
-            <a class="nav-item nav-sub" id="nav-the-wur" href="ranking-forms.html"><span class="nav-icon">📊</span> THE
-                WUR</a>
-            <a class="nav-item nav-sub" id="nav-the-impact" href="ranking-forms.html"><span class="nav-icon">🎯</span>
-                THE Impact</a>
-            <a class="nav-item nav-sub" id="nav-greenmetric" href="ranking-forms.html"><span class="nav-icon">🌱</span>
-                Green Metric</a>
-            <a class="nav-item" href="progress.html"><span class="nav-icon">📈</span> Progress</a>
-            <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
-            <div class="nav-spacer"></div>
-            <div class="nav-logout" onclick="logout()"><span class="nav-icon">🚪</span> Logout</div>
-        </aside>
-
-        <div class="main-wrap">
-            <div class="center">
-                <a href="ranking-forms.html" class="back-btn">Back to My Ranking Forms</a>
-                <div class="page-title" id="pageTitle">Loading...</div>
-                <div class="page-sub" id="pageSub"></div>
-                <div class="banner banner-green" id="deadlineBanner"></div>
-                <div class="banner banner-yellow">✦ All submissions are taken to be a true confirmation of that data
-                    point by the university. Indicators marked ↔ will automatically update if they also appear in other
-                    ranking forms.</div>
-                <div class="legend">
-                    <div class="legend-item"><span class="legend-dot"
-                            style="background:var(--blue);border-color:var(--blue)"></span> Submitted <span
-                            id="count-submitted" style="font-weight:700;color:var(--blue)"></span></div>
-                    <div class="legend-item"><span class="legend-dot"
-                            style="background:var(--green);border-color:var(--green)"></span> Accepted <span
-                            id="count-accepted" style="font-weight:700;color:var(--green)"></span></div>
-                    <div class="legend-item"><span class="legend-dot"
-                            style="background:var(--amber);border-color:var(--amber)"></span> Pending <span
-                            id="count-pending" style="font-weight:700;color:var(--amber)"></span></div>
-                    <div class="legend-item"><span class="legend-dot"
-                            style="background:var(--red);border-color:var(--red)"></span> Rejected <span
-                            id="count-rejected" style="font-weight:700;color:var(--red)"></span></div>
-                    <div class="legend-item"><span class="legend-dot"></span> No Status <span id="count-nostatus"
-                            style="font-weight:700;color:var(--subtext)"></span></div>
-                </div>
-
-                <!-- GreenMetric Category Tabs -->
-                <div id="gmTabsWrap" style="display:none;margin-bottom:1.1rem">
-                    <div
-                        style="display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#e8eaf0">
-                        <div class="gm-tab active" onclick="switchGMTab(this,'SI')" data-cat="SI">
-                            Setting &amp; Infrastructure <span>(SI)</span>
-                        </div>
-                        <div class="gm-tab" onclick="switchGMTab(this,'EC')" data-cat="EC">
-                            Energy &amp; Climate Change <span>(EC)</span>
-                        </div>
-                        <div class="gm-tab" onclick="switchGMTab(this,'WS')" data-cat="WS">
-                            Waste <span>(WS)</span>
-                        </div>
-                        <div class="gm-tab" onclick="switchGMTab(this,'WR')" data-cat="WR">
-                            Water <span>(WR)</span>
-                        </div>
-                        <div class="gm-tab" onclick="switchGMTab(this,'TR')" data-cat="TR">
-                            Transportation <span>(TR)</span>
-                        </div>
-                        <div class="gm-tab" onclick="switchGMTab(this,'ED')" data-cat="ED">
-                            Education &amp; Research <span>(ED)</span>
-                        </div>
-                        <div class="gm-tab" onclick="switchGMTab(this,'GD')" data-cat="GD">
-                            Governance &amp; Digitalization <span>(GD)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- THE Impact SDG Tabs -->
-                <div id="impactTabsWrap" style="display:none;margin-bottom:1.1rem">
-                    <div
-                        style="display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#e8eaf0">
-                        <div class="gm-tab active" onclick="switchImpactTab(this,'SDG3: Good Health and Wellbeing')">SDG
-                            3<span>Good Health</span></div>
-                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG4: Quality Education')">SDG 4<span>Quality
-                                Education</span></div>
-                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG5: Gender Equality')">SDG 5<span>Gender
-                                Equality</span></div>
-                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG7: Affordable and Clean Energy')">SDG
-                            7<span>Clean Energy</span></div>
-                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG8: Decent Work and Economic Growth')">SDG
-                            8<span>Decent Work</span></div>
-                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG13: Climate Action')">SDG 13<span>Climate
-                                Action</span></div>
-                        <div class="gm-tab" onclick="switchImpactTab(this,'SDG17: Partnerships for the Goals')">SDG
-                            17<span>Partnerships</span></div>
-                    </div>
-                </div>
-
-                <div class="questions-panel-wrap">
-                    <div id="sectionsContainer" class="sections-area">
-                        <div style="text-align:center;padding:3rem;color:var(--subtext)">Loading your assigned
-                            questions...</div>
-                    </div>
-
-                    <div class="def-panel" style="display:none">
-                        <div class="def-panel-hdr">
-                            <div class="def-panel-title" id="defTitle">Click any question to see its definition</div>
-                            <button class="def-close"
-                                onclick="this.closest('.def-panel').style.display='none'">✕</button>
-                        </div>
-                        <div class="def-tabs">
-                            <div class="def-tab active" onclick="switchTab(this,'def')">Definition</div>
-                            <div class="def-tab" onclick="switchTab(this,'hist')">History</div>
-                        </div>
-                        <div class="def-body" id="defBody">Select a question row to see its definition and guidance
-                            here.</div>
-                    </div>
-                </div>
+            <div class="def-tabs">
+              <div class="def-tab active" onclick="switchTab(this,'def')">Definition</div>
+              <div class="def-tab" onclick="switchTab(this,'hist')">History</div>
             </div>
+            <div class="def-body" id="defBody">Select a question row to see its definition and guidance here.</div>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- SUBMIT MODAL -->
-        <div class="modal-overlay" id="submitModal" onclick="closeModalOnOverlay(event)">
-            <div class="modal confirm-modal" style="max-width:520px">
-                <div style="padding:2rem 1.8rem 1.2rem;text-align:center">
-                    <div style="font-size:3rem;margin-bottom:1rem">📋</div>
-                    <div
-                        style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:.6rem">
-                        Confirm Submission</div>
-                    <div style="font-size:.84rem;color:var(--subtext);line-height:1.6;margin-bottom:1.2rem">You are
-                        about to submit all your answers. Please confirm that all data is accurate and complete.</div>
-                    <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem;text-align:left">
-                        <div
-                            style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
-                            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>All data
-                            entered has been verified against official institutional records.
-                        </div>
-                        <div
-                            style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
-                            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>Any URLs
-                            provided lead to publicly accessible, permanent pages.
-                        </div>
-                        <div
-                            style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
-                            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>Supporting
-                            evidence accurately reflects your institution's current practices.
-                        </div>
-                    </div>
-                    <div
-                        style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.65rem;font-size:.82rem;color:#713f12;line-height:1.55;margin-bottom:.4rem">
-                        <span>⚠️</span>Submissions are taken as a true confirmation of the data by the university.
-                    </div>
-                </div>
-                <div style="display:flex;justify-content:center;gap:.75rem;padding:0 1.8rem 1.8rem">
-                    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-                    <button class="btn-yes-submit" onclick="submitAll()">Yes, Submit All</button>
-                </div>
-            </div>
+  <!-- SUBMIT MODAL -->
+  <div class="modal-overlay" id="submitModal" onclick="closeModalOnOverlay(event)">
+    <div class="modal" style="max-width:520px">
+      <div style="padding:2rem 1.8rem 1.2rem;text-align:center">
+        <div style="font-size:3rem;margin-bottom:1rem">📋</div>
+        <div style="font-family:var(--font-serif);font-size:1.15rem;font-weight:400;color:var(--text-primary);margin-bottom:.6rem">Confirm Submission</div>
+        <div style="font-size:.84rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1.2rem">You are about to submit all your answers. Please confirm that all data is accurate and complete.</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem;text-align:left">
+          <div style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
+            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>All data entered has been verified against official institutional records.
+          </div>
+          <div style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
+            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>Any URLs provided lead to publicly accessible, permanent pages.
+          </div>
+          <div style="background:#f0fdf9;border:1px solid #a7f3d0;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.75rem;font-size:.84rem;color:#065f46;line-height:1.5">
+            <span style="color:#10b981;font-weight:700;font-size:1rem;flex-shrink:0">✓</span>Supporting evidence accurately reflects your institution's current practices.
+          </div>
         </div>
+        <div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:.75rem 1rem;display:flex;align-items:flex-start;gap:.65rem;font-size:.82rem;color:#713f12;line-height:1.55;margin-bottom:.4rem">
+          <span>⚠️</span>Submissions are taken as a true confirmation of the data by the university.
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:.75rem;padding:0 1.8rem 1.8rem">
+        <button class="btn-edit" onclick="closeModal()" style="padding:.65rem 1.5rem;font-size:.88rem">Cancel</button>
+        <button class="btn-submit-row" onclick="submitAll()" style="padding:.65rem 1.7rem;font-size:.88rem">Yes, Submit All</button>
+      </div>
+    </div>
+  </div>
 
-        <div class="bottom-bar">
-            <button class="btn-submit-all" onclick="openModal()">Submit All</button>
-        </div>
+  <div class="bottom-bar">
+    <button class="btn-submit-all" onclick="openModal()">Submit All</button>
+  </div>
 
         <script>
             const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'

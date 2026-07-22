@@ -1,1130 +1,540 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Department Dashboard – UoB Rankings Tracker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
+  <!-- Unified Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0
-    }
-
+    /* =========================================
+       1. CSS VARIABLES (Unified Admin/Dept)
+       ========================================= */
     :root {
-      --navy: #0d1b3e;
-      --navy-mid: #162248;
-      --gold: #c9a227;
-      --sidebar-w: 265px;
-      --header-h: 66px;
-      --light-bg: #f0f2f7;
-      --white: #fff;
-      --border: #e2e8f4;
-      --text: #1e2d50;
-      --subtext: #6b7c9e;
-      --card-shadow: 0 2px 16px rgba(13, 27, 62, 0.07);
+      --primary-blue: #094FA3;
+      --bright-blue: #4B95FA;
+      --light-blue: #91BDFC;
+      --primary-gold: #B99B68;
+      --bright-gold: #E4C082;
+      --light-gold: #F6EBD9;
+      --supporting-red: #ED1C24;
+      --bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --surface-alt: #F5F7FA;
+      --border: rgba(9, 79, 163, 0.15);
+      --text-primary: #032E64;
+      --text-secondary: #595F61;
+      --text-light: #7B8285;
+      --card-shadow: 0 2px 12px rgba(9, 79, 163, 0.08);
+      --green: #16a34a;
+      --amber: #f59e0b;
+      --sidebar-w: 260px;
+      --sidebar-w-collapsed: 70px;
+      --header-h: 70px;
     }
 
-    html,
-    body {
+    /* =========================================
+       2. RESET & BASE
+       ========================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
       height: 100%;
-      font-family: 'DM Sans', sans-serif;
-      background: var(--light-bg);
-      color: var(--text);
-      overflow: hidden
-    }
-
-    /* ════════════════════════════
-   TOP HEADER
-════════════════════════════ */
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--header-h);
-      z-index: 100;
-      background: var(--navy);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 1.5rem 0 0;
-      border-bottom: 2px solid var(--gold);
-    }
-
-    .header-brand {
-      display: flex;
-      align-items: center;
-      width: var(--sidebar-w);
-      flex-shrink: 0;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0 1.2rem;
-      height: 100%;
-      gap: .85rem;
-      text-decoration: none;
-    }
-
-    .header-logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 10px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--surface-alt);
+      color: var(--text-primary);
       overflow: hidden;
     }
+    a { text-decoration: none; color: inherit; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
 
-    .header-logo svg {
-      width: 40px;
-      height: 40px
+    /* =========================================
+       3. LAYOUT (Header, Sidebar, Main)
+       ========================================= */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 200;
+      background: var(--surface); display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; box-shadow: 0 2px 8px rgba(9, 79, 163, 0.1); border-bottom: 2px solid var(--primary-blue);
     }
-
-    .brand-title {
-      font-weight: 700;
-      font-size: .95rem;
-      color: #fff;
-      line-height: 1.2
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .header-right { display: flex; align-items: center; gap: 1.5rem; }
+    .header-logo { height: 50px; width: auto; object-fit: contain; }
+    
+    .menu-toggle {
+      width: 40px; height: 40px; border-radius: 8px; background: var(--surface-alt); border: none;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary-blue); font-size: 1.1rem; cursor: pointer; transition: all 0.2s;
     }
-
-    .brand-sub {
-      font-size: .62rem;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--gold)
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem
-    }
-
-    .bell-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.1rem;
-      position: relative;
-      transition: background .16s;
-    }
-
-    .bell-btn:hover {
-      background: rgba(255, 255, 255, 0.18)
-    }
-
-    .bell-dot {
-      position: absolute;
-      top: 6px;
-      right: 7px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #f59e0b;
-      border: 2px solid var(--navy);
-    }
+    .menu-toggle:hover { background: var(--light-blue); color: #fff; }
 
     .user-pill {
-      display: flex;
-      align-items: center;
-      gap: .7rem
+      display: flex; align-items: center; gap: .7rem; background: var(--surface-alt);
+      padding: 0.5rem 1.2rem; border-radius: 999px; border: 1.5px solid var(--border);
     }
-
     .user-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #16a34a;
-      color: #fff;
-      font-size: .82rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+      color: #fff; font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
     }
+    .user-name { font-size: .85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+    .user-role { font-size: .68rem; color: var(--text-secondary); }
 
-    .user-name {
-      font-size: .86rem;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.2
-    }
+    .layout { display: flex; margin-top: var(--header-h); height: calc(100vh - var(--header-h)); }
 
-    .user-role {
-      font-size: .72rem;
-      color: rgba(255, 255, 255, .6)
-    }
-
-    /* ════════════════════════════
-   LAYOUT
-════════════════════════════ */
-    .layout {
-      display: flex;
-      margin-top: var(--header-h);
-      height: calc(100vh - var(--header-h));
-    }
-
-    /* ════════════════════════════
-   SIDEBAR
-════════════════════════════ */
     .sidebar {
-      width: var(--sidebar-w);
-      flex-shrink: 0;
-      background: var(--navy);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      border-right: 1px solid rgba(255, 255, 255, 0.07);
-      position: relative;
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: linear-gradient(180deg, var(--primary-blue) 0%, var(--bright-blue) 100%);
+      display: flex; flex-direction: column; overflow-y: auto;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .sidebar.collapsed { width: var(--sidebar-w-collapsed); }
 
-    /* Gold left accent for active item */
-    .sidebar-collapse {
-      position: absolute;
-      right: -14px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 48px;
-      background: var(--light-bg);
-      border: 1px solid var(--border);
-      border-left: none;
-      border-radius: 0 8px 8px 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--subtext);
-      font-size: .7rem;
-      z-index: 5;
+    .nav-section { margin-top: 1.2rem; }
+    .nav-label {
+      font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5); padding: 0.6rem 1.2rem; white-space: nowrap; overflow: hidden;
     }
-
-    .nav-section-label {
-      font-size: .62rem;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.35);
-      padding: .9rem 1.4rem .5rem;
-    }
-
     .nav-item {
-      display: flex;
-      align-items: center;
-      gap: .85rem;
-      padding: .72rem 1.4rem;
-      cursor: pointer;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: .86rem;
-      font-weight: 500;
-      position: relative;
-      transition: background .16s, color .16s;
-      border-left: 3px solid transparent;
-      text-decoration: none;
+      display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: rgba(255, 255, 255, 0.8);
+      font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; 
+      transition: all .2s; cursor: pointer; white-space: nowrap; overflow: hidden;
     }
+    .nav-item:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .nav-item.active { background: rgba(255, 255, 255, 0.18); color: #fff; font-weight: 600; border-left-color: var(--bright-gold); }
+    .nav-icon { font-size: 1.05rem; width: 22px; text-align: center; flex-shrink: 0; color: #fff; }
+    .nav-text { opacity: 1; transition: opacity 0.2s; }
+    .sidebar.collapsed .nav-text, .sidebar.collapsed .nav-label, .sidebar.collapsed .nav-badge { opacity: 0; width: 0; display: none; }
 
-    .nav-item:hover {
-      background: rgba(255, 255, 255, 0.06);
-      color: rgba(255, 255, 255, .85)
+    .nav-badge {
+      margin-left: auto; background: var(--bright-gold); color: var(--text-primary); font-size: .65rem;
+      font-weight: 700; padding: .15rem .5rem; border-radius: 999px; flex-shrink: 0;
     }
-
-    .nav-item.active {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
-      font-weight: 600;
-      border-left-color: var(--gold);
-    }
-
-    .nav-icon {
-      font-size: 1rem;
-      width: 22px;
-      text-align: center;
-      flex-shrink: 0
-    }
-
-    .nav-spacer {
-      flex: 1
-    }
-
-    .nav-sub {
-      padding-left: 2.6rem;
-      font-size: .82rem;
-      color: rgba(255, 255, 255, 0.5)
-    }
-
-    .nav-sub:hover {
-      background: rgba(255, 255, 255, 0.04);
-      color: rgba(255, 255, 255, .75)
-    }
-
-    .nav-sub.active {
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
-      font-weight: 600;
-      border-left-color: var(--gold)
-    }
-
+    .nav-spacer { flex: 1; }
     .nav-logout {
-      display: flex;
-      align-items: center;
-      gap: .85rem;
-      padding: .72rem 1.4rem;
-      cursor: pointer;
-      color: #f87171;
-      font-size: .86rem;
-      font-weight: 600;
-      transition: background .16s;
-      border-left: 3px solid transparent;
-      text-decoration: none;
+      display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: #fecaca;
+      font-size: .85rem; font-weight: 600; border-left: 3px solid transparent; 
+      cursor: pointer; transition: all .2s; white-space: nowrap; overflow: hidden;
     }
-
-    .nav-logout:hover {
-      background: rgba(248, 113, 113, 0.1)
+    .nav-logout:hover { background: rgba(248, 113, 113, 0.15); color: #fff; }
+    
+    /* Collapsible Sub-menu Styles */
+    .nav-children { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+    .nav-children.open { max-height: 500px; }
+    .nav-child {
+      display: flex; align-items: center; gap: .85rem; padding: .7rem 1.2rem .7rem 3rem; color: rgba(255, 255, 255, 0.7);
+      font-size: .82rem; font-weight: 500; border-left: 3px solid transparent; 
+      transition: all .16s; white-space: nowrap; overflow: hidden; text-decoration: none;
     }
+    .nav-child:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+    .nav-child.active { color: #fff; font-weight: 600; border-left-color: var(--bright-gold); background: rgba(255, 255, 255, .15); }
 
-    /* ════════════════════════════
-   MAIN CONTENT
-════════════════════════════ */
-    .main {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      gap: 1.2rem;
-      padding: 1.4rem 1.2rem 1.4rem 1.5rem;
-    }
+    .main { flex: 1; overflow-y: auto; padding: 2rem; }
 
-    /* Center column */
-    .center {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-      min-width: 0
-    }
+    /* =========================================
+       4. DEPARTMENT SPECIFIC COMPONENTS
+       ========================================= */
+    .page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .page-title { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; color: var(--text-primary); }
+    .page-sub { font-size: .9rem; color: var(--text-secondary); margin-top: .25rem; }
 
-    /* Right column */
-    .right-col {
-      width: 290px;
-      flex-shrink: 0
-    }
-
-    /* ── Welcome banner ── */
     .welcome-card {
-      background: var(--navy);
-      border-radius: 16px;
-      padding: 1.6rem 2rem;
-      position: relative;
-      overflow: hidden;
+      background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+      border-radius: 12px; padding: 1.5rem 2rem; color: #fff; margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(9, 79, 163, 0.2);
     }
+    .welcome-label { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: 0.8; margin-bottom: .35rem; }
+    .welcome-title { font-family: 'Instrument Serif', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: .35rem; }
+    .welcome-sub { font-size: .86rem; opacity: 0.9; }
 
-    .welcome-card::after {
-      content: '';
-      position: absolute;
-      right: -30px;
-      top: -40px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: rgba(201, 162, 39, 0.08);
-      pointer-events: none;
-    }
-
-    .welcome-label {
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.45);
-      margin-bottom: .35rem
-    }
-
-    .welcome-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: .35rem
-    }
-
-    .welcome-sub {
-      font-size: .86rem;
-      color: rgba(255, 255, 255, 0.55)
-    }
-
-    /* ── Stat cards row ── */
-    .stat-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem
-    }
-
+    .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
     .stat-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 1.2rem 1.3rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border);
+      background: var(--surface); border-radius: 12px; padding: 1.2rem 1.3rem;
+      box-shadow: var(--card-shadow); border: 1.5px solid var(--border);
     }
-
     .stat-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: #f0f2f7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      margin-bottom: .85rem;
+      width: 40px; height: 40px; border-radius: 10px; background: var(--surface-alt);
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: .85rem; color: var(--primary-blue);
     }
+    .stat-num { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; color: var(--text-primary); line-height: 1; margin-bottom: .25rem; }
+    .stat-label { font-size: .75rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
-    .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--navy);
-      line-height: 1;
-      margin-bottom: .25rem
+    .card {
+      background: var(--surface); border-radius: 12px; box-shadow: var(--card-shadow);
+      border: 1.5px solid var(--border); overflow: hidden; margin-bottom: 1.5rem;
     }
-
-    .stat-label {
-      font-size: .75rem;
-      color: var(--subtext);
-      font-weight: 500
+    .card-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.4rem; border-bottom: 1.5px solid var(--border); background: var(--surface-alt);
     }
-
-    /* ── Chart card ── */
-    .chart-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 1.4rem 1.5rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border);
+    .card-hdr-title {
+      font-family: 'Instrument Serif', serif; font-size: 1.05rem; font-weight: 400;
+      color: var(--text-primary); display: flex; align-items: center; gap: .55rem;
     }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.3rem
-    }
-
-    .card-title {
-      font-size: .9rem;
-      font-weight: 700;
-      color: var(--navy);
-      display: flex;
-      align-items: center;
-      gap: .5rem
-    }
-
-    .card-link {
-      font-size: .8rem;
-      color: var(--navy);
-      font-weight: 600;
-      text-decoration: none;
-      opacity: .7;
-      transition: opacity .16s
-    }
-
-    .card-link:hover {
-      opacity: 1
-    }
-
-    /* Bar chart */
-    .bar-chart {
-      position: relative
-    }
-
-    .bar-y-labels {
-      display: flex;
-      flex-direction: column-reverse;
-      justify-content: space-between;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 28px;
-      pointer-events: none;
-    }
-
-    .bar-y-label {
-      font-size: .72rem;
-      color: var(--subtext);
-      line-height: 1
-    }
-
-    .bar-chart-inner {
-      margin-left: 36px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .bar-grid-lines {
-      position: relative;
-      height: 260px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border-left: 1px solid #e8ecf4;
-    }
-
-    .grid-line {
-      width: 100%;
-      border-top: 1px solid #eef0f5;
-    }
-
-    .bars-row {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-around;
-      padding: 0 2rem;
-      height: 100%;
-    }
-
-    .bar-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: .5rem;
-      flex: 1
-    }
-
-    .bar-pct {
-      font-size: .75rem;
-      font-weight: 700;
-      color: var(--text)
-    }
-
-    .bar {
-      width: 52px;
-      border-radius: 6px 6px 0 0;
-      transition: filter .18s;
-      cursor: pointer;
-    }
-
-    .bar:hover {
-      filter: brightness(1.1)
-    }
-
-    .bar-name {
-      font-size: .76rem;
-      color: var(--subtext);
-      margin-top: .3rem
-    }
-
-    /* ── My Ranking Forms ── */
-    .forms-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 1.4rem 1.5rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border);
-    }
+    .card-body { padding: 1.4rem; }
 
     .form-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: .85rem 0;
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 1rem; padding: .85rem 0;
+      border-bottom: 1px solid var(--border); transition: background 0.2s; cursor: pointer;
     }
-
-    .form-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0
-    }
-
+    .form-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .form-row:hover { background: var(--surface-alt); margin: 0 -1.4rem; padding: .85rem 1.4rem; }
     .form-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
+      width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 1.1rem; flex-shrink: 0; background: var(--light-gold); color: #8a6a00;
     }
-
-    .form-info {
-      flex: 1;
-      min-width: 0
-    }
-
-    .form-name {
-      font-size: .86rem;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: .45rem
-    }
-
-    .progress-bar-wrap {
-      height: 5px;
-      background: #eef0f6;
-      border-radius: 999px;
-      overflow: hidden
-    }
-
-    .progress-bar {
-      height: 100%;
-      border-radius: 999px;
-      transition: width .6s ease
-    }
-
-    /* ════════════════════════════
-   RIGHT COLUMN – DEADLINES
-════════════════════════════ */
-    .deadlines-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 1.4rem 1.3rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border);
-    }
+    .form-info { flex: 1; min-width: 0; }
+    .form-name { font-size: .86rem; font-weight: 600; color: var(--text-primary); margin-bottom: .45rem; }
+    .progress-bar-wrap { height: 6px; background: var(--surface-alt); border-radius: 999px; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 999px; transition: width .6s ease; background: var(--primary-blue); }
 
     .deadline-item {
-      display: flex;
-      gap: .85rem;
-      align-items: flex-start;
-      padding: .8rem 0;
+      display: flex; gap: .85rem; align-items: flex-start; padding: .8rem 0;
       border-bottom: 1px solid var(--border);
     }
-
-    .deadline-item:last-child {
-      border-bottom: none;
-      padding-bottom: 0
-    }
-
+    .deadline-item:last-child { border-bottom: none; padding-bottom: 0; }
     .deadline-date {
-      flex-shrink: 0;
-      width: 38px;
-      text-align: center;
-      background: var(--light-bg);
-      border-radius: 8px;
-      padding: .3rem .2rem;
+      flex-shrink: 0; width: 42px; text-align: center; background: var(--surface-alt);
+      border-radius: 8px; padding: .4rem .2rem; border: 1px solid var(--border);
     }
-
-    .deadline-day {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--navy);
-      line-height: 1
-    }
-
-    .deadline-mon {
-      font-size: .62rem;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--subtext)
-    }
-
-    .deadline-info {
-      flex: 1;
-      min-width: 0
-    }
-
-    .deadline-title {
-      font-size: .83rem;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: .2rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis
-    }
-
-    .deadline-sub {
-      font-size: .74rem;
-      color: var(--subtext);
-      margin-bottom: .35rem
-    }
-
-    .deadline-tags {
-      display: flex;
-      align-items: center;
-      gap: .4rem;
-      flex-wrap: wrap
-    }
-
+    .deadline-day { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
+    .deadline-mon { font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-secondary); }
+    .deadline-info { flex: 1; min-width: 0; }
+    .deadline-title { font-size: .83rem; font-weight: 600; color: var(--text-primary); margin-bottom: .2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .deadline-sub { font-size: .74rem; color: var(--text-secondary); margin-bottom: .35rem; }
+    
     .tag-ranking {
-      font-size: .66rem;
-      font-weight: 700;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      padding: .18rem .55rem;
-      border-radius: 999px;
+      font-size: .66rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      padding: .18rem .55rem; border-radius: 999px; background: var(--light-blue); color: var(--primary-blue);
     }
-
-    .tag-qs-wur {
-      background: #dbeafe;
-      color: #1e40af
-    }
-
-    .tag-the-wur {
-      background: #ede9fe;
-      color: #5b21b6
-    }
-
-    .tag-the-impact {
-      background: #fce7f3;
-      color: #9d174d
-    }
-
-    .tag-qs-sus {
-      background: #d1fae5;
-      color: #065f46
-    }
-
-    .tag-green {
-      background: #dcfce7;
-      color: #14532d
-    }
-
     .urgency {
-      font-size: .66rem;
-      font-weight: 700;
-      padding: .2rem .6rem;
-      border-radius: 999px;
-      margin-left: auto;
-      flex-shrink: 0;
+      font-size: .66rem; font-weight: 700; padding: .2rem .6rem; border-radius: 999px; margin-left: auto; flex-shrink: 0;
     }
+    .urg-urgent { background: #fee2e2; color: #dc2626; }
+    .urg-soon { background: #fef9c3; color: #854d0e; }
+    .urg-ontrack { background: #d1fae5; color: #065f46; }
 
-    .urg-urgent {
-      background: #fee2e2;
-      color: #dc2626
-    }
+    .bar-chart-inner { margin-left: 36px; display: flex; flex-direction: column; }
+    .bar-grid-lines { position: relative; height: 200px; display: flex; flex-direction: column; justify-content: space-between; border-left: 1px solid var(--border); }
+    .grid-line { width: 100%; border-top: 1px dashed var(--border); }
+    .bars-row { position: absolute; bottom: 0; left: 0; right: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 0 1rem; height: 100%; }
+    .bar-group { display: flex; flex-direction: column; align-items: center; gap: .5rem; flex: 1; }
+    .bar-pct { font-size: .75rem; font-weight: 700; color: var(--text-primary); }
+    .bar { width: 40px; border-radius: 6px 6px 0 0; transition: filter .18s; cursor: pointer; }
+    .bar:hover { filter: brightness(1.1); }
+    .bar-name { font-size: .76rem; color: var(--text-secondary); margin-top: .3rem; text-align: center; }
 
-    .urg-soon {
-      background: #fef9c3;
-      color: #854d0e
-    }
-
-    .urg-ontrack {
-      background: #d1fae5;
-      color: #065f46
-    }
-
-    /* Deadline left accent */
-    .deadline-accent {
-      width: 3px;
-      border-radius: 2px;
-      flex-shrink: 0;
-      align-self: stretch;
-      min-height: 60px
-    }
-
-    .acc-red {
-      background: #ef4444
-    }
-
-    .acc-purple {
-      background: #8b5cf6
-    }
-
-    .acc-orange {
-      background: #f59e0b
-    }
-
-    .acc-green {
-      background: #10b981
-    }
-
-    .acc-ltgreen {
-      background: #22c55e
-    }
-
-    /* scrollbar */
-    .main::-webkit-scrollbar,
-    .sidebar::-webkit-scrollbar {
-      width: 5px
-    }
-
-    .main::-webkit-scrollbar-track,
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent
-    }
-
-    .main::-webkit-scrollbar-thumb,
-    .sidebar::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, .12);
-      border-radius: 4px
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed; left: 0; top: var(--header-h); height: calc(100vh - var(--header-h));
+        z-index: 150; transform: translateX(-100%); transition: transform 0.3s;
+      }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .stat-cards { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- ════════ HEADER ════════ -->
+  <!-- HEADER -->
   <header class="header">
-    <a class="header-brand" href="index.html">
-      <div class="header-logo">
-        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="20" cy="20" r="18" fill="none" stroke="#c9a227" stroke-width="1.6" />
-          <polygon points="20,6 23,15 32,15 25,20 28,29 20,24 12,29 15,20 8,15 17,15" fill="#c9a227" />
-        </svg>
-      </div>
-      <div class="brand-text">
-        <div class="brand-title">Rankings Tracker</div>
-        <div class="brand-sub">Department Portal</div>
-      </div>
-    </a>
-
+    <div class="header-left">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    </div>
     <div class="header-right">
-      <button class="bell-btn">
-        🔔
-        <span class="bell-dot"></span>
-      </button>
+      <img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="header-logo">
       <div class="user-pill">
-        <div class="user-avatar">IT</div>
+        <div class="user-avatar" id="userAvatar">IT</div>
         <div class="user-info">
-          <div class="user-name">IT &amp; Digital Services</div>
-          <div class="user-role">Department User</div>
+          <div class="user-name" id="userName">Department User</div>
+          <div class="user-role">Department</div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- ════════ LAYOUT ════════ -->
   <div class="layout">
+    <!-- SIDEBAR (Restored with all specific ranking types) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-section">
+        <div class="nav-label">Main</div>
+        <a class="nav-item active" href="dashboard-dept.html">
+          <i class="fas fa-chart-line nav-icon"></i><span class="nav-text">Dashboard</span>
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-label">Ranking Cycles</div>
+        <div class="nav-item" style="padding-right:.5rem" onclick="toggleCycles()">
+          <i class="fas fa-trophy nav-icon"></i><span class="nav-text">My Forms</span>
+          <i class="fas fa-chevron-down" style="margin-left:auto;font-size:.65rem;transition:transform 0.3s" id="cyclesArrow"></i>
+        </div>
+        <div class="nav-children open" id="navCycles">
+          <a class="nav-child" href="ranking-forms.html">
+            <i class="fas fa-clipboard-list nav-icon" style="font-size:.9rem"></i><span class="nav-text">All Assigned Forms</span>
+          </a>
+          <a class="nav-child" id="nav-sustainability" href="ranking-forms.html">
+            <i class="fas fa-leaf nav-icon" style="font-size:.9rem"></i><span class="nav-text">QS Sustainability</span>
+          </a>
+          <a class="nav-child" id="nav-qs-wur" href="ranking-forms.html">
+            <i class="fas fa-award nav-icon" style="font-size:.9rem"></i><span class="nav-text">QS WUR</span>
+          </a>
+          <a class="nav-child" id="nav-the-wur" href="ranking-forms.html">
+            <i class="fas fa-chart-bar nav-icon" style="font-size:.9rem"></i><span class="nav-text">THE WUR</span>
+          </a>
+          <a class="nav-child" id="nav-the-impact" href="ranking-forms.html">
+            <i class="fas fa-bullseye nav-icon" style="font-size:.9rem"></i><span class="nav-text">THE Impact</span>
+          </a>
+          <a class="nav-child" id="nav-greenmetric" href="ranking-forms.html">
+            <i class="fas fa-seedling nav-icon" style="font-size:.9rem"></i><span class="nav-text">GreenMetric</span>
+          </a>
+        </div>
+      </div>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="nav-section-label">Navigation</div>
-      <a class="nav-item active" href="#"><span class="nav-icon">🏠</span> Home</a>
-      <a class="nav-item " href="ranking-forms.html"><span class="nav-icon">📋</span> My Ranking Forms</a>
-      <a class="nav-item nav-sub " href="form-qs-sustainability.html"><span class="nav-icon">🌿</span> QS
-        Sustainability</a>
-      <a class="nav-item nav-sub " href="form-qs-wur.html"><span class="nav-icon">🏆</span> QS WUR</a>
-      <a class="nav-item nav-sub" href="#"><span class="nav-icon">📊</span> THE WUR</a>
-      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🎯</span> THE Impact</a>
-      <a class="nav-item nav-sub" href="#"><span class="nav-icon">🌱</span> Green Metric</a>
-      <a class="nav-item " href="progress.html"><span class="nav-icon">📈</span> Progress</a>
-      <a class="nav-item" href="#"><span class="nav-icon">🔔</span> Notifications</a>
+      <div class="nav-section">
+        <div class="nav-label">Monitoring</div>
+        <a class="nav-item" href="progress.html">
+          <i class="fas fa-chart-area nav-icon"></i><span class="nav-text">Progress</span>
+        </a>
+      </div>
+
       <div class="nav-spacer"></div>
-      <a class="nav-logout" href="login.html"><span class="nav-icon">🚪</span> Logout</a>
+      <a class="nav-logout" href="login.html" id="logoutBtn">
+        <i class="fas fa-sign-out-alt nav-icon"></i><span class="nav-text">Logout</span>
+      </a>
     </aside>
 
-    <!-- MAIN -->
-    <div class="main">
-
-      <!-- CENTER COLUMN -->
-      <div class="center">
-
-        <!-- Welcome banner -->
-        <div class="welcome-card">
-          <div class="welcome-label">Good Morning</div>
-          <div class="welcome-title">IT &amp; Digital Services 👋</div>
-          <div class="welcome-sub">Here's your rankings submission overview for today.</div>
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Department Dashboard</div>
+          <div class="page-sub">Overview of your ranking data collection and upcoming deadlines.</div>
         </div>
+      </div>
 
-        <!-- Stat cards -->
-        <div class="stat-cards">
-          <div class="stat-card">
-            <div class="stat-icon">📋</div>
-            <div class="stat-num">35</div>
-            <div class="stat-label">Total Questions</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⏳</div>
-            <div class="stat-num">12</div>
-            <div class="stat-label">In Progress</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#f0fdf4">✅</div>
-            <div class="stat-num">8</div>
-            <div class="stat-label">Submitted</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#fff7ed">🔥</div>
-            <div class="stat-num">3</div>
-            <div class="stat-label">Deadlines Soon</div>
-          </div>
+      <!-- Welcome Banner -->
+      <div class="welcome-card">
+        <div class="welcome-label">Good Morning</div>
+        <div class="welcome-title" id="welcomeName">Department User 👋</div>
+        <div class="welcome-sub">Here's your rankings submission overview for today.</div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+          <div class="stat-num" id="statTotal">0</div>
+          <div class="stat-label">Total Questions</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+          <div class="stat-num" id="statProgress">0</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #f0fdf4; color: var(--green);"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-num" id="statSubmitted">0</div>
+          <div class="stat-label">Submitted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: #fef2f2; color: var(--supporting-red);"><i class="fas fa-exclamation-triangle"></i></div>
+          <div class="stat-num" id="statUrgent">0</div>
+          <div class="stat-label">Deadlines Soon</div>
+        </div>
+      </div>
 
-        <!-- Bar chart -->
-        <div class="chart-card">
-          <div class="card-header">
-            <div class="card-title">📊 Ranking Completion Overview</div>
-            <a href="#" class="card-link">View Details</a>
-          </div>
-          <div class="bar-chart">
-            <!-- Y axis labels -->
-            <div style="display:flex;gap:0">
-              <div
-                style="width:36px;display:flex;flex-direction:column-reverse;justify-content:space-between;height:260px;padding-bottom:0">
-                <span style="font-size:.69rem;color:var(--subtext)">0%</span>
-                <span style="font-size:.69rem;color:var(--subtext)">25%</span>
-                <span style="font-size:.69rem;color:var(--subtext)">50%</span>
-                <span style="font-size:.69rem;color:var(--subtext)">75%</span>
-                <span style="font-size:.69rem;color:var(--subtext)">100%</span>
-              </div>
-              <div style="flex:1;position:relative;height:260px;border-left:1px solid #eef0f5">
-                <!-- Grid lines -->
-                <div
-                  style="position:absolute;top:0;left:0;right:0;height:100%;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none">
-                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
-                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
-                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
-                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
-                  <div style="border-top:1px dashed #eef0f5;width:100%"></div>
-                </div>
-                <!-- Bars -->
-                <div
-                  style="position:absolute;bottom:0;left:0;right:0;display:flex;align-items:flex-end;justify-content:space-around;padding:0 2rem;height:100%">
-
-                  <div class="bar-group">
-                    <span class="bar-pct">35%</span>
-                    <div class="bar"
-                      style="height:calc(260px * 0.35);background:linear-gradient(180deg,#34d399,#10b981)"></div>
-                    <span class="bar-name">QS Sus</span>
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+        <!-- Left Column: Chart & Forms -->
+        <div>
+          <!-- Bar Chart -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-hdr-title"><i class="fas fa-chart-bar"></i> Ranking Completion Overview</div>
+            </div>
+            <div class="card-body">
+              <div class="bar-chart-inner">
+                <div class="bar-grid-lines">
+                  <div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div>
+                  <div class="bars-row" id="chartBars">
+                    <div class="bar-group"><span class="bar-pct">0%</span><div class="bar" style="height: 0%; background: var(--primary-blue);"></div><span class="bar-name">Loading...</span></div>
                   </div>
-
-                  <div class="bar-group">
-                    <span class="bar-pct">60%</span>
-                    <div class="bar"
-                      style="height:calc(260px * 0.60);background:linear-gradient(180deg,#22d3ee,#0891b2)"></div>
-                    <span class="bar-name">QS WUR</span>
-                  </div>
-
-                  <div class="bar-group">
-                    <span class="bar-pct">20%</span>
-                    <div class="bar"
-                      style="height:calc(260px * 0.20);background:linear-gradient(180deg,#a78bfa,#7c3aed)"></div>
-                    <span class="bar-name">THE WUR</span>
-                  </div>
-
-                  <div class="bar-group">
-                    <span class="bar-pct">45%</span>
-                    <div class="bar"
-                      style="height:calc(260px * 0.45);background:linear-gradient(180deg,#f87171,#ef4444)"></div>
-                    <span class="bar-name">Impact</span>
-                  </div>
-
-                  <div class="bar-group">
-                    <span class="bar-pct">10%</span>
-                    <div class="bar"
-                      style="height:calc(260px * 0.10);background:linear-gradient(180deg,#86efac,#22c55e)"></div>
-                    <span class="bar-name">Green</span>
-                  </div>
-
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- My Ranking Forms List -->
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-hdr-title"><i class="fas fa-folder-open"></i> My Ranking Forms</div>
+              <a href="ranking-forms.html" style="font-size: .8rem; color: var(--primary-blue); font-weight: 600;">See All</a>
+            </div>
+            <div class="card-body" id="formsList" style="padding: 0 1.4rem;">
+              <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">Loading forms...</div>
+            </div>
+          </div>
         </div>
 
-        <!-- My Ranking Forms -->
-        <div class="forms-card">
-          <div class="card-header">
-            <div class="card-title">📋 My Ranking Forms</div>
-            <a href="#" class="card-link">See All</a>
-          </div>
-
-          <div class="form-row">
-            <div class="form-icon" style="background:#d1fae5">🌿</div>
-            <div class="form-info">
-              <div class="form-name">QS Sustainability 2025</div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" style="width:55%;background:linear-gradient(90deg,#34d399,#10b981)"></div>
-              </div>
+        <!-- Right Column: Deadlines -->
+        <div>
+          <div class="card">
+            <div class="card-hdr">
+              <div class="card-hdr-title"><i class="fas fa-calendar-alt"></i> Upcoming Deadlines</div>
+            </div>
+            <div class="card-body" id="deadlinesList">
+              <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">Loading deadlines...</div>
             </div>
           </div>
-
-          <div class="form-row">
-            <div class="form-icon" style="background:#dbeafe">🏆</div>
-            <div class="form-info">
-              <div class="form-name">QS World University Rankings 2025</div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" style="width:70%;background:linear-gradient(90deg,#22d3ee,#0891b2)"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-icon" style="background:#ede9fe">📊</div>
-            <div class="form-info">
-              <div class="form-name">Times Higher Education WUR 2025</div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" style="width:30%;background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-icon" style="background:#fce7f3">🎯</div>
-            <div class="form-info">
-              <div class="form-name">THE Impact Rankings 2025</div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" style="width:45%;background:linear-gradient(90deg,#f87171,#ef4444)"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-icon" style="background:#dcfce7">🌱</div>
-            <div class="form-info">
-              <div class="form-name">UI GreenMetric Rankings 2025</div>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" style="width:10%;background:linear-gradient(90deg,#86efac,#22c55e)"></div>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div><!-- /center -->
-
-      <!-- RIGHT COLUMN -->
-      <div class="right-col">
-        <div class="deadlines-card">
-          <div class="card-header" style="margin-bottom:1rem">
-            <div class="card-title">📅 Upcoming Deadlines</div>
-          </div>
-
-          <!-- Item 1 -->
-          <div class="deadline-item">
-            <div class="deadline-accent acc-red"></div>
-            <div class="deadline-date">
-              <div class="deadline-day">31</div>
-              <div class="deadline-mon">Mar</div>
-            </div>
-            <div class="deadline-info">
-              <div class="deadline-title">QS World University Ra…</div>
-              <div class="deadline-sub">Data submission deadline</div>
-              <div class="deadline-tags">
-                <span class="tag-ranking tag-qs-wur">QS WUR</span>
-                <span class="urgency urg-urgent">Urgent</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Item 2 -->
-          <div class="deadline-item">
-            <div class="deadline-accent acc-purple"></div>
-            <div class="deadline-date">
-              <div class="deadline-day">30</div>
-              <div class="deadline-mon">Apr</div>
-            </div>
-            <div class="deadline-info">
-              <div class="deadline-title">THE World University Ra…</div>
-              <div class="deadline-sub">Data submission deadline</div>
-              <div class="deadline-tags">
-                <span class="tag-ranking tag-the-wur">THE WUR</span>
-                <span class="urgency urg-soon">Soon</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Item 3 -->
-          <div class="deadline-item">
-            <div class="deadline-accent acc-orange"></div>
-            <div class="deadline-date">
-              <div class="deadline-day">15</div>
-              <div class="deadline-mon">May</div>
-            </div>
-            <div class="deadline-info">
-              <div class="deadline-title">THE Impact Rankings</div>
-              <div class="deadline-sub">Data submission deadline</div>
-              <div class="deadline-tags">
-                <span class="tag-ranking tag-the-impact">THE Impact</span>
-                <span class="urgency urg-soon">Soon</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Item 4 -->
-          <div class="deadline-item">
-            <div class="deadline-accent acc-green"></div>
-            <div class="deadline-date">
-              <div class="deadline-day">15</div>
-              <div class="deadline-mon">Jun</div>
-            </div>
-            <div class="deadline-info">
-              <div class="deadline-title">QS Sustainability Ran…</div>
-              <div class="deadline-sub">Data submission deadline</div>
-              <div class="deadline-tags">
-                <span class="tag-ranking tag-qs-sus">QS Sus</span>
-                <span class="urgency urg-ontrack">On Track</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Item 5 -->
-          <div class="deadline-item">
-            <div class="deadline-accent acc-ltgreen"></div>
-            <div class="deadline-date">
-              <div class="deadline-day">30</div>
-              <div class="deadline-mon">Jun</div>
-            </div>
-            <div class="deadline-info">
-              <div class="deadline-title">UI GreenMetric Ranki…</div>
-              <div class="deadline-sub">Data submission deadline</div>
-              <div class="deadline-tags">
-                <span class="tag-ranking tag-green">GreenMetric</span>
-                <span class="urgency urg-ontrack">On Track</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div><!-- /right-col -->
-
-    </div><!-- /main -->
-  </div><!-- /layout -->
+      </div>
+    </main>
+  </div>
 
   <script>
     const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
       ? 'http://localhost:3002'
       : 'https://uob-rankings.onrender.com';
 
-    // Auth check
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (!token) {
-      window.location.href = 'login.html';
-    }
+    if (!token) window.location.href = 'login.html';
 
     // Display user info
-    document.querySelector('.user-name').textContent = user.name || 'User';
+    document.getElementById('userName').textContent = user.name || 'User';
     document.querySelector('.user-role').textContent = user.role === 'admin' ? 'Administrator' : 'Department User';
-
+    document.getElementById('welcomeName').textContent = (user.name || 'User') + ' 👋';
     const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-    document.querySelector('.user-avatar').textContent = initials;
+    document.getElementById('userAvatar').textContent = initials;
+
+    // Sidebar toggle
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('mobile-open');
+      } else {
+        sidebar.classList.toggle('collapsed');
+      }
+    }
+
+    // Cycles dropdown toggle
+    function toggleCycles() {
+      const el = document.getElementById('navCycles');
+      const ar = document.getElementById('cyclesArrow');
+      el.classList.toggle('open');
+      ar.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
 
     // Logout
-    document.querySelector('.nav-logout').addEventListener('click', async (e) => {
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
       e.preventDefault();
-      await fetch(`${API_BASE}/api/auth/logout`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      try {
+        await fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+      } catch (e) { console.error(e); }
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = 'login.html';
     });
+
+    // --- DATA LOADING LOGIC (UNCHANGED) ---
+    async function loadDashboardData() {
+      try {
+        const res = await fetch(`${API_BASE}/api/questions/my-rankings`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const rankings = await res.json();
+        
+        if (!Array.isArray(rankings) || rankings.length === 0) {
+          document.getElementById('formsList').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-secondary)">No forms assigned yet.</div>';
+          document.getElementById('deadlinesList').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-secondary)">No upcoming deadlines.</div>';
+          return;
+        }
+
+        let totalQ = 0, submittedQ = 0, urgentCount = 0;
+        const chartData = [];
+        const formsHtml = [];
+        const deadlinesHtml = [];
+        const colors = ['var(--primary-blue)', 'var(--primary-gold)', 'var(--supporting-red)', 'var(--green)', 'var(--bright-blue)'];
+
+        rankings.forEach((r, index) => {
+          const assigned = r.assigned || 0;
+          const submitted = r.submitted || 0;
+          const pct = assigned ? Math.round((submitted / assigned) * 100) : 0;
+          totalQ += assigned;
+          submittedQ += submitted;
+          if (r.outstanding > 0) urgentCount++;
+
+          chartData.push({ name: r.name.split(' ')[0], pct: pct, color: colors[index % colors.length] });
+
+          formsHtml.push(`
+            <div class="form-row" onclick="window.location.href='form.html?cycle=${r.id}'">
+              <div class="form-icon"><i class="fas fa-file-alt"></i></div>
+              <div class="form-info">
+                <div class="form-name">${r.name}</div>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar" style="width:${pct}%;background:${colors[index % colors.length]}"></div>
+                </div>
+              </div>
+              <div style="font-size:.8rem;font-weight:700;color:var(--text-secondary)">${pct}%</div>
+            </div>
+          `);
+
+          if (r.outstanding > 0 && r.next_due) {
+            const date = new Date(r.next_due);
+            const day = date.getDate();
+            const mon = date.toLocaleString('en-GB', { month: 'short' });
+            const isUrgent = r.outstanding > 2;
+            
+            deadlinesHtml.push(`
+              <div class="deadline-item">
+                <div class="deadline-date">
+                  <div class="deadline-day">${day}</div>
+                  <div class="deadline-mon">${mon}</div>
+                </div>
+                <div class="deadline-info">
+                  <div class="deadline-title">${r.name}</div>
+                  <div class="deadline-sub">Data submission deadline</div>
+                  <div class="deadline-tags" style="display:flex;align-items:center;gap:.5rem">
+                    <span class="tag-ranking">${r.name.split(' ')[0]} ${r.name.split(' ')[1] || ''}</span>
+                    <span class="urgency ${isUrgent ? 'urg-urgent' : 'urg-soon'}">${isUrgent ? 'Urgent' : 'Soon'}</span>
+                  </div>
+                </div>
+              </div>
+            `);
+          }
+        });
+
+        // Update Stats
+        document.getElementById('statTotal').textContent = totalQ;
+        document.getElementById('statProgress').textContent = totalQ - submittedQ;
+        document.getElementById('statSubmitted').textContent = submittedQ;
+        document.getElementById('statUrgent').textContent = urgentCount;
+
+        // Update Chart
+        document.getElementById('chartBars').innerHTML = chartData.map(d => `
+          <div class="bar-group">
+            <span class="bar-pct">${d.pct}%</span>
+            <div class="bar" style="height:calc(200px * ${d.pct / 100});background:${d.color}"></div>
+            <span class="bar-name">${d.name}</span>
+          </div>
+        `).join('');
+
+        // Update Lists
+        document.getElementById('formsList').innerHTML = formsHtml.join('') || '<div style="text-align:center;padding:2rem;color:var(--text-secondary)">No forms found.</div>';
+        document.getElementById('deadlinesList').innerHTML = deadlinesHtml.join('') || '<div style="text-align:center;padding:2rem;color:var(--text-secondary)">No upcoming deadlines. Great job!</div>';
+
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDashboardData();
+      // Open cycles menu by default
+      document.getElementById('navCycles').classList.add('open');
+      document.getElementById('cyclesArrow').style.transform = 'rotate(180deg)';
+    });
   </script>
 </body>
-
 </html>
