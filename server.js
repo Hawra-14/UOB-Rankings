@@ -28,9 +28,8 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/questions', require('./routes/questions'));
 app.use('/api/submissions', require('./routes/submissions'));
+app.use('/api/admin/reminders', require('./routes/reminder')); // This one is crucial!
 
-// New Reminder Route
-app.use('/api/admin/reminders', reminderRoutes);
 
 // Error Handling (Must be last)
 app.use(notFoundHandler);
