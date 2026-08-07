@@ -1,700 +1,784 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ranking Cycles – UoB Rankings Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --primary-blue: #094FA3;
-            --bright-blue: #4B95FA;
-            --light-blue: #91BDFC;
-            --primary-gold: #B99B68;
-            --bright-gold: #E4C082;
-            --light-gold: #F6EBD9;
-            --supporting-red: #ED1C24;
-            --sidebar-w: 260px;
-            --sidebar-w-collapsed: 70px;
-            --header-h: 70px;
-            --bg: #FFFFFF;
-            --surface: #FFFFFF;
-            --surface-alt: #F5F7FA;
-            --border: rgba(9, 79, 163, 0.15);
-            --text-primary: #032E64;
-            --text-secondary: #595F61;
-            --text-light: #7B8285;
-            --card-shadow: 0 2px 12px rgba(9, 79, 163, 0.08);
-            --green: #16a34a;
-            --amber: #f59e0b;
-            --icon-color: #094FA3;
-        }
-
-        html, body {
-            height: 100%;
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text-primary);
-            overflow: hidden;
-        }
-
-        /* HEADER */
-        .header {
-            position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 200;
-            background: #FFFFFF; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 2rem; box-shadow: 0 2px 8px rgba(9, 79, 163, 0.1); border-bottom: 2px solid var(--primary-blue);
-        }
-        .header-left { display: flex; align-items: center; gap: 1rem; }
-        .menu-toggle {
-            width: 40px; height: 40px; border-radius: 8px; background: var(--surface-alt); border: none;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            color: var(--primary-blue); font-size: 1.1rem; transition: all 0.2s;
-        }
-        .menu-toggle:hover { background: var(--light-blue); color: #fff; }
-        .header-right { display: flex; align-items: center; gap: 1.5rem; }
-        .header-logo { height: 50px; width: auto; object-fit: contain; }
-        .user-pill {
-            display: flex; align-items: center; gap: .7rem; background: var(--surface-alt);
-            padding: 0.5rem 1.2rem; border-radius: 999px; border: 1.5px solid var(--border);
-        }
-        .user-avatar {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
-            color: #fff; font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
-        }
-        .user-info { text-align: left; }
-        .user-name { font-size: .85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
-        .user-role { font-size: .68rem; color: var(--text-secondary); }
-
-        /* SIDEBAR */
-        .layout { display: flex; margin-top: var(--header-h); height: calc(100vh - var(--header-h)); }
-        .sidebar {
-            width: var(--sidebar-w); flex-shrink: 0;
-            background: linear-gradient(180deg, var(--primary-blue) 0%, var(--bright-blue) 100%);
-            display: flex; flex-direction: column; overflow-y: auto;
-            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .sidebar.collapsed { width: var(--sidebar-w-collapsed); }
-        .nav-section { margin-top: 1.2rem; }
-        .nav-label {
-            font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.5); padding: 0.6rem 1.2rem; white-space: nowrap; overflow: hidden;
-        }
-        .sidebar.collapsed .nav-label { padding: 0.6rem 0.5rem; }
-        .nav-item {
-            display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: rgba(255, 255, 255, 0.8);
-            font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; text-decoration: none;
-            transition: all .2s; cursor: pointer; white-space: nowrap; overflow: hidden;
-        }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
-        .nav-item.active { background: rgba(255, 255, 255, 0.18); color: #fff; font-weight: 600; border-left-color: var(--bright-gold); }
-        .nav-icon { font-size: 1.05rem; width: 22px; text-align: center; flex-shrink: 0; color: #fff; }
-        .nav-text { opacity: 1; transition: opacity 0.2s; }
-        .sidebar.collapsed .nav-text { opacity: 0; width: 0; }
-        .nav-badge {
-            margin-left: auto; background: var(--bright-gold); color: var(--text-primary); font-size: .65rem;
-            font-weight: 700; padding: .15rem .5rem; border-radius: 999px; flex-shrink: 0;
-        }
-        .sidebar.collapsed .nav-badge { display: none; }
-        .nav-spacer { flex: 1; }
-        .nav-logout {
-            display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: #fecaca;
-            font-size: .85rem; font-weight: 600; border-left: 3px solid transparent; text-decoration: none;
-            cursor: pointer; transition: all .2s; white-space: nowrap; overflow: hidden;
-        }
-        .nav-logout:hover { background: rgba(248, 113, 113, 0.15); color: #fff; }
-        .nav-children { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
-        .nav-children.open { max-height: 400px; }
-        .nav-child {
-            display: flex; align-items: center; gap: .85rem; padding: .7rem 1.2rem .7rem 3rem; color: rgba(255, 255, 255, 0.7);
-            font-size: .82rem; font-weight: 500; border-left: 3px solid transparent; text-decoration: none;
-            transition: all .16s; white-space: nowrap; overflow: hidden;
-        }
-        .nav-child:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-        .nav-child.active { color: #fff; font-weight: 600; border-left-color: var(--bright-gold); background: rgba(255, 255, 255, .15); }
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .25); border-radius: 4px; }
-
-        /* MAIN */
-        .main { flex: 1; overflow-y: auto; padding: 2rem; background: var(--bg); }
-        .main::-webkit-scrollbar { width: 6px; }
-        .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
-
-        /* PAGE HEADER */
-        .page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-        .page-title { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; color: var(--text-primary); }
-        .page-sub { font-size: .9rem; color: var(--text-secondary); margin-top: .25rem; }
-        .page-actions { display: flex; align-items: center; gap: .75rem; }
-        .btn-primary {
-            display: inline-flex; align-items: center; gap: .55rem; background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
-            color: #fff; border: none; font-size: .85rem; font-weight: 600; padding: .65rem 1.2rem; border-radius: 8px; cursor: pointer;
-            font-family: 'Inter', sans-serif; box-shadow: 0 3px 10px rgba(9, 79, 163, 0.25); transition: all .2s;
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(9, 79, 163, 0.35); }
-
-        /* FILTERS */
-        .filters-bar { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-        .select-input {
-            background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: .6rem .9rem;
-            font-size: .85rem; font-family: 'Inter', sans-serif; color: var(--text-primary); outline: none; cursor: pointer;
-            transition: border-color .2s;
-        }
-        .select-input:focus { border-color: var(--primary-blue); }
-        .filter-count { margin-left: auto; font-size: .85rem; color: var(--text-secondary); font-weight: 500; }
-
-        /* CYCLES GRID */
-        .cycles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; }
-        .cycle-card {
-            background: var(--surface); border-radius: 12px; box-shadow: var(--card-shadow);
-            border: 1.5px solid var(--border); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .cycle-card:hover { transform: translateY(-3px); box-shadow: 0 4px 16px rgba(9, 79, 163, 0.12); }
-        .cycle-card-top { padding: 1.2rem 1.4rem; position: relative; }
-        .cycle-card-top::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3.5px; background: linear-gradient(90deg, var(--primary-blue), var(--bright-blue)); }
-        .cycle-card.qs-sus .cycle-card-top::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
-        .cycle-card.qs-wur .cycle-card-top::before { background: linear-gradient(90deg, var(--primary-gold), var(--bright-gold)); }
-        .cycle-card.the-wur .cycle-card-top::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-        .cycle-card.the-impact .cycle-card-top::before { background: linear-gradient(90deg, #f97316, #fb923c); }
-        .cycle-card.greenmetric .cycle-card-top::before { background: linear-gradient(90deg, #0d9488, #14b8a6); }
-
-        .cycle-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
-        .cycle-type-badge {
-            display: inline-flex; align-items: center; gap: .35rem; font-size: .72rem; font-weight: 700;
-            padding: .25rem .75rem; border-radius: 999px;
-        }
-        .badge-qs-sus { background: #f0fdf4; color: #15803d; }
-        .badge-qs-wur { background: var(--light-gold); color: #854d0e; }
-        .badge-the-wur { background: #f5f3ff; color: #6d28d9; }
-        .badge-the-impact { background: #fff7ed; color: #c2410c; }
-        .badge-greenmetric { background: #f0fdfa; color: #0f766e; }
-
-        .status-dot { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 700; padding: .25rem .75rem; border-radius: 999px; }
-        .dot-active { background: #f0fdf4; color: #15803d; }
-        .dot-closed { background: #f8fafc; color: #64748b; }
-        .dot-draft { background: #fefce8; color: #b45309; }
-
-        .cycle-title { font-family: 'Instrument Serif', serif; font-size: 1.2rem; font-weight: 400; color: var(--text-primary); margin-bottom: .4rem; line-height: 1.3; }
-        .cycle-dates { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--text-secondary); margin-bottom: .5rem; }
-        .cycle-desc { font-size: .82rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: .8rem; }
-        
-        .cycle-progress-row { display: flex; align-items: center; gap: .6rem; }
-        .cycle-prog-label { font-size: .75rem; color: var(--text-secondary); min-width: 65px; font-weight: 500; }
-        .prog-bar { flex: 1; height: 6px; background: #e8ecf4; border-radius: 999px; overflow: hidden; }
-        .prog-fill { height: 100%; border-radius: 999px; transition: width .4s ease; background: linear-gradient(90deg, var(--primary-blue), var(--bright-blue)); }
-        .prog-pct { font-size: .8rem; font-weight: 700; min-width: 36px; text-align: right; color: var(--text-secondary); }
-
-        .cycle-card-bottom {
-            display: flex; align-items: center; gap: .6rem; padding: .9rem 1.4rem; background: var(--surface-alt);
-            border-top: 1.5px solid var(--border);
-        }
-        .btn-open-form {
-            flex: 1; background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue)); color: #fff;
-            border: none; padding: .6rem; border-radius: 8px; font-size: .82rem; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; transition: all .2s; text-align: center; text-decoration: none; display: block;
-        }
-        .btn-open-form:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(9, 79, 163, 0.25); }
-        .btn-edit-cycle {
-            background: var(--surface); color: var(--text-primary); border: 1.5px solid var(--border);
-            padding: .6rem .9rem; border-radius: 8px; font-size: .82rem; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; white-space: nowrap; display: flex; align-items: center; gap: .3rem; transition: all .2s;
-        }
-        .btn-edit-cycle:hover { background: var(--surface-alt); border-color: var(--primary-blue); }
-
-        /* MODAL */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(3, 46, 100, 0.5); z-index: 1000;
-            display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);
-        }
-        .modal-overlay.show { display: flex; }
-        .modal {
-            background: var(--surface); border-radius: 12px; width: 100%; max-width: 520px;
-            box-shadow: 0 20px 60px rgba(9, 79, 163, 0.2); overflow: hidden;
-            animation: mIn .25s cubic-bezier(.34, 1.56, .64, 1) both;
-        }
-        @keyframes mIn {
-            from { opacity: 0; transform: scale(.92) translateY(16px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .create-modal { max-width: 560px; text-align: center; }
-        .create-modal-title { font-family: 'Instrument Serif', serif; font-size: 1.4rem; font-weight: 400; color: var(--text-primary); margin-bottom: .35rem; text-align: center; }
-        .create-modal-sub { font-size: .85rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 1.5rem; text-align: center; }
-        .create-modal-body { padding: 2rem 1.8rem 1rem; text-align: left; }
-        .create-modal-footer { display: flex; justify-content: center; gap: .75rem; padding: 0 1.8rem 1.8rem; }
-
-        .form-group { margin-bottom: 1.2rem; }
-        .form-label {
-            display: block; font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
-            color: var(--text-secondary); margin-bottom: .4rem;
-        }
-        .form-label span { color: var(--supporting-red); }
-        .form-input {
-            width: 100%; background: var(--surface-alt); border: 1.5px solid transparent; border-radius: 8px;
-            padding: .65rem .9rem; font-size: .85rem; font-family: 'Inter', sans-serif; color: var(--text-primary);
-            outline: none; transition: border-color .2s, background .2s;
-        }
-        .form-input:focus { border-color: var(--primary-blue); background: var(--surface); }
-        .form-input[readonly] { color: var(--text-secondary); cursor: default; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
-        .form-textarea { resize: vertical; min-height: 72px; }
-
-        .btn-cancel-m {
-            background: var(--surface); color: var(--text-primary); border: 1.5px solid var(--border);
-            padding: .65rem 1.4rem; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; transition: background .2s;
-        }
-        .btn-cancel-m:hover { background: var(--surface-alt); }
-        .btn-create {
-            background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue)); color: #fff; border: none;
-            padding: .65rem 1.6rem; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: .4rem; transition: all .2s;
-            justify-content: center; box-shadow: 0 3px 10px rgba(9, 79, 163, 0.25);
-        }
-        .btn-create:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(9, 79, 163, 0.35); }
-
-        .alert-modal { max-width: 400px; text-align: center; }
-        .alert-modal-body { padding: 2rem 1.8rem; }
-        .alert-icon { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; font-size: 2.8rem; }
-        .alert-title { font-family: 'Instrument Serif', serif; font-size: 1.15rem; font-weight: 400; color: var(--text-primary); margin-bottom: .8rem; }
-        .alert-msg { font-size: .85rem; color: var(--text-secondary); line-height: 1.6; }
-        .alert-modal-footer { display: flex; justify-content: center; padding: 0 1.8rem 1.8rem; }
-        .btn-alert-ok {
-            background: var(--supporting-red); color: #fff; border: none; padding: .65rem 2.5rem; border-radius: 8px;
-            font-size: .85rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s;
-        }
-        .btn-alert-ok:hover { background: #d11a21; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar { position: fixed; left: 0; top: var(--header-h); height: calc(100vh - var(--header-h)); z-index: 150; transform: translateX(-100%); transition: transform 0.3s; }
-            .sidebar.mobile-open { transform: translateX(0); }
-            .cycles-grid { grid-template-columns: 1fr; }
-            .page-title { font-size: 1.6rem; }
-            .header-logo { height: 42px; }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ranking Cycles – UoB Rankings Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+--primary-blue: #094FA3;
+--bright-blue: #4B95FA;
+--light-blue: #91BDFC;
+--primary-gold: #B99B68;
+--bright-gold: #E4C082;
+--light-gold: #F6EBD9;
+--supporting-red: #ED1C24;
+--sidebar-w: 260px;
+--sidebar-w-collapsed: 70px;
+--header-h: 70px;
+--bg: #FFFFFF;
+--surface: #FFFFFF;
+--surface-alt: #F5F7FA;
+--border: rgba(9, 79, 163, 0.15);
+--text-primary: #032E64;
+--text-secondary: #595F61;
+--text-light: #7B8285;
+--card-shadow: 0 2px 12px rgba(9, 79, 163, 0.08);
+--green: #16a34a;
+--amber: #f59e0b;
+--icon-color: #094FA3;
+}
+html, body {
+height: 100%;
+font-family: 'Inter', sans-serif;
+background: var(--bg);
+color: var(--text-primary);
+overflow: hidden;
+}
+/* HEADER */
+.header {
+position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 200;
+background: #FFFFFF; display: flex; align-items: center; justify-content: space-between;
+padding: 0 2rem; box-shadow: 0 2px 8px rgba(9, 79, 163, 0.1); border-bottom: 2px solid var(--primary-blue);
+}
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.menu-toggle {
+width: 40px; height: 40px; border-radius: 8px; background: var(--surface-alt); border: none;
+cursor: pointer; display: flex; align-items: center; justify-content: center;
+color: var(--primary-blue); font-size: 1.1rem; transition: all 0.2s;
+}
+.menu-toggle:hover { background: var(--light-blue); color: #fff; }
+.header-right { display: flex; align-items: center; gap: 1.5rem; }
+.header-logo { height: 50px; width: auto; object-fit: contain; }
+.user-pill {
+display: flex; align-items: center; gap: .7rem; background: var(--surface-alt);
+padding: 0.5rem 1.2rem; border-radius: 999px; border: 1.5px solid var(--border);
+}
+.user-avatar {
+width: 36px; height: 36px; border-radius: 50%;
+background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+color: #fff; font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.user-info { text-align: left; }
+.user-name { font-size: .85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+.user-role { font-size: .68rem; color: var(--text-secondary); }
+/* SIDEBAR */
+.layout { display: flex; margin-top: var(--header-h); height: calc(100vh - var(--header-h)); }
+.sidebar {
+width: var(--sidebar-w); flex-shrink: 0;
+background: linear-gradient(180deg, var(--primary-blue) 0%, var(--bright-blue) 100%);
+display: flex; flex-direction: column; overflow-y: auto;
+transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+.nav-section { margin-top: 1.2rem; }
+.nav-label {
+font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+color: rgba(255, 255, 255, 0.5); padding: 0.6rem 1.2rem; white-space: nowrap; overflow: hidden;
+}
+.sidebar.collapsed .nav-label { padding: 0.6rem 0.5rem; }
+.nav-item {
+display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: rgba(255, 255, 255, 0.8);
+font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; text-decoration: none;
+transition: all .2s; cursor: pointer; white-space: nowrap; overflow: hidden;
+}
+.nav-item:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.nav-item.active { background: rgba(255, 255, 255, 0.18); color: #fff; font-weight: 600; border-left-color: var(--bright-gold); }
+.nav-icon { font-size: 1.05rem; width: 22px; text-align: center; flex-shrink: 0; color: #fff; }
+.nav-text { opacity: 1; transition: opacity 0.2s; }
+.sidebar.collapsed .nav-text { opacity: 0; width: 0; }
+.nav-badge {
+margin-left: auto; background: var(--bright-gold); color: var(--text-primary); font-size: .65rem;
+font-weight: 700; padding: .15rem .5rem; border-radius: 999px; flex-shrink: 0;
+}
+.sidebar.collapsed .nav-badge { display: none; }
+.nav-spacer { flex: 1; }
+.nav-logout {
+display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: #fecaca;
+font-size: .85rem; font-weight: 600; border-left: 3px solid transparent; text-decoration: none;
+cursor: pointer; transition: all .2s; white-space: nowrap; overflow: hidden;
+}
+.nav-logout:hover { background: rgba(248, 113, 113, 0.15); color: #fff; }
+.nav-children { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+.nav-children.open { max-height: 400px; }
+.nav-child {
+display: flex; align-items: center; gap: .85rem; padding: .7rem 1.2rem .7rem 3rem; color: rgba(255, 255, 255, 0.7);
+font-size: .82rem; font-weight: 500; border-left: 3px solid transparent; text-decoration: none;
+transition: all .16s; white-space: nowrap; overflow: hidden;
+}
+.nav-child:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.nav-child.active { color: #fff; font-weight: 600; border-left-color: var(--bright-gold); background: rgba(255, 255, 255, .15); }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .25); border-radius: 4px; }
+/* MAIN */
+.main { flex: 1; overflow-y: auto; padding: 2rem; background: var(--bg); }
+.main::-webkit-scrollbar { width: 6px; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+/* PAGE HEADER */
+.page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.page-title { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; color: var(--text-primary); }
+.page-sub { font-size: .9rem; color: var(--text-secondary); margin-top: .25rem; }
+.page-actions { display: flex; align-items: center; gap: .75rem; }
+.btn-primary {
+display: inline-flex; align-items: center; gap: .55rem; background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue));
+color: #fff; border: none; font-size: .85rem; font-weight: 600; padding: .65rem 1.2rem; border-radius: 8px; cursor: pointer;
+font-family: 'Inter', sans-serif; box-shadow: 0 3px 10px rgba(9, 79, 163, 0.25); transition: all .2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(9, 79, 163, 0.35); }
+.btn-secondary {
+    display: inline-flex; align-items: center; gap: .55rem;
+    background: var(--surface); color: var(--primary-blue);
+    border: 1.5px solid var(--primary-blue);
+    font-size: .85rem; font-weight: 600; padding: .6rem 1.2rem; border-radius: 8px; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: all .2s;
+}
+.btn-secondary:hover { 
+    background: var(--primary-blue); color: #fff;
+    transform: translateY(-2px); box-shadow: 0 5px 15px rgba(9, 79, 163, 0.25);
+}
+/* FILTERS */
+.filters-bar { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.select-input {
+background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; padding: .6rem .9rem;
+font-size: .85rem; font-family: 'Inter', sans-serif; color: var(--text-primary); outline: none; cursor: pointer;
+transition: border-color .2s;
+}
+.select-input:focus { border-color: var(--primary-blue); }
+.filter-count { margin-left: auto; font-size: .85rem; color: var(--text-secondary); font-weight: 500; }
+/* CYCLES GRID */
+.cycles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; }
+.cycle-card {
+background: var(--surface); border-radius: 12px; box-shadow: var(--card-shadow);
+border: 1.5px solid var(--border); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+}
+.cycle-card:hover { transform: translateY(-3px); box-shadow: 0 4px 16px rgba(9, 79, 163, 0.12); }
+.cycle-card-top { padding: 1.2rem 1.4rem; position: relative; }
+.cycle-card-top::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3.5px; background: linear-gradient(90deg, var(--primary-blue), var(--bright-blue)); }
+.cycle-card.qs-sus .cycle-card-top::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
+.cycle-card.qs-wur .cycle-card-top::before { background: linear-gradient(90deg, var(--primary-gold), var(--bright-gold)); }
+.cycle-card.the-wur .cycle-card-top::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.cycle-card.the-impact .cycle-card-top::before { background: linear-gradient(90deg, #f97316, #fb923c); }
+.cycle-card.greenmetric .cycle-card-top::before { background: linear-gradient(90deg, #0d9488, #14b8a6); }
+.cycle-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
+.cycle-type-badge {
+display: inline-flex; align-items: center; gap: .35rem; font-size: .72rem; font-weight: 700;
+padding: .25rem .75rem; border-radius: 999px;
+}
+.badge-qs-sus { background: #f0fdf4; color: #15803d; }
+.badge-qs-wur { background: var(--light-gold); color: #854d0e; }
+.badge-the-wur { background: #f5f3ff; color: #6d28d9; }
+.badge-the-impact { background: #fff7ed; color: #c2410c; }
+.badge-greenmetric { background: #f0fdfa; color: #0f766e; }
+.status-dot { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 700; padding: .25rem .75rem; border-radius: 999px; }
+.dot-active { background: #f0fdf4; color: #15803d; }
+.dot-closed { background: #f8fafc; color: #64748b; }
+.dot-draft { background: #fefce8; color: #b45309; }
+.cycle-title { font-family: 'Instrument Serif', serif; font-size: 1.2rem; font-weight: 400; color: var(--text-primary); margin-bottom: .4rem; line-height: 1.3; }
+.cycle-dates { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--text-secondary); margin-bottom: .5rem; }
+.cycle-desc { font-size: .82rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: .8rem; }
+.cycle-progress-row { display: flex; align-items: center; gap: .6rem; }
+.cycle-prog-label { font-size: .75rem; color: var(--text-secondary); min-width: 65px; font-weight: 500; }
+.prog-bar { flex: 1; height: 6px; background: #e8ecf4; border-radius: 999px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 999px; transition: width .4s ease; background: linear-gradient(90deg, var(--primary-blue), var(--bright-blue)); }
+.prog-pct { font-size: .8rem; font-weight: 700; min-width: 36px; text-align: right; color: var(--text-secondary); }
+.cycle-card-bottom {
+display: flex; align-items: center; gap: .6rem; padding: .9rem 1.4rem; background: var(--surface-alt);
+border-top: 1.5px solid var(--border);
+}
+.btn-open-form {
+flex: 1; background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue)); color: #fff;
+border: none; padding: .6rem; border-radius: 8px; font-size: .82rem; font-weight: 600; cursor: pointer;
+font-family: 'Inter', sans-serif; transition: all .2s; text-align: center; text-decoration: none; display: block;
+}
+.btn-open-form:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(9, 79, 163, 0.25); }
+.btn-edit-cycle {
+background: var(--surface); color: var(--text-primary); border: 1.5px solid var(--border);
+padding: .6rem .9rem; border-radius: 8px; font-size: .82rem; font-weight: 600; cursor: pointer;
+font-family: 'Inter', sans-serif; white-space: nowrap; display: flex; align-items: center; gap: .3rem; transition: all .2s;
+}
+.btn-edit-cycle:hover { background: var(--surface-alt); border-color: var(--primary-blue); }
+/* MODAL */
+.modal-overlay {
+position: fixed; inset: 0; background: rgba(3, 46, 100, 0.5); z-index: 1000;
+display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+}
+.modal-overlay.show { display: flex; }
+.modal {
+background: var(--surface); border-radius: 12px; width: 100%; max-width: 520px;
+box-shadow: 0 20px 60px rgba(9, 79, 163, 0.2); overflow: hidden;
+animation: mIn .25s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+@keyframes mIn {
+from { opacity: 0; transform: scale(.92) translateY(16px); }
+to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.create-modal { max-width: 560px; text-align: center; }
+.create-modal-title { font-family: 'Instrument Serif', serif; font-size: 1.4rem; font-weight: 400; color: var(--text-primary); margin-bottom: .35rem; text-align: center; }
+.create-modal-sub { font-size: .85rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 1.5rem; text-align: center; }
+.create-modal-body { padding: 2rem 1.8rem 1rem; text-align: left; }
+.create-modal-footer { display: flex; justify-content: center; gap: .75rem; padding: 0 1.8rem 1.8rem; }
+.form-group { margin-bottom: 1.2rem; }
+.form-label {
+display: block; font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+color: var(--text-secondary); margin-bottom: .4rem;
+}
+.form-label span { color: var(--supporting-red); }
+.form-input {
+width: 100%; background: var(--surface-alt); border: 1.5px solid transparent; border-radius: 8px;
+padding: .65rem .9rem; font-size: .85rem; font-family: 'Inter', sans-serif; color: var(--text-primary);
+outline: none; transition: border-color .2s, background .2s;
+}
+.form-input:focus { border-color: var(--primary-blue); background: var(--surface); }
+.form-input[readonly] { color: var(--text-secondary); cursor: default; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+.form-textarea { resize: vertical; min-height: 72px; }
+.btn-cancel-m {
+background: var(--surface); color: var(--text-primary); border: 1.5px solid var(--border);
+padding: .65rem 1.4rem; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer;
+font-family: 'Inter', sans-serif; transition: background .2s;
+}
+.btn-cancel-m:hover { background: var(--surface-alt); }
+.btn-create {
+background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue)); color: #fff; border: none;
+padding: .65rem 1.6rem; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer;
+font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: .4rem; transition: all .2s;
+justify-content: center; box-shadow: 0 3px 10px rgba(9, 79, 163, 0.25);
+}
+.btn-create:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(9, 79, 163, 0.35); }
+.alert-modal { max-width: 400px; text-align: center; }
+.alert-modal-body { padding: 2rem 1.8rem; }
+.alert-icon { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; font-size: 2.8rem; }
+.alert-title { font-family: 'Instrument Serif', serif; font-size: 1.15rem; font-weight: 400; color: var(--text-primary); margin-bottom: .8rem; }
+.alert-msg { font-size: .85rem; color: var(--text-secondary); line-height: 1.6; }
+.alert-modal-footer { display: flex; justify-content: center; padding: 0 1.8rem 1.8rem; }
+.btn-alert-ok {
+background: var(--supporting-red); color: #fff; border: none; padding: .65rem 2.5rem; border-radius: 8px;
+font-size: .85rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s;
+}
+.btn-alert-ok:hover { background: #d11a21; }
+/* Responsive */
+@media (max-width: 768px) {
+.sidebar { position: fixed; left: 0; top: var(--header-h); height: calc(100vh - var(--header-h)); z-index: 150; transform: translateX(-100%); transition: transform 0.3s; }
+.sidebar.mobile-open { transform: translateX(0); }
+.cycles-grid { grid-template-columns: 1fr; }
+.page-title { font-size: 1.6rem; }
+.header-logo { height: 42px; }
+}
+</style>
 </head>
-
 <body>
+<header class="header">
+<div class="header-left">
+<button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+</div>
+<div class="header-right">
+<img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="header-logo">
+<div class="user-pill">
+<div class="user-avatar" id="adminAvatar">AD</div>
+<div class="user-info">
+<div class="user-name" id="adminName">Admin</div>
+<div class="user-role">Administrator</div>
+</div>
+</div>
+</div>
+</header>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<div class="nav-section">
+<div class="nav-label">Main</div>
+<a class="nav-item" href="dashboard-admin.html">
+<i class="fas fa-chart-line nav-icon"></i><span class="nav-text">Dashboard</span>
+</a>
+</div>
+<div class="nav-section">
+<div class="nav-label">Ranking Cycles</div>
+<div class="nav-item active" style="padding-right:.5rem" onclick="toggleCycles()">
+<i class="fas fa-trophy nav-icon"></i><span class="nav-text">All Cycles</span>
+<i class="fas fa-chevron-down" style="margin-left:auto;font-size:.65rem;transition:transform 0.3s" id="cyclesArrow"></i>
+</div>
+<div class="nav-children open" id="navCycles">
+<a class="nav-child" href="admin-cycles.html?type=qs-sustainability">
+<i class="fas fa-leaf nav-icon" style="font-size:.9rem"></i><span class="nav-text">QS Sustainability</span>
+</a>
+<a class="nav-child" href="admin-cycles.html?type=qs-wur">
+<i class="fas fa-award nav-icon" style="font-size:.9rem"></i><span class="nav-text">QS WUR</span>
+</a>
+<a class="nav-child" href="admin-cycles.html?type=the-wur">
+<i class="fas fa-chart-bar nav-icon" style="font-size:.9rem"></i><span class="nav-text">THE WUR</span>
+</a>
+<a class="nav-child" href="admin-cycles.html?type=the-impact">
+<i class="fas fa-bullseye nav-icon" style="font-size:.9rem"></i><span class="nav-text">THE Impact</span>
+</a>
+<a class="nav-child" href="admin-cycles.html?type=greenmetric">
+<i class="fas fa-seedling nav-icon" style="font-size:.9rem"></i><span class="nav-text">GreenMetric</span>
+</a>
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Monitoring</div>
+<a class="nav-item" href="admin-progress.html">
+<i class="fas fa-chart-area nav-icon"></i><span class="nav-text">Progress</span>
+</a>
+<a class="nav-item" href="reminders.html">
+<i class="fas fa-envelope nav-icon"></i><span class="nav-text">Reminders</span><span class="nav-badge">4</span>
+</a>
+<a class="nav-item" href="department.html">
+<i class="fas fa-building nav-icon"></i><span class="nav-text">Departments</span>
+</a>
+</div>
+<div class="nav-spacer"></div>
+<div class="nav-logout" onclick="logout()">
+<i class="fas fa-sign-out-alt nav-icon"></i><span class="nav-text">Logout</span>
+</div>
+</aside>
+<main class="main">
+<div class="page-hdr">
+<div>
+<div class="page-title">Ranking Cycles</div>
+<div class="page-sub">Create and manage ranking submission cycles</div>
+</div>
+<div class="page-actions">
+    <button class="btn-secondary" onclick="window.location.href='admin-template-editor.html'">
+        <i class="fas fa-layer-group"></i> Manage Templates
+    </button>
+    <button class="btn-primary" onclick="openCreateModal()"><i class="fas fa-plus"></i> New Cycle</button>
+</div>
+</div>
+<div class="filters-bar">
+<select class="select-input" id="filterType" onchange="renderCycles()">
+<option value="">All Types</option>
+<option value="QS Sustainability Rankings">QS Sustainability Rankings</option>
+<option value="QS World University Rankings">QS World University Rankings</option>
+<option value="THE World University Rankings">THE World University Rankings</option>
+<option value="THE Impact Rankings">THE Impact Rankings</option>
+<option value="UI GreenMetric">UI GreenMetric</option>
+</select>
+<select class="select-input" id="filterYear" onchange="renderCycles()" style="min-width:110px">
+<option value="">All Years</option>
+</select>
+<div class="filter-count" id="cycleCount">— cycles</div>
+</div>
+<div class="cycles-grid" id="cyclesGrid">
+<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-secondary)">Loading cycles...</div>
+</div>
+</main>
+</div>
 
-    <header class="header">
-        <div class="header-left">
-            <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-        </div>
-        <div class="header-right">
-            <img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="header-logo">
-            <div class="user-pill">
-                <div class="user-avatar" id="adminAvatar">AD</div>
-                <div class="user-info">
-                    <div class="user-name" id="adminName">Admin</div>
-                    <div class="user-role">Administrator</div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="layout">
-        <aside class="sidebar" id="sidebar">
-            <div class="nav-section">
-                <div class="nav-label">Main</div>
-                <a class="nav-item" href="dashboard-admin.html">
-                    <i class="fas fa-chart-line nav-icon"></i><span class="nav-text">Dashboard</span>
-                </a>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-label">Ranking Cycles</div>
-                <div class="nav-item active" style="padding-right:.5rem" onclick="toggleCycles()">
-                    <i class="fas fa-trophy nav-icon"></i><span class="nav-text">All Cycles</span>
-                    <i class="fas fa-chevron-down" style="margin-left:auto;font-size:.65rem;transition:transform 0.3s" id="cyclesArrow"></i>
-                </div>
-                <div class="nav-children open" id="navCycles">
-                    <a class="nav-child" href="admin-cycles.html?type=qs-sustainability">
-                        <i class="fas fa-leaf nav-icon" style="font-size:.9rem"></i><span class="nav-text">QS Sustainability</span>
-                    </a>
-                    <a class="nav-child" href="admin-cycles.html?type=qs-wur">
-                        <i class="fas fa-award nav-icon" style="font-size:.9rem"></i><span class="nav-text">QS WUR</span>
-                    </a>
-                    <a class="nav-child" href="admin-cycles.html?type=the-wur">
-                        <i class="fas fa-chart-bar nav-icon" style="font-size:.9rem"></i><span class="nav-text">THE WUR</span>
-                    </a>
-                    <a class="nav-child" href="admin-cycles.html?type=the-impact">
-                        <i class="fas fa-bullseye nav-icon" style="font-size:.9rem"></i><span class="nav-text">THE Impact</span>
-                    </a>
-                    <a class="nav-child" href="admin-cycles.html?type=greenmetric">
-                        <i class="fas fa-seedling nav-icon" style="font-size:.9rem"></i><span class="nav-text">GreenMetric</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-label">Monitoring</div>
-                <a class="nav-item" href="admin-progress.html">
-                    <i class="fas fa-chart-area nav-icon"></i><span class="nav-text">Progress</span>
-                </a>
-                <a class="nav-item" href="reminders.html">
-                    <i class="fas fa-envelope nav-icon"></i><span class="nav-text">Reminders</span><span class="nav-badge">4</span>
-                </a>
-                <a class="nav-item" href="department.html">
-                    <i class="fas fa-building nav-icon"></i><span class="nav-text">Departments</span>
-                </a>
-            </div>
-
-            <div class="nav-spacer"></div>
-            <div class="nav-logout" onclick="logout()">
-                <i class="fas fa-sign-out-alt nav-icon"></i><span class="nav-text">Logout</span>
-            </div>
-        </aside>
-
-        <main class="main">
-            <div class="page-hdr">
-                <div>
-                    <div class="page-title">Ranking Cycles</div>
-                    <div class="page-sub">Create and manage ranking submission cycles</div>
-                </div>
-                <div class="page-actions">
-                    <button class="btn-primary" onclick="openCreateModal()"><i class="fas fa-plus"></i> New Cycle</button>
-                </div>
-            </div>
-
-            <div class="filters-bar">
-                <select class="select-input" id="filterType" onchange="renderCycles()">
-                    <option value="">All Types</option>
-                    <option value="QS Sustainability Rankings">QS Sustainability Rankings</option>
-                    <option value="QS World University Rankings">QS World University Rankings</option>
-                    <option value="THE World University Rankings">THE World University Rankings</option>
-                    <option value="THE Impact Rankings">THE Impact Rankings</option>
-                    <option value="UI GreenMetric">UI GreenMetric</option>
-                </select>
-                <select class="select-input" id="filterYear" onchange="renderCycles()" style="min-width:110px">
-                    <option value="">All Years</option>
-                </select>
-                <div class="filter-count" id="cycleCount">— cycles</div>
-            </div>
-
-            <div class="cycles-grid" id="cyclesGrid">
-                <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-secondary)">Loading cycles...</div>
-            </div>
-        </main>
-    </div>
-
-    <!-- CREATE CYCLE MODAL -->
-    <div class="modal-overlay" id="createModal" onclick="closeOnOverlay(event,'createModal')">
-        <div class="modal create-modal">
+<!-- CREATE CYCLE MODAL -->
+<div class="modal-overlay" id="createModal" onclick="closeOnOverlay(event,'createModal')">
+    <div class="modal create-modal">
+        <form id="createCycleForm" onsubmit="handleCreateCycle(event)" novalidate>
             <div class="create-modal-body">
                 <div class="create-modal-title">Create Ranking Cycle</div>
-                <div class="create-modal-sub">Set up a new data collection cycle. Once created, you'll be taken straight to the form.</div>
+                <div class="create-modal-sub">Set up a new data collection cycle or create a new question template.</div>
+                
+                <!-- 1. Setup Choice -->
                 <div class="form-group">
-                    <label class="form-label">Ranking Type <span>*</span></label>
-                    <select class="form-input" id="newType" onchange="updateAutoName()">
-                        <option value="">— Select Ranking Type —</option>
-                        <option value="QS Sustainability Rankings">QS Sustainability Rankings</option>
-                        <option value="QS World University Rankings">QS World University Rankings</option>
-                        <option value="THE World University Rankings">THE World University Rankings</option>
-                        <option value="THE Impact Rankings">THE Impact Rankings</option>
-                        <option value="UI GreenMetric">UI GreenMetric</option>
-                    </select>
+                    <label class="form-label">Cycle Setup <span>*</span></label>
+                    <div style="display:flex; gap:1.5rem; margin-top:.5rem;">
+                        <label style="display:flex; align-items:center; gap:.5rem; cursor:pointer; font-size:.85rem; color:var(--text-primary);">
+                            <input type="radio" name="cycleSetup" value="existing" checked onchange="toggleCycleSetup()" required>
+                            Use Existing Template
+                        </label>
+                        <label style="display:flex; align-items:center; gap:.5rem; cursor:pointer; font-size:.85rem; color:var(--text-primary);">
+                            <input type="radio" name="cycleSetup" value="new" onchange="toggleCycleSetup()">
+                            Create New Template
+                        </label>
+                    </div>
                 </div>
+
+                <!-- 2. Existing Template Fields -->
+                <div id="existingTemplateFields">
+                    <div class="form-group">
+                        <label class="form-label" for="newTemplateId">Select Template <span>*</span></label>
+                        <select class="form-input" id="newTemplateId" name="templateId" onchange="updateAutoNameFromTemplate()" required>
+                            <option value="">— Select Template —</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="newYear">Year <span>*</span></label>
+                            <input class="form-input" id="newYear" name="year" type="text" inputmode="numeric" 
+                                   maxlength="4" pattern="\d{4}" placeholder="e.g. 2026" 
+                                   oninput="updateAutoNameFromTemplate()" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Auto-Generated Name</label>
+                            <input class="form-input" id="newAutoName" type="text" placeholder="Select template + year" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. New Template Fields (Hidden by default) -->
+                <div id="newTemplateFields" style="display:none;">
+                    <div class="form-group">
+                        <label class="form-label" for="newTemplateName">Template Name <span>*</span></label>
+                        <input class="form-input" id="newTemplateName" name="templateName" type="text" 
+                               placeholder="e.g. QS Sustainability Rankings" oninput="updateAutoNameNewTemplate()" required />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="newTemplateYear">Initial Year (Optional)</label>
+                            <input class="form-input" id="newTemplateYear" name="templateYear" type="text" 
+                                   inputmode="numeric" maxlength="4" placeholder="e.g. 2026" oninput="updateAutoNameNewTemplate()" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Auto-Generated Name</label>
+                            <input class="form-input" id="newAutoNameNew" type="text" placeholder="Enter template name" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Common Fields -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Year <span>*</span></label>
-                        <input class="form-input" id="newYear" type="text" inputmode="numeric" maxlength="4" 
-                            placeholder="e.g. 2026" oninput="updateAutoName()" />
+                        <label class="form-label" for="newStart">Start Date <span>*</span></label>
+                        <input class="form-input" id="newStart" name="startDate" type="date" required />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Auto-Generated Name</label>
-                        <input class="form-input" id="newAutoName" type="text" placeholder="Fill Type + Year" readonly />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Start Date <span>*</span></label>
-                        <input class="form-input" id="newStart" type="date" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">End Date <span>*</span></label>
-                        <input class="form-input" id="newDeadline" type="date" />
+                        <label class="form-label" for="newDeadline">End Date <span>*</span></label>
+                        <input class="form-input" id="newDeadline" name="deadline" type="date" required />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Description / Notes (optional)</label>
-                    <textarea class="form-input form-textarea" id="newDesc" placeholder="Any notes about this cycle..."></textarea>
+                    <label class="form-label" for="newDesc">Description / Notes (optional)</label>
+                    <textarea class="form-input form-textarea" id="newDesc" name="description" 
+                              placeholder="Any notes about this cycle..."></textarea>
                 </div>
             </div>
             <div class="create-modal-footer">
-                <button class="btn-cancel-m" onclick="closeModal('createModal')">Cancel</button>
-                <button class="btn-create" onclick="createCycle()"><i class="fas fa-plus"></i> Create & Open Form</button>
+                <button type="button" class="btn-cancel-m" onclick="closeModal('createModal')">Cancel</button>
+                <button type="submit" class="btn-create" id="createBtn">
+                    <i class="fas fa-plus"></i> <span id="createBtnText">Create & Open Form</span>
+                </button>
             </div>
-        </div>
+        </form>
     </div>
+</div>
 
-    <!-- DUPLICATE WARNING MODAL -->
-    <div class="modal-overlay" id="alertModal" onclick="closeOnOverlay(event,'alertModal')">
-        <div class="modal alert-modal">
-            <div class="alert-modal-body">
-                <div class="alert-icon">⚠️</div>
-                <div id="alertTitle" class="alert-title"></div>
-                <div id="alertMsg" class="alert-msg"></div>
-            </div>
-            <div class="alert-modal-footer">
-                <button id="alertConfirmBtn" class="btn-alert-ok">OK</button>
-            </div>
-        </div>
-    </div>
+<!-- DUPLICATE WARNING MODAL -->
+<div class="modal-overlay" id="alertModal" onclick="closeOnOverlay(event,'alertModal')">
+<div class="modal alert-modal">
+<div class="alert-modal-body">
+<div class="alert-icon">⚠️</div>
+<div id="alertTitle" class="alert-title"></div>
+<div id="alertMsg" class="alert-msg"></div>
+</div>
+<div class="alert-modal-footer">
+<button id="alertConfirmBtn" class="btn-alert-ok">OK</button>
+</div>
+</div>
+</div>
 
-    <script>
-        const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-            ? 'http://localhost:3002'
-            : 'https://uob-rankings.onrender.com';
+<script>
+const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+? 'http://localhost:3002'
+: 'https://uob-rankings.onrender.com';
+const token = localStorage.getItem('token');
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+if (!token || user.role !== 'admin') window.location.href = 'login.html';
+document.getElementById('adminName').textContent = user.name || 'Admin';
+document.getElementById('adminAvatar').textContent = (user.name || 'AD').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
 
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (!token || user.role !== 'admin') window.location.href = 'login.html';
+// ── Sidebar toggle ──────────────────────────────────────
+function toggleSidebar() {
+const sidebar = document.getElementById('sidebar');
+sidebar.classList.toggle('collapsed');
+localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+}
+const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+if (sidebarCollapsed) {
+document.getElementById('sidebar').classList.add('collapsed');
+}
+function toggleCycles() {
+const el = document.getElementById('navCycles');
+const arrow = document.getElementById('cyclesArrow');
+el.classList.toggle('open');
+arrow.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+function logout() {
+fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } }).catch(() => {});
+localStorage.clear();
+window.location.href = 'login.html';
+}
 
-        document.getElementById('adminName').textContent = user.name || 'Admin';
-        document.getElementById('adminAvatar').textContent = (user.name || 'AD').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+// ── URL param → filter map ──────────────────────────────
+const typeParamMap = {
+'qs-sustainability': 'QS Sustainability Rankings',
+'qs-wur': 'QS World University Rankings',
+'the-wur': 'THE World University Rankings',
+'the-impact': 'THE Impact Rankings',
+'greenmetric': 'UI GreenMetric'
+};
+const urlParams = new URLSearchParams(window.location.search);
+const typeParam = urlParams.get('type') || '';
+const mappedType = typeParamMap[typeParam] || '';
+if (mappedType) {
+document.getElementById('filterType').value = mappedType;
+}
+let hasActiveChild = false;
+document.querySelectorAll('.nav-child').forEach(a => {
+const url = new URL(a.href, location.href);
+if (url.searchParams.get('type') === typeParam && typeParam) {
+a.classList.add('active');
+hasActiveChild = true;
+document.getElementById('navCycles').classList.add('open');
+document.getElementById('cyclesArrow').style.transform = 'rotate(180deg)';
+}
+});
 
-        // ── Sidebar toggle ──────────────────────────────────────
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('collapsed');
-            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
-        }
+// ── Ranking type config ─────────────────────────────────
+const rankingConfig = {
+'QS Sustainability Rankings': { cls: 'qs-sus', badge: 'badge-qs-sus', icon: '<i class="fas fa-leaf"></i>', formUrl: 'form-qs-sustainability.html' },
+'QS World University Rankings': { cls: 'qs-wur', badge: 'badge-qs-wur', icon: '<i class="fas fa-award"></i>', formUrl: '#' },
+'THE World University Rankings': { cls: 'the-wur', badge: 'badge-the-wur', icon: '<i class="fas fa-chart-bar"></i>', formUrl: '#' },
+'THE Impact Rankings': { cls: 'the-impact', badge: 'badge-the-impact', icon: '<i class="fas fa-bullseye"></i>', formUrl: '#' },
+'UI GreenMetric': { cls: 'greenmetric', badge: 'badge-greenmetric', icon: '<i class="fas fa-seedling"></i>', formUrl: '#' },
+};
+function getConfig(name) {
+for (const [key, val] of Object.entries(rankingConfig)) {
+if (name.toLowerCase().includes(key.toLowerCase())) return val;
+}
+return { cls: 'qs-wur', badge: 'badge-qs-wur', icon: '<i class="fas fa-award"></i>', formUrl: '#' };
+}
 
-        // Restore sidebar state
-        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-        if (sidebarCollapsed) {
-            document.getElementById('sidebar').classList.add('collapsed');
-        }
+let allCycles = [];
+let allTemplates = [];
 
-        function toggleCycles() {
-            const el = document.getElementById('navCycles');
-            const arrow = document.getElementById('cyclesArrow');
-            el.classList.toggle('open');
-            arrow.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-        }
+async function loadCycles() {
+try {
+const res = await fetch(`${API_BASE}/api/admin/cycles`, {
+headers: { 'Authorization': `Bearer ${token}` }
+});
+allCycles = await res.json();
+const years = [...new Set(allCycles.map(c => c.year))].sort((a, b) => b - a);
+const filterYearSelect = document.getElementById('filterYear');
+filterYearSelect.innerHTML = '<option value="">All Years</option>';
+years.forEach(y => {
+const opt = document.createElement('option');
+opt.value = y;
+opt.textContent = y;
+filterYearSelect.appendChild(opt);
+});
+renderCycles();
+} catch (e) {
+document.getElementById('cyclesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-secondary)">Failed to load cycles.</div>';
+}
+}
 
-        function logout() {
-            fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } }).catch(() => {});
-            localStorage.clear(); 
-            window.location.href = 'login.html';
-        }
+// Fetch templates from the backend
+async function loadTemplates() {
+try {
+const res = await fetch(`${API_BASE}/api/admin/templates`, {
+headers: { 'Authorization': `Bearer ${token}` }
+});
+allTemplates = await res.json();
+const sel = document.getElementById('newTemplateId');
+sel.innerHTML = '<option value="">— Select Template —</option>' +
+allTemplates.map(t => `<option value="${t.id}" data-name="${t.name}">${t.name}</option>`).join('');
+} catch (e) { 
+console.error('Failed to load templates:', e); 
+}
+}
 
-        // ── URL param → filter map ──────────────────────────────
-        const typeParamMap = {
-            'qs-sustainability': 'QS Sustainability Rankings',
-            'qs-wur': 'QS World University Rankings',
-            'the-wur': 'THE World University Rankings',
-            'the-impact': 'THE Impact Rankings',
-            'greenmetric': 'UI GreenMetric'
-        };
+function renderCycles() {
+const typeFilter = document.getElementById('filterType').value;
+const yearFilter = document.getElementById('filterYear').value;
+const filtered = allCycles.filter(c => {
+if (typeFilter && !c.name.toLowerCase().includes(typeFilter.toLowerCase())) return false;
+if (yearFilter && String(c.year) !== yearFilter) return false;
+return true;
+});
+document.getElementById('cycleCount').textContent = `${filtered.length} cycle${filtered.length !== 1 ? 's' : ''}`;
+if (!filtered.length) {
+document.getElementById('cyclesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-secondary)">No cycles found. Create one with the "+ New Cycle" button.</div>';
+return;
+}
+document.getElementById('cyclesGrid').innerHTML = filtered.map(c => {
+const cfg = getConfig(c.name);
+const total = c.total_questions || 0;
+const submitted = c.submitted_questions || 0;
+const pct = total ? Math.round((submitted / total) * 100) : 0;
+const statusCls = c.status === 'active' ? 'dot-active' : c.status === 'closed' ? 'dot-closed' : 'dot-draft';
+const statusLabel = c.status === 'active' ? '● Active' : c.status === 'closed' ? '○ Closed' : '◐ Draft';
+const startFmt = c.start_date ? new Date(c.start_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+const endFmt = c.deadline ? new Date(c.deadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+let progColor = '#094FA3';
+if (pct === 100) progColor = '#16a34a';
+else if (pct >= 60) progColor = '#4B95FA';
+else if (pct >= 30) progColor = '#f59e0b';
+else progColor = '#ED1C24';
+return `
+<div class="cycle-card ${cfg.cls}">
+<div class="cycle-card-top">
+<div class="cycle-top-row">
+<span class="cycle-type-badge ${cfg.badge}">${cfg.icon} ${c.name.includes('World University') ? (c.name.startsWith('QS') ? 'QS WUR' : 'THE WUR') : c.name.split(' ').slice(0, 2).join(' ')}</span>
+<span class="status-dot ${statusCls}">${statusLabel}</span>
+</div>
+<div class="cycle-title">${c.name}</div>
+<div class="cycle-dates"><i class="far fa-calendar-alt"></i> Start: ${startFmt} &nbsp;&nbsp; <i class="far fa-calendar-check"></i> End: ${endFmt}</div>
+${c.description ? `<div class="cycle-desc">${c.description}</div>` : ''}
+<div class="cycle-progress-row">
+<span class="cycle-prog-label">Completion</span>
+<div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${progColor}"></div></div>
+<span class="prog-pct" style="color:${progColor}">${pct}%</span>
+</div>
+</div>
+<div class="cycle-card-bottom">
+<a class="btn-open-form" href="admin-form.html?cycle=${c.id}">Open Form</a>
+<button class="btn-edit-cycle" onclick="editCycle(${c.id})"><i class="fas fa-edit"></i> Edit</button>
+</div>
+</div>`;
+}).join('');
+}
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const typeParam = urlParams.get('type') || '';
-        const mappedType = typeParamMap[typeParam] || '';
+function openCreateModal() {
+document.getElementById('createModal').classList.add('show');
+document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+document.getElementById(id).classList.remove('show');
+document.body.style.overflow = '';
+}
+function closeOnOverlay(e, id) {
+if (e.target === document.getElementById(id)) closeModal(id);
+}
 
-        if (mappedType) {
-            document.getElementById('filterType').value = mappedType;
-        }
+// Toggle visibility and required attributes based on radio selection
+function toggleCycleSetup() {
+const val = document.querySelector('input[name="cycleSetup"]:checked').value;
+document.getElementById('existingTemplateFields').style.display = val === 'existing' ? 'block' : 'none';
+document.getElementById('newTemplateFields').style.display = val === 'new' ? 'block' : 'none';
 
-        // Highlight matching sidebar child
-        let hasActiveChild = false;
-        document.querySelectorAll('.nav-child').forEach(a => {
-            const url = new URL(a.href, location.href);
-            if (url.searchParams.get('type') === typeParam && typeParam) {
-                a.classList.add('active');
-                hasActiveChild = true;
-                document.getElementById('navCycles').classList.add('open');
-                document.getElementById('cyclesArrow').style.transform = 'rotate(180deg)';
-            }
-        });
+const btnText = document.getElementById('createBtnText');
+btnText.textContent = val === 'new' ? 'Create & Build Questions' : 'Create & Open Form';
 
-        // ── Ranking type config ─────────────────────────────────
-        const rankingConfig = {
-            'QS Sustainability Rankings': { cls: 'qs-sus', badge: 'badge-qs-sus', icon: '<i class="fas fa-leaf"></i>', formUrl: 'form-qs-sustainability.html' },
-            'QS World University Rankings': { cls: 'qs-wur', badge: 'badge-qs-wur', icon: '<i class="fas fa-award"></i>', formUrl: 'form-qs-wur.html' },
-            'THE World University Rankings': { cls: 'the-wur', badge: 'badge-the-wur', icon: '<i class="fas fa-chart-bar"></i>', formUrl: '#' },
-            'THE Impact Rankings': { cls: 'the-impact', badge: 'badge-the-impact', icon: '<i class="fas fa-bullseye"></i>', formUrl: '#' },
-            'UI GreenMetric': { cls: 'greenmetric', badge: 'badge-greenmetric', icon: '<i class="fas fa-seedling"></i>', formUrl: '#' },
-        };
+const templateId = document.getElementById('newTemplateId');
+const year = document.getElementById('newYear');
+const templateName = document.getElementById('newTemplateName');
 
-        function getConfig(name) {
-            for (const [key, val] of Object.entries(rankingConfig)) {
-                if (name.toLowerCase().includes(key.toLowerCase())) return val;
-            }
-            return { cls: 'qs-wur', badge: 'badge-qs-wur', icon: '<i class="fas fa-award"></i>', formUrl: '#' };
-        }
+if (val === 'existing') {
+templateId.required = true;
+year.required = true;
+templateName.required = false;
+} else {
+templateId.required = false;
+year.required = false;
+templateName.required = true;
+}
+}
 
-        let allCycles = [];
+// Auto-generate name when using an existing template
+function updateAutoNameFromTemplate() {
+const sel = document.getElementById('newTemplateId');
+const name = sel.options[sel.selectedIndex]?.dataset.name || '';
+const year = document.getElementById('newYear').value;
+document.getElementById('newAutoName').value = name && year ? `${name} ${year}` : name || '';
+}
 
-        async function loadCycles() {
-            try {
-                const res = await fetch(`${API_BASE}/api/admin/cycles`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                allCycles = await res.json();
+// Auto-generate name when creating a new template
+function updateAutoNameNewTemplate() {
+const templateName = document.getElementById('newTemplateName').value.trim();
+const year = document.getElementById('newTemplateYear').value;
+document.getElementById('newAutoNameNew').value = templateName && year ? `${templateName} ${year}` : templateName || '';
+}
 
-                // Populate filter year dropdown with only years that exist
-                const years = [...new Set(allCycles.map(c => c.year))].sort((a, b) => b - a);
-                const filterYearSelect = document.getElementById('filterYear');
-                filterYearSelect.innerHTML = '<option value="">All Years</option>';
-                years.forEach(y => {
-                    const opt = document.createElement('option');
-                    opt.value = y;
-                    opt.textContent = y;
-                    filterYearSelect.appendChild(opt);
-                });
+// Handle form submission with native HTML5 validation
+async function handleCreateCycle(event) {
+event.preventDefault();
 
-                renderCycles();
-            } catch (e) {
-                document.getElementById('cyclesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-secondary)">Failed to load cycles.</div>';
-            }
-        }
+const form = event.target;
+const setup = document.querySelector('input[name="cycleSetup"]:checked').value;
+const start = document.getElementById('newStart').value;
+const deadline = document.getElementById('newDeadline').value;
+const desc = document.getElementById('newDesc').value;
 
-        function renderCycles() {
-            const typeFilter = document.getElementById('filterType').value;
-            const yearFilter = document.getElementById('filterYear').value;
+if (!form.checkValidity()) {
+form.reportValidity();
+return;
+}
 
-            const filtered = allCycles.filter(c => {
-                if (typeFilter && !c.name.toLowerCase().includes(typeFilter.toLowerCase())) return false;
-                if (yearFilter && String(c.year) !== yearFilter) return false;
-                return true;
-            });
+const btn = document.getElementById('createBtn');
+const btnText = document.getElementById('createBtnText');
+const originalText = btnText.textContent;
+btnText.textContent = 'Creating...';
+btn.disabled = true;
 
-            document.getElementById('cycleCount').textContent = `${filtered.length} cycle${filtered.length !== 1 ? 's' : ''}`;
+try {
+let payload = { 
+start_date: start, 
+deadline, 
+description: desc 
+};
 
-            if (!filtered.length) {
-                document.getElementById('cyclesGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-secondary)">No cycles found. Create one with the "+ New Cycle" button.</div>';
-                return;
-            }
+if (setup === 'existing') {
+const templateId = document.getElementById('newTemplateId').value;
+const year = document.getElementById('newYear').value;
+const templateName = allTemplates.find(t => t.id == templateId)?.name || '';
+payload.name = `${templateName} ${year}`;
+payload.year = parseInt(year);
+payload.is_template = false;
+} else {
+const templateName = document.getElementById('newTemplateName').value.trim();
+const year = document.getElementById('newTemplateYear').value;
+payload.name = year ? `${templateName} ${year}` : templateName;
+payload.year = year ? parseInt(year) : null;
+payload.is_template = true;
+}
 
-            document.getElementById('cyclesGrid').innerHTML = filtered.map(c => {
-                const cfg = getConfig(c.name);
-                const total = c.total_questions || 0;
-                const submitted = c.submitted_questions || 0;
-                const pct = total ? Math.round((submitted / total) * 100) : 0;
-                const statusCls = c.status === 'active' ? 'dot-active' : c.status === 'closed' ? 'dot-closed' : 'dot-draft';
-                const statusLabel = c.status === 'active' ? '● Active' : c.status === 'closed' ? '○ Closed' : '◐ Draft';
-                const startFmt = c.start_date ? new Date(c.start_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
-                const endFmt = c.deadline ? new Date(c.deadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
-                
-                let progColor = '#094FA3';
-                if (pct === 100) progColor = '#16a34a';
-                else if (pct >= 60) progColor = '#4B95FA';
-                else if (pct >= 30) progColor = '#f59e0b';
-                else progColor = '#ED1C24';
+const res = await fetch(`${API_BASE}/api/admin/cycles`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+body: JSON.stringify(payload)
+});
+const data = await res.json();
 
-                return `
-    <div class="cycle-card ${cfg.cls}">
-      <div class="cycle-card-top">
-        <div class="cycle-top-row">
-          <span class="cycle-type-badge ${cfg.badge}">${cfg.icon} ${c.name.includes('World University') ? (c.name.startsWith('QS') ? 'QS WUR' : 'THE WUR') : c.name.split(' ').slice(0, 2).join(' ')}</span>
-          <span class="status-dot ${statusCls}">${statusLabel}</span>
-        </div>
-        <div class="cycle-title">${c.name}</div>
-        <div class="cycle-dates"><i class="far fa-calendar-alt"></i> Start: ${startFmt} &nbsp;&nbsp; <i class="far fa-calendar-check"></i> End: ${endFmt}</div>
-        ${c.description ? `<div class="cycle-desc">${c.description}</div>` : ''}
-        <div class="cycle-progress-row">
-          <span class="cycle-prog-label">Completion</span>
-          <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${progColor}"></div></div>
-          <span class="prog-pct" style="color:${progColor}">${pct}%</span>
-        </div>
-      </div>
-      <div class="cycle-card-bottom">
-        <a class="btn-open-form" href="admin-form.html?cycle=${c.id}">Open Form</a>
-        <button class="btn-edit-cycle" onclick="editCycle(${c.id})"><i class="fas fa-edit"></i> Edit</button>
-      </div>
-    </div>`;
-            }).join('');
-        }
+if (data.success) {
+closeModal('createModal');
+form.reset();
 
-        function openCreateModal() {
-            document.getElementById('createModal').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('show');
-            document.body.style.overflow = '';
-        }
-        function closeOnOverlay(e, id) {
-            if (e.target === document.getElementById(id)) closeModal(id);
-        }
-        function updateAutoName() {
-            const type = document.getElementById('newType').value;
-            const year = document.getElementById('newYear').value;
-            document.getElementById('newAutoName').value = type && year ? `${type} ${year}` : '';
-        }
-        function editCycle(id) {
-            window.location.href = `admin-form.html?cycle=${id}&edit=true`;
-        }
+if (setup === 'new') {
+window.location.href = `admin-form.html?cycle=${data.id}&edit=true`; 
+} else {
+window.location.href = `admin-form.html?cycle=${data.id}`;
+}
+} else {
+showAlert('Error', data.error || 'Failed to create cycle');
+btnText.textContent = originalText;
+btn.disabled = false;
+}
+} catch (e) {
+showAlert('Server Error', 'Make sure the server is running.');
+btnText.textContent = originalText;
+btn.disabled = false;
+}
+}
 
-        function showAlert(title, msg, onConfirm = null) {
-            document.getElementById('alertTitle').textContent = title;
-            document.getElementById('alertMsg').textContent = msg;
-            const btn = document.getElementById('alertConfirmBtn');
-            btn.onclick = () => {
-                closeModal('alertModal');
-                if (onConfirm) onConfirm();
-            };
-            document.getElementById('alertModal').classList.add('show');
-        }
+function editCycle(id) {
+window.location.href = `admin-form.html?cycle=${id}&edit=true`;
+}
 
-        async function createCycle() {
-            const type = document.getElementById('newType').value;
-            const year = document.getElementById('newYear').value;
-            const start = document.getElementById('newStart').value;
-            const deadline = document.getElementById('newDeadline').value;
-            const desc = document.getElementById('newDesc').value;
+function showAlert(title, msg, onConfirm = null) {
+document.getElementById('alertTitle').textContent = title;
+document.getElementById('alertMsg').textContent = msg;
+const btn = document.getElementById('alertConfirmBtn');
+btn.onclick = () => {
+closeModal('alertModal');
+if (onConfirm) onConfirm();
+};
+document.getElementById('alertModal').classList.add('show');
+}
 
-            if (!type || !year || !start || !deadline) { 
-                showAlert('Missing Fields', 'Please fill in all required fields.'); 
-                return; 
-            }
-
-            const name = `${type} ${year}`;
-            const duplicate = allCycles.find(c => c.name.toLowerCase() === name.toLowerCase());
-            if (duplicate) {
-                showAlert('Cycle Already Exists', `A cycle named "${name}" already exists. Please choose a different type or year.`);
-                return;
-            }
-
-            const btn = document.querySelector('.btn-create');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-            btn.disabled = true;
-
-            try {
-                const res = await fetch(`${API_BASE}/api/admin/cycles`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ name, year: parseInt(year), deadline, start_date: start, description: desc })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    closeModal('createModal');
-                    window.location.href = `admin-form.html?cycle=${data.id}`;
-                } else {
-                    showAlert('Error', data.error || 'Failed to create cycle');
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                }
-            } catch (e) {
-                showAlert('Server Error', 'Make sure the server is running.');
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCycles();
-            // Open cycles menu by default for consistency
-            document.getElementById('navCycles').classList.add('open');
-            document.getElementById('cyclesArrow').style.transform = 'rotate(180deg)';
-        });
-    </script>
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+loadCycles();
+loadTemplates();
+document.getElementById('navCycles').classList.add('open');
+document.getElementById('cyclesArrow').style.transform = 'rotate(180deg)';
+});
+</script>
 </body>
 </html>

@@ -22,26 +22,24 @@ router.get('/dashboard', adminOnly, async (req, res) => {
     try {
         const stats = await db.execute({
             sql: `SELECT
-              COUNT(*) as total,
-              COUNT(CASE WHEN status != 'pending' THEN 1 END) as submitted,
-              COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending
-            FROM task_assignments`,
+                COUNT(*) as total,
+                COUNT(CASE WHEN status != 'pending' THEN 1 END) as submitted,
+                COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending
+                FROM task_assignments`,
             args: []
         });
-
         const depts = await db.execute({
             sql: `SELECT
-              d.name,
-              COUNT(ta.id) as total,
-              COUNT(CASE WHEN ta.status != 'pending' THEN 1 END) as submitted
-            FROM departments d
-            LEFT JOIN task_assignments ta ON ta.department_id = d.id
-            GROUP BY d.id, d.name
-            HAVING COUNT(ta.id) > 0
-            ORDER BY d.name`,
+                d.name,
+                COUNT(ta.id) as total,
+                COUNT(CASE WHEN ta.status != 'pending' THEN 1 END) as submitted
+                FROM departments d
+                LEFT JOIN task_assignments ta ON ta.department_id = d.id
+                GROUP BY d.id, d.name
+                HAVING COUNT(ta.id) > 0
+                ORDER BY d.name`,
             args: []
         });
-
         res.json({
             total: stats.rows[0]?.total || 0,
             submitted: stats.rows[0]?.submitted || 0,
@@ -55,7 +53,7 @@ router.get('/dashboard', adminOnly, async (req, res) => {
     }
 });
 
-// GET all ranking cycles
+// GET all ranking cycles (excluding templates from the main list)
 router.get('/cycles', adminOnly, async (req, res) => {
     try {
         const result = await db.execute({
@@ -92,65 +90,85 @@ router.get('/cycles/:id', adminOnly, async (req, res) => {
     }
 });
 
-// POST create new ranking cycle
-router.post('/cycles', adminOnly, async (req, res) => {
-    const { name, year, deadline, status, description } = req.body;
+// GET all templates (with question count)
+router.get('/templates', adminOnly, async (req, res) => {
     try {
-        // Create the cycle
         const result = await db.execute({
-            sql: `INSERT INTO ranking_cycles (name, year, deadline, start_date, status, description)
-            VALUES (?, ?, ?, ?, ?, ?)`,
-            args: [name, year, deadline, req.body.start_date || null, status || 'active', description || null]
+            sql: `SELECT rc.id, rc.name, rc.year,
+                  COUNT(q.id) as question_count
+                  FROM ranking_cycles rc
+                  LEFT JOIN questions q ON q.ranking_cycle_id = rc.id
+                  WHERE rc.is_template = 1
+                  GROUP BY rc.id
+                  ORDER BY rc.name ASC`,
+            args: []
+        });
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching templates:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST create new ranking cycle (UPDATED to handle is_template)
+router.post('/cycles', adminOnly, async (req, res) => {
+    const { name, year, deadline, status, description, is_template } = req.body;
+    try {
+        // 1. Create the cycle with the is_template flag
+        const result = await db.execute({
+            sql: `INSERT INTO ranking_cycles (name, year, deadline, start_date, status, description, is_template)
+                  VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            args: [name, year, deadline, req.body.start_date || null, status || 'active', description || null, is_template ? 1 : 0]
         });
         const newCycleId = Number(result.lastInsertRowid);
 
-        // Strip year from name to get the ranking type
-        // e.g. "QS Sustainability Rankings 2026" → "QS Sustainability Rankings"
-        const rankingType = name.replace(/\s+\d{4}$/, '').trim().toLowerCase();
+        // 2. ONLY copy questions if this is NOT a new template
+        if (!is_template) {
+            const rankingType = name.replace(/\s+\d{4}$/, '').trim().toLowerCase();
+            const allCycles = await db.execute({
+                sql: `SELECT id, name, is_template FROM ranking_cycles WHERE id != ? ORDER BY year ASC`,
+                args: [newCycleId]
+            });
 
-        const allCycles = await db.execute({
-            sql: `SELECT id, name, is_template FROM ranking_cycles WHERE id != ? ORDER BY year ASC`,
-            args: [newCycleId]
-        });
-
-        function getRankingCategory(name) {
-            const n = name.toLowerCase();
-            if (n.includes('greenmetric')) return 'greenmetric';
-            if (n.includes('sustainability')) return 'sustainability';
-            if (n.includes('impact')) return 'impact';
-            if (n.includes('world university') || n.includes('wur')) {
-                if (n.includes('qs')) return 'qs-wur';
-                return 'the-wur';
+            function getRankingCategory(name) {
+                const n = name.toLowerCase();
+                if (n.includes('greenmetric')) return 'greenmetric';
+                if (n.includes('sustainability')) return 'sustainability';
+                if (n.includes('impact')) return 'impact';
+                if (n.includes('world university') || n.includes('wur')) {
+                    if (n.includes('qs')) return 'qs-wur';
+                    return 'the-wur';
+                }
+                return n;
             }
-            return n;
-        }
 
-        const newCategory = getRankingCategory(name);
-        const templateCycle = allCycles.rows.find(c => {
-            return getRankingCategory(c.name) === newCategory && c.is_template === 1;
-        });
-
-        if (templateCycle) {
-            // Copy all questions from the template cycle to the new one
-            // kpi_index is included for THE WUR subject-based questions
-            await db.execute({
-                sql: `INSERT INTO questions (ranking_cycle_id, code, title, description, question_type, theme, kpi_index, is_synced, gm_category, has_evidence)
-                    SELECT ?, code, title, description, question_type, theme, kpi_index, is_synced, gm_category, has_evidence
-                    FROM questions WHERE ranking_cycle_id = ?`,
-                args: [newCycleId, templateCycle.id]
+            const newCategory = getRankingCategory(name);
+            const templateCycle = allCycles.rows.find(c => {
+                return getRankingCategory(c.name) === newCategory && c.is_template === 1;
             });
 
-            await db.execute({
-                sql: `INSERT INTO question_items (question_id, item_number, label, answer_type, max_words, options)
-                    SELECT q_new.id, qi.item_number, qi.label, qi.answer_type, qi.max_words, qi.options
-                    FROM question_items qi
-                    JOIN questions q_old ON q_old.id = qi.question_id AND q_old.ranking_cycle_id = ?
-                    JOIN questions q_new ON q_new.code = q_old.code AND q_new.ranking_cycle_id = ?`,
-                args: [templateCycle.id, newCycleId]
-            });
-            console.log(`✓ Copied questions from cycle ${templateCycle.id} ("${templateCycle.name}") → new cycle ${newCycleId}`);
+            if (templateCycle) {
+                // Copy all questions from the template cycle to the new one
+                await db.execute({
+                    sql: `INSERT INTO questions (ranking_cycle_id, code, title, description, question_type, theme, kpi_index, is_synced, gm_category, has_evidence)
+                          SELECT ?, code, title, description, question_type, theme, kpi_index, is_synced, gm_category, has_evidence
+                          FROM questions WHERE ranking_cycle_id = ?`,
+                    args: [newCycleId, templateCycle.id]
+                });
+                await db.execute({
+                    sql: `INSERT INTO question_items (question_id, item_number, label, answer_type, max_words, options)
+                          SELECT q_new.id, qi.item_number, qi.label, qi.answer_type, qi.max_words, qi.options
+                          FROM question_items qi
+                          JOIN questions q_old ON q_old.id = qi.question_id AND q_old.ranking_cycle_id = ?
+                          JOIN questions q_new ON q_new.code = q_old.code AND q_new.ranking_cycle_id = ?`,
+                    args: [templateCycle.id, newCycleId]
+                });
+                console.log(`✓ Copied questions from cycle ${templateCycle.id} ("${templateCycle.name}") → new cycle ${newCycleId}`);
+            } else {
+                console.log(`⚠ No template found for "${rankingType}" — seed questions manually for cycle ${newCycleId}`);
+            }
         } else {
-            console.log(`⚠ No template found for "${rankingType}" — seed questions manually for cycle ${newCycleId}`);
+            console.log(`✓ Created new template cycle ${newCycleId} ("${name}"). Ready for question building.`);
         }
 
         res.json({ success: true, id: newCycleId });
@@ -165,9 +183,9 @@ router.get('/cycles/:id/questions', adminOnly, async (req, res) => {
     try {
         const result = await db.execute({
             sql: `SELECT q.*, ta.id as task_id, ta.department_id, ta.deadline, ta.submitted_at,
-                    d.name as department_name,
-                    a.answer_text, a.answer_number, a.updated_at as answer_updated_at,
-                    a.status as task_status, a.admin_comment
+                d.name as department_name,
+                a.answer_text, a.answer_number, a.updated_at as answer_updated_at,
+                a.status as task_status, a.admin_comment
                 FROM questions q
                 LEFT JOIN task_assignments ta ON ta.question_id = q.id
                 LEFT JOIN departments d ON d.id = ta.department_id
@@ -175,28 +193,22 @@ router.get('/cycles/:id/questions', adminOnly, async (req, res) => {
                 WHERE q.ranking_cycle_id = ?`,
             args: [req.params.id]
         });
-
-        // Fetch ALL items in one query
         const allItems = await db.execute({
             sql: `SELECT qi.* FROM question_items qi
-                  JOIN questions q ON q.id = qi.question_id
-                  WHERE q.ranking_cycle_id = ?
-                  ORDER BY qi.question_id, CAST(qi.item_number AS INTEGER)`,
+                JOIN questions q ON q.id = qi.question_id
+                WHERE q.ranking_cycle_id = ?
+                ORDER BY qi.question_id, CAST(qi.item_number AS INTEGER)`,
             args: [req.params.id]
         });
-
-        // Group items by question_id
         const itemsMap = {};
         for (const item of allItems.rows) {
             if (!itemsMap[item.question_id]) itemsMap[item.question_id] = [];
             itemsMap[item.question_id].push(item);
         }
-
         const questions = result.rows.map(q => ({
             ...q,
             items: itemsMap[q.id] || []
         }));
-
         res.json(questions);
     } catch (err) {
         console.error(err);
@@ -208,14 +220,13 @@ router.get('/cycles/:id/questions', adminOnly, async (req, res) => {
 router.post('/assign', adminOnly, async (req, res) => {
     const { question_id, department_id, deadline } = req.body;
     try {
-        // Helper: assign one question + insert answer row
         async function assignOne(qid) {
             await db.execute({
                 sql: `INSERT INTO task_assignments (question_id, department_id, deadline, status)
-                    VALUES (?, ?, ?, 'pending')
-                    ON CONFLICT(question_id) DO UPDATE SET
-                    department_id = excluded.department_id,
-                    deadline = excluded.deadline`,
+                      VALUES (?, ?, ?, 'pending')
+                      ON CONFLICT(question_id) DO UPDATE SET
+                      department_id = excluded.department_id,
+                      deadline = excluded.deadline`,
                 args: [qid, department_id, deadline || null]
             });
             const taRes = await db.execute({
@@ -226,14 +237,13 @@ router.post('/assign', adminOnly, async (req, res) => {
             if (taId) {
                 await db.execute({
                     sql: `INSERT INTO answers (task_assignment_id, status)
-                  VALUES (?, 'pending')
-                  ON CONFLICT(task_assignment_id) DO NOTHING`,
+                          VALUES (?, 'pending')
+                          ON CONFLICT(task_assignment_id) DO NOTHING`,
                     args: [taId]
                 });
             }
         }
 
-        // Run all lookups in parallel
         const [qInfo, syncInfo] = await Promise.all([
             db.execute({ sql: `SELECT kpi_index, ranking_cycle_id FROM questions WHERE id = ?`, args: [question_id] }),
             db.execute({
@@ -247,7 +257,6 @@ router.post('/assign', adminOnly, async (req, res) => {
         const q = qInfo.rows[0];
         const syncQ = syncInfo.rows[0];
 
-        // Find siblings and synced questions in parallel
         const [siblingsRes, matchingRes] = await Promise.all([
             q?.kpi_index
                 ? db.execute({
@@ -258,20 +267,18 @@ router.post('/assign', adminOnly, async (req, res) => {
             syncQ?.is_synced
                 ? db.execute({
                     sql: `SELECT q.id FROM questions q
-                        JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
-                        WHERE q.code = ? AND q.is_synced = 1 AND q.id != ? AND rc.year = ?`,
+                          JOIN ranking_cycles rc ON rc.id = q.ranking_cycle_id
+                          WHERE q.code = ? AND q.is_synced = 1 AND q.id != ? AND rc.year = ?`,
                     args: [syncQ.code, question_id, syncQ.year]
                 })
                 : Promise.resolve({ rows: [] })
         ]);
 
-        // Assign all questions in parallel
         const allIds = [
             question_id,
             ...siblingsRes.rows.map(r => r.id),
             ...matchingRes.rows.map(r => r.id)
         ];
-
         await Promise.all(allIds.map(id => assignOne(id)));
 
         res.json({ success: true, assignedIds: allIds });
@@ -286,12 +293,12 @@ router.get('/departments', adminOnly, async (req, res) => {
     try {
         const result = await db.execute({
             sql: `SELECT d.*,
-              COUNT(ta.id) as assigned_tasks,
-              COUNT(CASE WHEN ta.status != 'pending' THEN 1 END) as submitted_tasks
-            FROM departments d
-            LEFT JOIN task_assignments ta ON ta.department_id = d.id
-            GROUP BY d.id
-            ORDER BY d.name`,
+                COUNT(ta.id) as assigned_tasks,
+                COUNT(CASE WHEN ta.status != 'pending' THEN 1 END) as submitted_tasks
+                FROM departments d
+                LEFT JOIN task_assignments ta ON ta.department_id = d.id
+                GROUP BY d.id
+                ORDER BY d.name`,
             args: []
         });
         res.json(result.rows);
@@ -306,16 +313,16 @@ router.get('/progress/:ranking_cycle_id', adminOnly, async (req, res) => {
     try {
         const result = await db.execute({
             sql: `SELECT
-              d.id, d.name,
-              COUNT(ta.id) as assigned,
-              COUNT(CASE WHEN ta.status != 'pending' THEN 1 END) as submitted,
-              COUNT(CASE WHEN ta.status = 'pending' THEN 1 END) as pending
-            FROM departments d
-            LEFT JOIN task_assignments ta ON ta.department_id = d.id
-            LEFT JOIN questions q ON q.id = ta.question_id AND q.ranking_cycle_id = ?
-            WHERE ta.id IS NOT NULL
-            GROUP BY d.id, d.name
-            ORDER BY d.name`,
+                d.id, d.name,
+                COUNT(ta.id) as assigned,
+                COUNT(CASE WHEN ta.status != 'pending' THEN 1 END) as submitted,
+                COUNT(CASE WHEN ta.status = 'pending' THEN 1 END) as pending
+                FROM departments d
+                LEFT JOIN task_assignments ta ON ta.department_id = d.id
+                LEFT JOIN questions q ON q.id = ta.question_id AND q.ranking_cycle_id = ?
+                WHERE ta.id IS NOT NULL
+                GROUP BY d.id, d.name
+                ORDER BY d.name`,
             args: [req.params.ranking_cycle_id]
         });
         res.json(result.rows);
@@ -353,13 +360,14 @@ router.patch('/cycles/:id/close', adminOnly, async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
 // GET all users with their department names
 router.get('/users', adminOnly, async (req, res) => {
     try {
         const result = await db.execute({
-            sql: `SELECT u.name, u.email, d.name as department_name 
-                  FROM users u 
-                  LEFT JOIN departments d ON u.department_id = d.id`,
+            sql: `SELECT u.name, u.email, d.name as department_name
+                FROM users u
+                LEFT JOIN departments d ON u.department_id = d.id`,
             args: []
         });
         res.json(result.rows);
@@ -381,4 +389,89 @@ router.post('/add-department', adminOnly, async (req, res) => {
         res.status(500).json({ error: 'Failed to create department' });
     }
 });
+
+// GET all questions for a template
+router.get('/templates/:id/questions', adminOnly, async (req, res) => {
+    try {
+        const result = await db.execute({
+            sql: `SELECT * FROM questions WHERE ranking_cycle_id = ? ORDER BY id`,
+            args: [req.params.id]
+        });
+        const allItems = await db.execute({
+            sql: `SELECT qi.* FROM question_items qi
+                  JOIN questions q ON q.id = qi.question_id
+                  WHERE q.ranking_cycle_id = ?
+                  ORDER BY qi.question_id, CAST(qi.item_number AS INTEGER)`,
+            args: [req.params.id]
+        });
+        const itemsMap = {};
+        for (const item of allItems.rows) {
+            if (!itemsMap[item.question_id]) itemsMap[item.question_id] = [];
+            itemsMap[item.question_id].push(item);
+        }
+        const questions = result.rows.map(q => ({ ...q, items: itemsMap[q.id] || [] }));
+        res.json(questions);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// POST add a new question to a template
+router.post('/templates/:id/questions', adminOnly, async (req, res) => {
+    const { code, title, description, question_type, theme, gm_category, has_evidence } = req.body;
+    try {
+        const result = await db.execute({
+            sql: `INSERT INTO questions (ranking_cycle_id, code, title, description, question_type, theme, gm_category, has_evidence)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            args: [req.params.id, code || null, title, description || null, question_type, theme || 'General', gm_category || null, has_evidence ? 1 : 0]
+        });
+        res.json({ success: true, id: Number(result.lastInsertRowid) });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// PATCH update a question
+router.patch('/questions/:id', adminOnly, async (req, res) => {
+    const { code, title, description, question_type, theme, gm_category, has_evidence } = req.body;
+    try {
+        await db.execute({
+            sql: `UPDATE questions SET code = ?, title = ?, description = ?, question_type = ?, theme = ?, gm_category = ?, has_evidence = ?
+                  WHERE id = ?`,
+            args: [code || null, title, description || null, question_type, theme || 'General', gm_category || null, has_evidence ? 1 : 0, req.params.id]
+        });
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// DELETE a question
+router.delete('/questions/:id', adminOnly, async (req, res) => {
+    try {
+        // Delete associated items first
+        await db.execute({
+            sql: `DELETE FROM question_items WHERE question_id = ?`,
+            args: [req.params.id]
+        });
+        // Delete associated task assignments
+        await db.execute({
+            sql: `DELETE FROM task_assignments WHERE question_id = ?`,
+            args: [req.params.id]
+        });
+        // Delete the question
+        await db.execute({
+            sql: `DELETE FROM questions WHERE id = ?`,
+            args: [req.params.id]
+        });
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 module.exports = router;

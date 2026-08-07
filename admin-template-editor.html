@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Template Editor – UoB Rankings Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+--primary-blue: #094FA3;
+--bright-blue: #4B95FA;
+--light-blue: #91BDFC;
+--primary-gold: #B99B68;
+--bright-gold: #E4C082;
+--light-gold: #F6EBD9;
+--supporting-red: #ED1C24;
+--sidebar-w: 260px;
+--sidebar-w-collapsed: 70px;
+--header-h: 70px;
+--bg: #FFFFFF;
+--surface: #FFFFFF;
+--surface-alt: #F5F7FA;
+--border: rgba(9, 79, 163, 0.15);
+--text-primary: #032E64;
+--text-secondary: #595F61;
+--card-shadow: 0 2px 12px rgba(9, 79, 163, 0.08);
+}
+html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); overflow: hidden; }
+/* HEADER - same as other pages */
+.header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); z-index: 200; background: #FFFFFF; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; box-shadow: 0 2px 8px rgba(9, 79, 163, 0.1); border-bottom: 2px solid var(--primary-blue); }
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.header-right { display: flex; align-items: center; gap: 1.5rem; }
+.header-logo { height: 50px; width: auto; object-fit: contain; }
+.menu-toggle { width: 40px; height: 40px; border-radius: 8px; background: var(--surface-alt); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--primary-blue); font-size: 1.1rem; transition: all 0.2s; }
+.menu-toggle:hover { background: var(--light-blue); color: #fff; }
+.user-pill { display: flex; align-items: center; gap: .7rem; background: var(--surface-alt); padding: 0.5rem 1.2rem; border-radius: 999px; border: 1.5px solid var(--border); }
+.user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue)); color: #fff; font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.user-info { text-align: left; }
+.user-name { font-size: .85rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+.user-role { font-size: .68rem; color: var(--text-secondary); }
+/* SIDEBAR - same as other pages */
+.layout { display: flex; margin-top: var(--header-h); height: calc(100vh - var(--header-h)); }
+.sidebar { width: var(--sidebar-w); flex-shrink: 0; background: linear-gradient(180deg, var(--primary-blue) 0%, var(--bright-blue) 100%); display: flex; flex-direction: column; overflow-y: auto; transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+.nav-section { margin-top: 1.2rem; }
+.nav-label { font-size: .62rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); padding: 0.6rem 1.2rem; white-space: nowrap; overflow: hidden; }
+.sidebar.collapsed .nav-label { padding: 0.6rem 0.5rem; }
+.nav-item { display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: rgba(255, 255, 255, 0.8); font-size: .85rem; font-weight: 500; border-left: 3px solid transparent; text-decoration: none; transition: all .2s; cursor: pointer; white-space: nowrap; overflow: hidden; }
+.nav-item:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.nav-item.active { background: rgba(255, 255, 255, 0.18); color: #fff; font-weight: 600; border-left-color: var(--bright-gold); }
+.nav-icon { font-size: 1.05rem; width: 22px; text-align: center; flex-shrink: 0; color: #fff; }
+.nav-text { opacity: 1; transition: opacity 0.2s; }
+.sidebar.collapsed .nav-text { opacity: 0; width: 0; }
+.nav-spacer { flex: 1; }
+.nav-logout { display: flex; align-items: center; gap: .85rem; padding: .75rem 1.2rem; color: #fecaca; font-size: .85rem; font-weight: 600; border-left: 3px solid transparent; text-decoration: none; cursor: pointer; transition: all .2s; white-space: nowrap; overflow: hidden; }
+.nav-logout:hover { background: rgba(248, 113, 113, 0.15); color: #fff; }
+/* MAIN */
+.main { flex: 1; overflow-y: auto; padding: 2rem; background: var(--bg); }
+.main::-webkit-scrollbar { width: 6px; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+/* PAGE HEADER */
+.page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.page-title { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; color: var(--text-primary); }
+.page-sub { font-size: .9rem; color: var(--text-secondary); margin-top: .25rem; }
+.page-actions { display: flex; align-items: center; gap: .75rem; }
+.back-btn { display: inline-flex; align-items: center; gap: .4rem; border: 1.5px solid var(--border); background: #fff; color: var(--text-primary); font-size: .8rem; font-weight: 600; padding: .45rem 1rem; border-radius: 8px; cursor: pointer; text-decoration: none; margin-bottom: .6rem; transition: background .14s; }
+.back-btn:hover { background: var(--surface-alt); }
+.btn-primary { display: inline-flex; align-items: center; gap: .55rem; background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue)); color: #fff; border: none; font-size: .85rem; font-weight: 600; padding: .65rem 1.2rem; border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; box-shadow: 0 3px 10px rgba(9, 79, 163, 0.25); transition: all .2s; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(9, 79, 163, 0.35); }
+.btn-secondary { display: inline-flex; align-items: center; gap: .55rem; background: var(--surface); color: var(--primary-blue); border: 1.5px solid var(--primary-blue); font-size: .85rem; font-weight: 600; padding: .6rem 1.2rem; border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s; }
+.btn-secondary:hover { background: var(--primary-blue); color: #fff; }
+.btn-danger { display: inline-flex; align-items: center; gap: .4rem; background: #fff; color: var(--supporting-red); border: 1.5px solid var(--supporting-red); font-size: .78rem; font-weight: 600; padding: .35rem .75rem; border-radius: 6px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s; }
+.btn-danger:hover { background: var(--supporting-red); color: #fff; }
+.btn-edit { display: inline-flex; align-items: center; gap: .4rem; background: var(--surface); color: var(--primary-blue); border: 1.5px solid var(--border); font-size: .78rem; font-weight: 600; padding: .35rem .75rem; border-radius: 6px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s; }
+.btn-edit:hover { background: var(--primary-blue); color: #fff; border-color: var(--primary-blue); }
+/* LAYOUT: Templates list on left, questions on right */
+.editor-layout { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; height: calc(100vh - var(--header-h) - 140px); }
+.templates-panel { background: var(--surface); border-radius: 12px; border: 1.5px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; }
+.templates-panel-hdr { padding: 1rem 1.2rem; background: var(--surface-alt); border-bottom: 1.5px solid var(--border); }
+.templates-panel-title { font-size: .9rem; font-weight: 700; color: var(--text-primary); }
+.templates-panel-sub { font-size: .75rem; color: var(--text-secondary); margin-top: .2rem; }
+.templates-list { flex: 1; overflow-y: auto; padding: .5rem; }
+.template-card { padding: .9rem 1rem; border-radius: 8px; cursor: pointer; margin-bottom: .4rem; border: 1.5px solid transparent; transition: all .2s; }
+.template-card:hover { background: var(--surface-alt); border-color: var(--border); }
+.template-card.active { background: var(--light-gold); border-color: var(--primary-gold); }
+.template-card-name { font-size: .88rem; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+.template-card-meta { font-size: .72rem; color: var(--text-secondary); margin-top: .3rem; display: flex; align-items: center; gap: .5rem; }
+.template-card-count { background: var(--primary-blue); color: #fff; font-size: .65rem; font-weight: 700; padding: .15rem .45rem; border-radius: 999px; }
+/* Questions panel */
+.questions-panel { background: var(--surface); border-radius: 12px; border: 1.5px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden; display: flex; flex-direction: column; }
+.questions-panel-hdr { padding: 1rem 1.2rem; background: var(--surface-alt); border-bottom: 1.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.questions-panel-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+.questions-panel-sub { font-size: .78rem; color: var(--text-secondary); margin-top: .2rem; }
+.questions-list { flex: 1; overflow-y: auto; padding: 1rem; }
+.question-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: .8rem; transition: all .2s; }
+.question-card:hover { border-color: var(--primary-blue); box-shadow: 0 2px 8px rgba(9, 79, 163, 0.08); }
+.question-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: .6rem; }
+.question-code { font-size: .72rem; font-weight: 700; color: var(--primary-blue); background: var(--light-blue); padding: .2rem .55rem; border-radius: 4px; letter-spacing: .05em; }
+.question-title { font-size: .92rem; font-weight: 600; color: var(--text-primary); line-height: 1.4; flex: 1; }
+.question-meta { display: flex; align-items: center; gap: .8rem; font-size: .75rem; color: var(--text-secondary); flex-wrap: wrap; }
+.question-meta-item { display: inline-flex; align-items: center; gap: .3rem; }
+.question-actions { display: flex; gap: .5rem; margin-top: .8rem; padding-top: .8rem; border-top: 1px solid var(--border); }
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-secondary); }
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+.empty-state-title { font-size: 1rem; font-weight: 600; margin-bottom: .4rem; color: var(--text-primary); }
+.empty-state-sub { font-size: .85rem; line-height: 1.5; }
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(3, 46, 100, 0.5); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--surface); border-radius: 12px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(9, 79, 163, 0.2); animation: mIn .25s cubic-bezier(.34, 1.56, .64, 1) both; }
+@keyframes mIn { from { opacity: 0; transform: scale(.92) translateY(16px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-hdr { padding: 1.2rem 1.5rem; background: var(--primary-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; }
+.modal-title { font-family: 'Instrument Serif', serif; font-size: 1.3rem; font-weight: 400; }
+.modal-close { background: rgba(255,255,255,0.2); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: .9rem; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: rgba(255,255,255,0.35); }
+.modal-body { padding: 1.5rem; }
+.form-group { margin-bottom: 1.2rem; }
+.form-label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: .4rem; }
+.form-label span { color: var(--supporting-red); }
+.form-input, .form-select, .form-textarea { width: 100%; background: var(--surface-alt); border: 1.5px solid transparent; border-radius: 8px; padding: .65rem .9rem; font-size: .85rem; font-family: 'Inter', sans-serif; color: var(--text-primary); outline: none; transition: border-color .2s, background .2s; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary-blue); background: var(--surface); }
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; }
+.form-check { display: flex; align-items: center; gap: .5rem; font-size: .85rem; color: var(--text-primary); cursor: pointer; }
+.form-check input { accent-color: var(--primary-blue); width: 16px; height: 16px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: .75rem; padding: 1rem 1.5rem; border-top: 1.5px solid var(--border); background: var(--surface-alt); }
+.btn-cancel { background: var(--surface); color: var(--text-primary); border: 1.5px solid var(--border); padding: .6rem 1.3rem; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+.btn-cancel:hover { background: var(--surface-alt); }
+.btn-save { background: linear-gradient(135deg, var(--primary-blue), var(--bright-blue)); color: #fff; border: none; padding: .6rem 1.5rem; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: .4rem; box-shadow: 0 3px 10px rgba(9, 79, 163, 0.25); }
+.btn-save:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(9, 79, 163, 0.35); }
+.btn-save:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+/* Alert */
+.alert-modal { max-width: 400px; text-align: center; }
+.alert-modal-body { padding: 2rem 1.8rem; }
+.alert-icon { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; font-size: 2.8rem; }
+.alert-title { font-family: 'Instrument Serif', serif; font-size: 1.15rem; font-weight: 400; color: var(--text-primary); margin-bottom: .8rem; }
+.alert-msg { font-size: .85rem; color: var(--text-secondary); line-height: 1.6; }
+.alert-modal-footer { display: flex; justify-content: center; padding: 0 1.8rem 1.8rem; }
+.btn-alert-ok { background: var(--supporting-red); color: #fff; border: none; padding: .65rem 2.5rem; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+.btn-alert-ok:hover { background: #d11a21; }
+</style>
+</head>
+<body>
+<header class="header">
+<div class="header-left">
+<button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+</div>
+<div class="header-right">
+<img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="header-logo">
+<div class="user-pill">
+<div class="user-avatar" id="adminAvatar">AD</div>
+<div class="user-info">
+<div class="user-name" id="adminName">Admin</div>
+<div class="user-role">Administrator</div>
+</div>
+</div>
+</div>
+</header>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<div class="nav-section">
+<div class="nav-label">Main</div>
+<a class="nav-item" href="dashboard-admin.html">
+<i class="fas fa-chart-line nav-icon"></i><span class="nav-text">Dashboard</span>
+</a>
+</div>
+<div class="nav-section">
+<div class="nav-label">Ranking Cycles</div>
+<a class="nav-item active" href="admin-cycles.html">
+<i class="fas fa-trophy nav-icon"></i><span class="nav-text">All Cycles</span>
+</a>
+</div>
+<div class="nav-section">
+<div class="nav-label">Monitoring</div>
+<a class="nav-item" href="admin-progress.html">
+<i class="fas fa-chart-area nav-icon"></i><span class="nav-text">Progress</span>
+</a>
+<a class="nav-item" href="reminders.html">
+<i class="fas fa-envelope nav-icon"></i><span class="nav-text">Reminders</span>
+</a>
+<a class="nav-item" href="department.html">
+<i class="fas fa-building nav-icon"></i><span class="nav-text">Departments</span>
+</a>
+</div>
+<div class="nav-spacer"></div>
+<div class="nav-logout" onclick="logout()">
+<i class="fas fa-sign-out-alt nav-icon"></i><span class="nav-text">Logout</span>
+</div>
+</aside>
+<main class="main">
+<div class="page-hdr">
+<div>
+<a href="admin-cycles.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Cycles</a>
+<div class="page-title">Template Editor</div>
+<div class="page-sub">Manage question templates that will be used across ranking cycles</div>
+</div>
+<div class="page-actions">
+<button class="btn-primary" onclick="openAddTemplateModal()"><i class="fas fa-plus"></i> New Template</button>
+</div>
+</div>
+<div class="editor-layout">
+<!-- LEFT: Templates list -->
+<div class="templates-panel">
+<div class="templates-panel-hdr">
+<div class="templates-panel-title">Templates</div>
+<div class="templates-panel-sub">Select a template to edit its questions</div>
+</div>
+<div class="templates-list" id="templatesList">
+<div class="empty-state">
+<div class="empty-state-icon">📋</div>
+<div class="empty-state-title">Loading templates...</div>
+</div>
+</div>
+</div>
+<!-- RIGHT: Questions for selected template -->
+<div class="questions-panel">
+<div class="questions-panel-hdr">
+<div>
+<div class="questions-panel-title" id="questionsPanelTitle">Select a Template</div>
+<div class="questions-panel-sub" id="questionsPanelSub">Choose a template from the left to view and edit its questions</div>
+</div>
+<button class="btn-primary" id="addQuestionBtn" onclick="openAddQuestionModal()" style="display:none">
+<i class="fas fa-plus"></i> Add Question
+</button>
+</div>
+<div class="questions-list" id="questionsList">
+<div class="empty-state">
+<div class="empty-state-icon">👈</div>
+<div class="empty-state-title">No template selected</div>
+<div class="empty-state-sub">Select a template from the left panel to view its questions</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<!-- ADD/EDIT QUESTION MODAL -->
+<div class="modal-overlay" id="questionModal" onclick="if(event.target===this)closeModal('questionModal')">
+<div class="modal">
+<form id="questionForm" onsubmit="handleQuestionSubmit(event)">
+<div class="modal-hdr">
+<div class="modal-title" id="questionModalTitle">Add Question</div>
+<button type="button" class="modal-close" onclick="closeModal('questionModal')">✕</button>
+</div>
+<div class="modal-body">
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Question Code <span>*</span></label>
+<input class="form-input" id="qCode" name="code" type="text" placeholder="e.g. ES1, SI_1_1" required />
+</div>
+<div class="form-group">
+<label class="form-label">Question Type <span>*</span></label>
+<select class="form-select" id="qType" name="question_type" required>
+<option value="">— Select Type —</option>
+<option value="text">Text</option>
+<option value="number">Number</option>
+<option value="url">URL</option>
+<option value="yesno">Yes / No</option>
+<option value="checkbox">Checkbox</option>
+<option value="richtext">Rich Text</option>
+<option value="metric">Metric (Section Header)</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Question Title <span>*</span></label>
+<input class="form-input" id="qTitle" name="title" type="text" placeholder="e.g. Total energy consumption (MWh)" required />
+</div>
+<div class="form-group">
+<label class="form-label">Description / Guidance</label>
+<textarea class="form-textarea" id="qDesc" name="description" placeholder="Detailed guidance for departments on how to answer this question..."></textarea>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Theme <span>*</span></label>
+<select class="form-select" id="qTheme" name="theme" required>
+<option value="General">General</option>
+<option value="Environmental Impact">Environmental Impact</option>
+<option value="Social Impact">Social Impact</option>
+<option value="Governance">Governance</option>
+<option value="Teaching & Learning">Teaching & Learning</option>
+<option value="Research">Research</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">GreenMetric Category</label>
+<select class="form-select" id="qGmCategory" name="gm_category">
+<option value="">— None —</option>
+<option value="SI">SI - Setting & Infrastructure</option>
+<option value="EC">EC - Energy & Climate</option>
+<option value="WS">WS - Waste</option>
+<option value="WR">WR - Water</option>
+<option value="TR">TR - Transportation</option>
+<option value="ED">ED - Education & Research</option>
+<option value="GD">GD - Governance & Digitalization</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label class="form-check">
+<input type="checkbox" id="qHasEvidence" name="has_evidence" value="1" />
+This question requires evidence (URL)
+</label>
+</div>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn-cancel" onclick="closeModal('questionModal')">Cancel</button>
+<button type="submit" class="btn-save" id="saveQuestionBtn">
+<i class="fas fa-save"></i> <span id="saveBtnText">Save Question</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- ADD TEMPLATE MODAL -->
+<div class="modal-overlay" id="templateModal" onclick="if(event.target===this)closeModal('templateModal')">
+<div class="modal">
+<form id="templateForm" onsubmit="handleTemplateSubmit(event)">
+<div class="modal-hdr">
+<div class="modal-title">Create New Template</div>
+<button type="button" class="modal-close" onclick="closeModal('templateModal')">✕</button>
+</div>
+<div class="modal-body">
+<div class="form-group">
+<label class="form-label">Template Name <span>*</span></label>
+<input class="form-input" id="tName" name="name" type="text" placeholder="e.g. QS Sustainability Rankings" required />
+</div>
+<div class="form-group">
+<label class="form-label">Initial Year (optional)</label>
+<input class="form-input" id="tYear" name="year" type="text" inputmode="numeric" maxlength="4" placeholder="e.g. 2026" />
+</div>
+<div class="form-group">
+<label class="form-label">Description (optional)</label>
+<textarea class="form-textarea" id="tDesc" name="description" placeholder="Notes about this template..."></textarea>
+</div>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn-cancel" onclick="closeModal('templateModal')">Cancel</button>
+<button type="submit" class="btn-save" id="saveTemplateBtn">
+<i class="fas fa-save"></i> Create Template
+</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- ALERT MODAL -->
+<div class="modal-overlay" id="alertModal" onclick="if(event.target===this)closeModal('alertModal')">
+<div class="modal alert-modal">
+<div class="alert-modal-body">
+<div class="alert-icon">⚠️</div>
+<div id="alertTitle" class="alert-title"></div>
+<div id="alertMsg" class="alert-msg"></div>
+</div>
+<div class="alert-modal-footer">
+<button class="btn-alert-ok" onclick="closeModal('alertModal')">OK</button>
+</div>
+</div>
+</div>
+
+<script>
+const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+? 'http://localhost:3002'
+: 'https://uob-rankings.onrender.com';
+const token = localStorage.getItem('token');
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+if (!token || user.role !== 'admin') window.location.href = 'login.html';
+document.getElementById('adminName').textContent = user.name || 'Admin';
+document.getElementById('adminAvatar').textContent = (user.name || 'AD').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+let allTemplates = [];
+let selectedTemplate = null;
+let templateQuestions = [];
+let editingQuestionId = null;
+
+// ── Sidebar ──────────────────────────────────────────────
+function toggleSidebar() {
+const sidebar = document.getElementById('sidebar');
+sidebar.classList.toggle('collapsed');
+localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+}
+if (localStorage.getItem('sidebarCollapsed') === 'true') {
+document.getElementById('sidebar').classList.add('collapsed');
+}
+function logout() {
+fetch(`${API_BASE}/api/auth/logout`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } }).catch(() => {});
+localStorage.clear();
+window.location.href = 'login.html';
+}
+
+// ── Load templates ───────────────────────────────────────
+async function loadTemplates() {
+try {
+const res = await fetch(`${API_BASE}/api/admin/templates`, {
+headers: { 'Authorization': `Bearer ${token}` }
+});
+allTemplates = await res.json();
+renderTemplates();
+} catch (e) {
+console.error(e);
+document.getElementById('templatesList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-title">Failed to load templates</div></div>';
+}
+}
+
+function renderTemplates() {
+const list = document.getElementById('templatesList');
+if (!allTemplates.length) {
+list.innerHTML = `<div class="empty-state">
+<div class="empty-state-icon">📋</div>
+<div class="empty-state-title">No templates yet</div>
+<div class="empty-state-sub">Click "+ New Template" to create your first question template</div>
+</div>`;
+return;
+}
+list.innerHTML = allTemplates.map(t => `
+<div class="template-card ${selectedTemplate?.id === t.id ? 'active' : ''}" onclick="selectTemplate(${t.id})">
+<div class="template-card-name">${t.name}</div>
+<div class="template-card-meta">
+${t.year ? `<span>Year: ${t.year}</span>` : ''}
+<span class="template-card-count">${t.question_count || 0} Q</span>
+</div>
+</div>
+`).join('');
+}
+
+// ── Select template ──────────────────────────────────────
+async function selectTemplate(id) {
+selectedTemplate = allTemplates.find(t => t.id === id);
+renderTemplates();
+document.getElementById('questionsPanelTitle').textContent = selectedTemplate.name;
+document.getElementById('questionsPanelSub').textContent = `Template ID: ${selectedTemplate.id}${selectedTemplate.year ? ' · Year: ' + selectedTemplate.year : ''}`;
+document.getElementById('addQuestionBtn').style.display = 'inline-flex';
+await loadTemplateQuestions();
+}
+
+async function loadTemplateQuestions() {
+const list = document.getElementById('questionsList');
+list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-title">Loading questions...</div></div>';
+try {
+const res = await fetch(`${API_BASE}/api/admin/templates/${selectedTemplate.id}/questions`, {
+headers: { 'Authorization': `Bearer ${token}` }
+});
+templateQuestions = await res.json();
+renderQuestions();
+} catch (e) {
+console.error(e);
+list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-title">Failed to load questions</div></div>';
+}
+}
+
+function renderQuestions() {
+const list = document.getElementById('questionsList');
+if (!templateQuestions.length) {
+list.innerHTML = `<div class="empty-state">
+<div class="empty-state-icon">❓</div>
+<div class="empty-state-title">No questions in this template</div>
+<div class="empty-state-sub">Click "+ Add Question" to start building this template</div>
+</div>`;
+return;
+}
+list.innerHTML = templateQuestions.map(q => `
+<div class="question-card">
+<div class="question-card-top">
+${q.code ? `<span class="question-code">${q.code}</span>` : ''}
+<div class="question-title">${q.title}</div>
+</div>
+${q.description ? `<div style="font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin-bottom:.6rem">${q.description}</div>` : ''}
+<div class="question-meta">
+<span class="question-meta-item"><i class="fas fa-tag"></i> ${q.theme || 'General'}</span>
+<span class="question-meta-item"><i class="fas fa-cube"></i> ${q.question_type}</span>
+${q.gm_category ? `<span class="question-meta-item"><i class="fas fa-leaf"></i> ${q.gm_category}</span>` : ''}
+${q.has_evidence ? `<span class="question-meta-item"><i class="fas fa-link"></i> Evidence required</span>` : ''}
+</div>
+<div class="question-actions">
+<button class="btn-edit" onclick="openEditQuestionModal(${q.id})"><i class="fas fa-edit"></i> Edit</button>
+<button class="btn-danger" onclick="deleteQuestion(${q.id})"><i class="fas fa-trash"></i> Delete</button>
+</div>
+</div>
+`).join('');
+}
+
+// ── Modal helpers ────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('show'); document.body.style.overflow = 'hidden'; }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); document.body.style.overflow = ''; }
+function showAlert(title, msg) {
+document.getElementById('alertTitle').textContent = title;
+document.getElementById('alertMsg').textContent = msg;
+openModal('alertModal');
+}
+
+// ── Add Template ─────────────────────────────────────────
+function openAddTemplateModal() {
+document.getElementById('templateForm').reset();
+openModal('templateModal');
+}
+
+async function handleTemplateSubmit(event) {
+event.preventDefault();
+const btn = document.getElementById('saveTemplateBtn');
+btn.disabled = true;
+btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+try {
+const payload = {
+name: document.getElementById('tName').value.trim(),
+year: document.getElementById('tYear').value ? parseInt(document.getElementById('tYear').value) : null,
+description: document.getElementById('tDesc').value.trim(),
+is_template: true
+};
+const res = await fetch(`${API_BASE}/api/admin/cycles`, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+body: JSON.stringify(payload)
+});
+const data = await res.json();
+if (data.success) {
+closeModal('templateModal');
+await loadTemplates();
+// Auto-select the new template
+const newTemplate = allTemplates.find(t => t.id === data.id);
+if (newTemplate) selectTemplate(newTemplate.id);
+} else {
+showAlert('Error', data.error || 'Failed to create template');
+}
+} catch (e) {
+showAlert('Server Error', 'Make sure the server is running.');
+} finally {
+btn.disabled = false;
+btn.innerHTML = '<i class="fas fa-save"></i> Create Template';
+}
+}
+
+// ── Add/Edit Question ────────────────────────────────────
+function openAddQuestionModal() {
+editingQuestionId = null;
+document.getElementById('questionModalTitle').textContent = 'Add Question';
+document.getElementById('saveBtnText').textContent = 'Save Question';
+document.getElementById('questionForm').reset();
+document.getElementById('qTheme').value = 'General';
+openModal('questionModal');
+}
+
+function openEditQuestionModal(id) {
+const q = templateQuestions.find(x => x.id === id);
+if (!q) return;
+editingQuestionId = id;
+document.getElementById('questionModalTitle').textContent = 'Edit Question';
+document.getElementById('saveBtnText').textContent = 'Update Question';
+document.getElementById('qCode').value = q.code || '';
+document.getElementById('qTitle').value = q.title || '';
+document.getElementById('qDesc').value = q.description || '';
+document.getElementById('qType').value = q.question_type || '';
+document.getElementById('qTheme').value = q.theme || 'General';
+document.getElementById('qGmCategory').value = q.gm_category || '';
+document.getElementById('qHasEvidence').checked = q.has_evidence === 1;
+openModal('questionModal');
+}
+
+async function handleQuestionSubmit(event) {
+event.preventDefault();
+if (!selectedTemplate) { showAlert('Error', 'No template selected'); return; }
+const btn = document.getElementById('saveQuestionBtn');
+btn.disabled = true;
+const originalHtml = btn.innerHTML;
+btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+try {
+const payload = {
+code: document.getElementById('qCode').value.trim(),
+title: document.getElementById('qTitle').value.trim(),
+description: document.getElementById('qDesc').value.trim(),
+question_type: document.getElementById('qType').value,
+theme: document.getElementById('qTheme').value,
+gm_category: document.getElementById('qGmCategory').value || null,
+has_evidence: document.getElementById('qHasEvidence').checked ? 1 : 0
+};
+const url = editingQuestionId
+? `${API_BASE}/api/admin/questions/${editingQuestionId}`
+: `${API_BASE}/api/admin/templates/${selectedTemplate.id}/questions`;
+const method = editingQuestionId ? 'PATCH' : 'POST';
+const res = await fetch(url, {
+method,
+headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+body: JSON.stringify(payload)
+});
+const data = await res.json();
+if (data.success) {
+closeModal('questionModal');
+await loadTemplateQuestions();
+await loadTemplates(); // refresh question counts
+} else {
+showAlert('Error', data.error || 'Failed to save question');
+}
+} catch (e) {
+showAlert('Server Error', 'Make sure the server is running.');
+} finally {
+btn.disabled = false;
+btn.innerHTML = originalHtml;
+}
+}
+
+// ── Delete Question ──────────────────────────────────────
+async function deleteQuestion(id) {
+if (!confirm('Are you sure you want to delete this question? This cannot be undone.')) return;
+try {
+const res = await fetch(`${API_BASE}/api/admin/questions/${id}`, {
+method: 'DELETE',
+headers: { 'Authorization': `Bearer ${token}` }
+});
+const data = await res.json();
+if (data.success) {
+await loadTemplateQuestions();
+await loadTemplates();
+} else {
+showAlert('Error', data.error || 'Failed to delete question');
+}
+} catch (e) {
+showAlert('Server Error', 'Make sure the server is running.');
+}
+}
+
+// ── Init ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+loadTemplates();
+});
+</script>
+</body>
+</html>
