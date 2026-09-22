@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); 
 const db = require('../db');
 const emailjs = require('@emailjs/nodejs'); 
+const { logActivity } = require('../utils/activityLogger'); 
 
 // Initialize EmailJS securely on the backend
 emailjs.init({
@@ -180,11 +181,25 @@ router.post('/login', async (req, res) => {
         department_id: user.department_id
       }
     });
+    await logActivity({
+      userId: user.id,
+      userName: user.name,
+      userRole: user.role,
+      action: 'LOGIN',
+      entityType: 'user',
+      entityId: user.id,
+      entityName: user.name,
+      ip: req.ip
+    });
+
+res.json({ token, user: { id: user.id, name: user.name, role: user.role } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
 
 router.get('/me', async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
