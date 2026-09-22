@@ -36,6 +36,7 @@ app.use('/api/admin/reminders', require('./routes/reminder')); // This one is cr
 app.use(notFoundHandler);
 app.use(serverErrorHandler);
 
+// Health Check Route
 app.use('/api/health', require('./routes/health'));
 
 const PORT = process.env.PORT || 3002;
