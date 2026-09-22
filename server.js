@@ -21,7 +21,8 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files
-app.use(express.static(__dirname, { extensions: ['html'] }));
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 
 // API Routes
 app.use('/api/admin', require('./routes/admin'));
@@ -34,6 +35,8 @@ app.use('/api/admin/reminders', require('./routes/reminder')); // This one is cr
 // Error Handling (Must be last)
 app.use(notFoundHandler);
 app.use(serverErrorHandler);
+
+app.use('/api/health', require('./routes/health'));
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
