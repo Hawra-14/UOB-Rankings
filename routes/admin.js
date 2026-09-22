@@ -474,4 +474,18 @@ router.delete('/questions/:id', adminOnly, async (req, res) => {
     }
 });
 
+// GET recent activity logs
+router.get('/activity', async (req, res) => {
+  try {
+    const result = await db.execute({
+      sql: `SELECT * FROM activity_logs ORDER BY created_at DESC LIMIT 10`,
+      args: []
+    });
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching activity logs:', err);
+    res.status(500).json({ error: 'Failed to fetch activity logs' });
+  }
+});
+
 module.exports = router;

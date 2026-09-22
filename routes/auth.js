@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto'); 
 const db = require('../db');
 const emailjs = require('@emailjs/nodejs'); 
-const { logActivity } = require('../utils/activityLogger'); 
+const { logActivity } = require('../src/utils/activityLogger'); 
+
 
 emailjs.init({
   publicKey: process.env.EMAILJS_PUBLIC_KEY,
@@ -105,13 +106,19 @@ router.post('/login', async (req, res) => {
       args: [user.id, token]
     });
 
-    // ✅ LOG ACTIVITY *BEFORE* SENDING RESPONSE
+    // LOG ACTIVITY *BEFORE* SENDING RESPONSE
     await logActivity({
-      userId: user.id, userName: user.name, userRole: user.role,
-      action: 'LOGIN', entityType: 'user', entityId: user.id, entityName: user.name, ip: req.ip
+      userId: user.id,
+      userName: user.name,
+      userRole: user.role,
+      action: 'LOGIN',
+      entityType: 'user',
+      entityId: user.id,
+      entityName: user.name,
+      ip: req.ip
     });
 
-    // ✅ ONLY CALL res.json ONCE
+
     res.json({
       token,
       user: { id: user.id, name: user.name, email: user.email, role: user.role, department_id: user.department_id }

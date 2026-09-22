@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../../db');
 
 async function logActivity({ userId, userName, userRole, action, entityType, entityId, entityName, details, ip }) {
   try {
