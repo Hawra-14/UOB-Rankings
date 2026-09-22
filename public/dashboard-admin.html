@@ -272,6 +272,10 @@
                 <a class="nav-item" href="departments.html">
                     <i class="fas fa-building nav-icon"></i><span class="nav-text">Departments</span>
                 </a>
+                <a class="nav-item" href="activity-log.html">
+                <i class="fas fa-history nav-icon"></i>
+                <span class="nav-text">Activity Logs</span>
+                </a>
             </div>
 
             <div class="nav-spacer"></div>
@@ -352,9 +356,10 @@
                     </table>
                 </div>
 
-                <div class="card">
+                                <div class="card">
                     <div class="card-hdr">
                         <div class="card-hdr-title"><i class="fas fa-history"></i> Recent Activity</div>
+                        <a class="btn-link" href="activity-log.html">View All</a>
                     </div>
                     <div class="activity-list" id="activityList">
                         <div class="activity-item">
@@ -367,163 +372,573 @@
     </div>
 
     <script>
-        const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-            ? 'http://localhost:3002'
-            : 'https://uob-rankings.onrender.com';
+    const API_BASE = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+        ? 'http://localhost:3002'
+        : 'https://uob-rankings.onrender.com';
 
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        if (!token || user.role !== 'admin') window.location.href = 'login.html';
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-        document.getElementById('userName').textContent = user.name || 'Admin';
-        const initials = (user.name || 'Admin').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-        document.getElementById('userAvatar').textContent = initials;
+    if (!token || user.role !== 'admin') {
+        window.location.href = 'login.html';
+    }
 
-        let currentCycle = 'all';
+    document.getElementById('userName').textContent = user.name || 'Admin';
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('collapsed');
-            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+    const initials = (user.name || 'Admin')
+        .split(' ')
+        .map(w => w[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+
+    document.getElementById('userAvatar').textContent = initials;
+
+    let currentCycle = 'all';
+
+
+    /* ==========================================
+       SIDEBAR
+    ========================================== */
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+
+        sidebar.classList.toggle('collapsed');
+
+        localStorage.setItem(
+            'sidebarCollapsed',
+            sidebar.classList.contains('collapsed')
+        );
+    }
+
+    // Restore sidebar state
+    const sidebarCollapsed =
+        localStorage.getItem('sidebarCollapsed') === 'true';
+
+    if (sidebarCollapsed) {
+        document.getElementById('sidebar').classList.add('collapsed');
+    }
+
+
+    function toggleCycles() {
+        const el = document.getElementById('navCycles');
+        const arrow = document.getElementById('cyclesArrow');
+
+        el.classList.toggle('open');
+
+        arrow.style.transform = el.classList.contains('open')
+            ? 'rotate(180deg)'
+            : 'rotate(0deg)';
+    }
+
+
+    /* ==========================================
+       LOGOUT
+    ========================================== */
+
+    function logout() {
+        fetch(`${API_BASE}/api/auth/logout`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).catch(() => {});
+
+        localStorage.clear();
+
+        window.location.href = 'login.html';
+    }
+
+
+    /* ==========================================
+       DEPARTMENT HELPERS
+    ========================================== */
+
+    function getDeptColor(name) {
+        const map = {
+            'IT & Digital Services': '#4B95FA',
+            'Sustainability Office': '#16a34a',
+            'Human Resources': '#f59e0b',
+            'Research & Graduate Studies': '#094FA3',
+            'Finance & Accounts': '#8b5cf6',
+            'Quality Assurance': '#ec4899',
+            'College of Science': '#f97316',
+            'Deanship of Student Affairs': '#64748b',
+            'Registrar Office': '#dc2626'
+        };
+
+        return map[name] || '#6b7c9e';
+    }
+
+
+    function getInitials(name) {
+        if (!name) return 'NA';
+
+        return name
+            .split(' ')
+            .map(w => w[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2);
+    }
+
+
+    function getStatusPill(pct) {
+        if (pct === 100) {
+            return `
+                <span class="status-pill pill-green">
+                    <i class="fas fa-check"></i>
+                    Complete
+                </span>
+            `;
         }
 
-        // Restore sidebar state
-        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-        if (sidebarCollapsed) {
-            document.getElementById('sidebar').classList.add('collapsed');
+        if (pct >= 60) {
+            return `
+                <span class="status-pill pill-blue">
+                    On Track
+                </span>
+            `;
         }
 
-        function toggleCycles() {
-            const el = document.getElementById('navCycles');
-            const arrow = document.getElementById('cyclesArrow');
-            el.classList.toggle('open');
-            arrow.style.transform = el.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        if (pct >= 30) {
+            return `
+                <span class="status-pill pill-amber">
+                    In Progress
+                </span>
+            `;
         }
 
-        function logout() {
-            fetch(`${API_BASE}/api/auth/logout`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }
-            }).catch(() => {});
-            localStorage.clear();
-            window.location.href = 'login.html';
+        if (pct > 0) {
+            return `
+                <span class="status-pill pill-red">
+                    Overdue
+                </span>
+            `;
         }
 
-        function getDeptColor(name) {
-            const map = {
-                'IT & Digital Services': '#4B95FA',
-                'Sustainability Office': '#16a34a',
-                'Human Resources': '#f59e0b',
-                'Research & Graduate Studies': '#094FA3',
-                'Finance & Accounts': '#8b5cf6',
-                'Quality Assurance': '#ec4899',
-                'College of Science': '#f97316',
-                'Deanship of Student Affairs': '#64748b',
-                'Registrar Office': '#dc2626'
+        return `
+            <span class="status-pill pill-red">
+                Not Started
+            </span>
+        `;
+    }
+
+
+    /* ==========================================
+       ACTIVITY TIME
+    ========================================== */
+
+    function getTimeAgo(dateString) {
+        if (!dateString) {
+            return 'Recently';
+        }
+
+        const date = new Date(dateString);
+        const now = new Date();
+
+        const seconds = Math.floor((now - date) / 1000);
+
+        if (seconds < 60) {
+            return 'Just now';
+        }
+
+        const minutes = Math.floor(seconds / 60);
+
+        if (minutes < 60) {
+            return `${minutes}m ago`;
+        }
+
+        const hours = Math.floor(minutes / 60);
+
+        if (hours < 24) {
+            return `${hours}h ago`;
+        }
+
+        const days = Math.floor(hours / 24);
+
+        return `${days}d ago`;
+    }
+
+
+    /* ==========================================
+       ACTIVITY ICON
+    ========================================== */
+
+    function getActivityIcon(action) {
+        const normalizedAction = (action || '').toUpperCase();
+
+        if (normalizedAction === 'LOGIN') {
+            return {
+                icon: 'fa-sign-in-alt',
+                color: '#16a34a'
             };
-            return map[name] || '#6b7c9e';
-        }
-        
-        function getInitials(name) {
-            return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-        }
-        
-        function getStatusPill(pct) {
-            if (pct === 100) return '<span class="status-pill pill-green"><i class="fas fa-check"></i> Complete</span>';
-            if (pct >= 60) return '<span class="status-pill pill-blue">On Track</span>';
-            if (pct >= 30) return '<span class="status-pill pill-amber">In Progress</span>';
-            if (pct > 0) return '<span class="status-pill pill-red">Overdue</span>';
-            return '<span class="status-pill pill-red">Not Started</span>';
         }
 
-        function getTimeAgo(dateString) {
-            if (!dateString) return 'Recently';
-            const date = new Date(dateString);
-            const now = new Date();
-            const seconds = Math.floor((now - date) / 1000);
-            if (seconds < 60) return 'Just now';
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return minutes + 'm ago';
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return hours + 'h ago';
-            const days = Math.floor(hours / 24);
-            return days + 'd ago';
+        if (normalizedAction.includes('SUBMIT')) {
+            return {
+                icon: 'fa-check',
+                color: '#094FA3'
+            };
         }
 
-        async function loadDashboard() {
-            try {
-                const url = currentCycle === 'all' 
-                    ? `${API_BASE}/api/admin/dashboard` 
-                    : `${API_BASE}/api/admin/dashboard?cycle_id=${currentCycle}`;
-                    
-                const res = await fetch(url, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await res.json();
+        if (normalizedAction.includes('ASSIGN')) {
+            return {
+                icon: 'fa-user-plus',
+                color: '#8b5cf6'
+            };
+        }
 
-                document.getElementById('statTotal').textContent = data.total || 0;
-                document.getElementById('statSubmitted').textContent = data.submitted || 0;
-                document.getElementById('statPending').textContent = data.pending || 0;
-                document.getElementById('statOverdue').textContent = data.overdue || 0;
-                const pct = data.total ? Math.round((data.submitted / data.total) * 100) : 0;
-                document.getElementById('statPct').textContent = pct + '% completion';
+        if (normalizedAction.includes('UPDATE')) {
+            return {
+                icon: 'fa-edit',
+                color: '#f59e0b'
+            };
+        }
 
-                const tbody = document.getElementById('deptTableBody');
-                if (data.departments && data.departments.length > 0) {
-                    tbody.innerHTML = data.departments.map(d => {
-                        const deptPct = d.total ? Math.round((d.submitted / d.total) * 100) : 0;
-                        const color = getDeptColor(d.name);
-                        return `<tr>
+        if (normalizedAction.includes('DELETE')) {
+            return {
+                icon: 'fa-trash',
+                color: '#dc2626'
+            };
+        }
+
+        if (normalizedAction.includes('CREATE')) {
+            return {
+                icon: 'fa-plus',
+                color: '#16a34a'
+            };
+        }
+
+        return {
+            icon: 'fa-file',
+            color: '#f59e0b'
+        };
+    }
+
+
+    /* ==========================================
+       LOAD DASHBOARD
+       
+       This function loads:
+       1. Dashboard statistics
+       2. Department progress
+       3. Recent activity
+    ========================================== */
+
+    async function loadDashboard() {
+
+        try {
+
+            /* ------------------------------------------
+               1. LOAD DASHBOARD DATA
+            ------------------------------------------ */
+
+            const dashboardUrl = currentCycle === 'all'
+                ? `${API_BASE}/api/admin/dashboard`
+                : `${API_BASE}/api/admin/dashboard?cycle_id=${currentCycle}`;
+
+            const dashboardRes = await fetch(dashboardUrl, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!dashboardRes.ok) {
+                throw new Error(
+                    `Dashboard request failed: ${dashboardRes.status}`
+                );
+            }
+
+            const data = await dashboardRes.json();
+
+
+            /* ------------------------------------------
+               2. DISPLAY STATISTICS
+            ------------------------------------------ */
+
+            const total = Number(data.total) || 0;
+            const submitted = Number(data.submitted) || 0;
+            const pending = Number(data.pending) || 0;
+            const overdue = Number(data.overdue) || 0;
+
+            document.getElementById('statTotal').textContent = total;
+
+            document.getElementById('statSubmitted').textContent =
+                submitted;
+
+            document.getElementById('statPending').textContent =
+                pending;
+
+            document.getElementById('statOverdue').textContent =
+                overdue;
+
+            const completionPercentage = total > 0
+                ? Math.round((submitted / total) * 100)
+                : 0;
+
+            document.getElementById('statPct').textContent =
+                `${completionPercentage}% completion`;
+
+
+            /* ------------------------------------------
+               3. DISPLAY DEPARTMENT PROGRESS
+            ------------------------------------------ */
+
+            const tbody =
+                document.getElementById('deptTableBody');
+
+            if (
+                data.departments &&
+                Array.isArray(data.departments) &&
+                data.departments.length > 0
+            ) {
+
+                tbody.innerHTML = data.departments.map(department => {
+
+                    const departmentTotal =
+                        Number(department.total) || 0;
+
+                    const departmentSubmitted =
+                        Number(department.submitted) || 0;
+
+                    const departmentPercentage =
+                        departmentTotal > 0
+                            ? Math.round(
+                                (departmentSubmitted / departmentTotal) * 100
+                            )
+                            : 0;
+
+                    const color =
+                        getDeptColor(department.name);
+
+                    return `
+                        <tr>
+
                             <td>
                                 <div class="dept-name-cell">
-                                    <div class="dept-init" style="background:${color}">${getInitials(d.name)}</div>
-                                    <div class="dept-name">${d.name}</div>
+
+                                    <div
+                                        class="dept-init"
+                                        style="background:${color}"
+                                    >
+                                        ${getInitials(department.name)}
+                                    </div>
+
+                                    <div class="dept-name">
+                                        ${department.name}
+                                    </div>
+
                                 </div>
                             </td>
+
                             <td>
                                 <div class="prog-wrap">
-                                    <div class="prog-bar"><div class="prog-fill" style="width:${deptPct}%"></div></div>
-                                    <div class="prog-pct">${deptPct}%</div>
+
+                                    <div class="prog-bar">
+                                        <div
+                                            class="prog-fill"
+                                            style="width:${departmentPercentage}%"
+                                        ></div>
+                                    </div>
+
+                                    <div class="prog-pct">
+                                        ${departmentPercentage}%
+                                    </div>
+
                                 </div>
                             </td>
-                            <td>${getStatusPill(deptPct)}</td>
-                        </tr>`;
-                    }).join('');
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-secondary);padding:1.5rem">No data</td></tr>';
-                }
 
-                const activityList = document.getElementById('activityList');
-                if (data.activities && data.activities.length > 0) {
-                    activityList.innerHTML = data.activities.slice(0, 5).map(act => {
-                        const iconClass = act.status === 'approved' ? 'fa-check' : 'fa-file';
-                        const iconColor = act.status === 'approved' ? '#16a34a' : '#f59e0b';
-                        return `<div class="activity-item">
-                            <div class="act-icon" style="color:${iconColor}">
-                                <i class="fas ${iconClass}"></i>
-                            </div>
-                            <div class="act-content">
-                                <div class="act-text"><strong>${act.dept_name}</strong> ${act.status === 'approved' ? 'approved' : 'submitted'} "${act.question_title}"</div>
-                                <div class="act-time">${getTimeAgo(act.submitted_at)}</div>
-                            </div>
-                        </div>`;
-                    }).join('');
-                } else {
-                    activityList.innerHTML = '<div class="activity-item"><div class="act-text" style="color:var(--text-secondary);text-align:center;width:100%">No recent activity</div></div>';
-                }
+                            <td>
+                                ${getStatusPill(departmentPercentage)}
+                            </td>
 
-            } catch (err) {
-                console.error('Dashboard load error:', err);
+                        </tr>
+                    `;
+
+                }).join('');
+
+            } else {
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td
+                            colspan="3"
+                            style="
+                                text-align:center;
+                                color:var(--text-secondary);
+                                padding:1.5rem
+                            "
+                        >
+                            No department data available
+                        </td>
+                    </tr>
+                `;
             }
+
+
+            /* ------------------------------------------
+               4. LOAD RECENT ACTIVITY
+               
+               Activity comes from the activity-log API,
+               but it is still handled inside this same
+               dashboard function.
+            ------------------------------------------ */
+
+            const activityRes = await fetch(
+                `${API_BASE}/api/activity/recent`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (!activityRes.ok) {
+                throw new Error(
+                    `Activity request failed: ${activityRes.status}`
+                );
+            }
+
+            const activities = await activityRes.json();
+
+            const activityList =
+                document.getElementById('activityList');
+
+
+            /* ------------------------------------------
+               5. DISPLAY RECENT ACTIVITY
+            ------------------------------------------ */
+
+            if (
+                activities &&
+                Array.isArray(activities) &&
+                activities.length > 0
+            ) {
+
+                // Only show the latest 5 activities
+                const recentActivities =
+                    activities.slice(0, 5);
+
+                activityList.innerHTML =
+                    recentActivities.map(activity => {
+
+                        const activityIcon =
+                            getActivityIcon(activity.action);
+
+                        const actionText =
+                            (activity.action || 'performed an action')
+                                .toLowerCase()
+                                .replace(/_/g, ' ');
+
+                        return `
+                            <div class="activity-item">
+
+                                <div
+                                    class="act-icon"
+                                    style="color:${activityIcon.color}"
+                                >
+                                    <i
+                                        class="fas ${activityIcon.icon}"
+                                    ></i>
+                                </div>
+
+                                <div class="act-content">
+
+                                    <div class="act-text">
+                                        <strong>
+                                            ${activity.user_name || 'Unknown'}
+                                        </strong>
+
+                                        ${actionText}
+                                    </div>
+
+                                    <div class="act-time">
+                                        ${getTimeAgo(activity.created_at)}
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        `;
+
+                    }).join('');
+
+            } else {
+
+                activityList.innerHTML = `
+                    <div class="activity-item">
+
+                        <div
+                            class="act-text"
+                            style="
+                                color:var(--text-secondary);
+                                text-align:center;
+                                width:100%
+                            "
+                        >
+                            No recent activity
+                        </div>
+
+                    </div>
+                `;
+            }
+
+
+        } catch (err) {
+
+            console.error('Dashboard load error:', err);
+
+            /*
+             * We don't completely destroy the dashboard
+             * if something goes wrong.
+             */
+
+            const activityList =
+                document.getElementById('activityList');
+
+            if (activityList) {
+                activityList.innerHTML = `
+                    <div class="activity-item">
+
+                        <div
+                            class="act-text"
+                            style="
+                                color:var(--text-secondary);
+                                text-align:center;
+                                width:100%
+                            "
+                        >
+                            Unable to load recent activity
+                        </div>
+
+                    </div>
+                `;
+            }
+
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadDashboard();
-            // Open cycles menu by default for consistency with other pages
-            document.getElementById('navCycles').classList.add('open');
-            document.getElementById('cyclesArrow').style.transform = 'rotate(180deg)';
-        });
-    </script>
+    }
+
+
+    /* ==========================================
+       INITIALIZE DASHBOARD
+    ========================================== */
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Load ALL dashboard information
+        loadDashboard();
+
+        // Open ranking cycles menu by default
+        document.getElementById('navCycles')
+            .classList.add('open');
+
+        document.getElementById('cyclesArrow')
+            .style.transform = 'rotate(180deg)';
+
+    });
+</script>
 </body>
 </html>

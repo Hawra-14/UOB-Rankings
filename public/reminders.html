@@ -76,34 +76,6 @@
         }
         .menu-toggle:hover { background: var(--light-blue); color: #fff; }
 
-        .header-brand { text-decoration: none; display: flex; align-items: center; gap: 0.75rem; }
-        .brand-logo {
-            width: 40px;
-            height: 40px;
-            background: var(--bright-gold);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .brand-text { white-space: nowrap; }
-        .brand-title {
-            font-family: 'Instrument Serif', serif;
-            font-weight: 400;
-            font-size: 1rem;
-            color: var(--text-primary);
-            line-height: 1.2;
-        }
-        .brand-sub {
-            font-size: .62rem;
-            font-weight: 600;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            color: var(--primary-blue);
-            margin-top: 2px;
-        }
-
         .header-right { display: flex; align-items: center; gap: 1.5rem; }
         .header-logo { height: 50px; width: auto; object-fit: contain; }
 
@@ -607,21 +579,10 @@
 <body>
     <header class="header">
         <div class="header-left">
-            <button class="menu-toggle" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-            <a class="header-brand" href="dashboard-admin.html">
-                <div class="brand-logo">
-                    <span style="font-family:'Instrument Serif',serif; font-weight:400; color:var(--text-primary); font-size:1.1rem;">UoB</span>
-                </div>
-                <div class="brand-text">
-                    <div class="brand-title">QS Rankings Tracker</div>
-                    <div class="brand-sub">Admin Portal</div>
-                </div>
-            </a>
+            <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
         </div>
         <div class="header-right">
-            <img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="header-logo" onerror="this.style.display='none'">
+            <img src="assets/image/UOB-new-logo.png" alt="UoB Logo" class="header-logo">
             <div class="user-pill">
                 <div class="user-avatar" id="adminAvatar">AD</div>
                 <div class="user-info">
@@ -682,10 +643,13 @@
                     <span class="nav-text">Reminders</span>
                     <span class="nav-badge" id="reminderBadge">0</span>
                 </a>
-                <!-- FIXED: Changed from departments.html to department.html to match your dashboard template -->
                 <a class="nav-item" href="department.html">
                     <i class="fas fa-building nav-icon"></i>
                     <span class="nav-text">Departments</span>
+                </a>
+                <a class="nav-item" href="activity-log.html">
+                    <i class="fas fa-history nav-icon"></i>
+                    <span class="nav-text">Activity Logs</span>
                 </a>
             </div>
             <div class="nav-spacer"></div>
@@ -1195,9 +1159,15 @@ University of Bahrain</textarea>
         }
 
         // Initialize
-        loadRankingCycles();
-        loadNeedsAttention();
-        loadHistory();
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRankingCycles();
+            loadNeedsAttention();
+            loadHistory();
+            
+            // Keep the "All Cycles" dropdown open by default for consistency
+            document.getElementById('navCycles').classList.add('open');
+            document.getElementById('cyclesArrow').style.transform = 'rotate(180deg)';
+        });
     </script>
 </body>
 </html>
